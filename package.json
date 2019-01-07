@@ -1,0 +1,23 @@
+{
+  "name": "vraevrae",
+  "version": "0.0.0",
+  "description": "A trivia game",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yunusdemir/vraevrae.git"
+  },
+  "keywords": [
+    "trivia",
+    "progik"
+  ],
+  "author": "Yunus Demir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yunusdemir/vraevrae/issues"
+  },
+  "homepage": "https://github.com/yunusdemir/vraevrae#readme"
+}
