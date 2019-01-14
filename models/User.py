@@ -2,7 +2,7 @@ from uuid import uuid4
 
 
 class User():
-    "Class that defines the participants in a quiz"
+    "Defines the participants in a quiz"
 
     def __init__(self, name):
         self.userId = str(uuid4())
