@@ -1,4 +1,6 @@
 import random
+import pprint
+pp = pprint.PrettyPrinter(depth=6)
 
 
 def apiQuestion():
@@ -13,6 +15,8 @@ def apiQuestion():
 
 
 class Quiz ():
+    "Class that defines the quiz itself"
+
     def __init__(self):
         quizId = random.randrange(100000000)
         self.id = quizId
@@ -33,6 +37,8 @@ class Quiz ():
 
 
 class Question():
+    "Class that defines the questions of a quiz"
+
     def __init__(self, quizId):
         question = apiQuestion()
 
@@ -44,6 +50,8 @@ class Question():
 
 
 class User():
+    "Class that defines the participants in a quiz"
+
     def __init__(self, name):
         self.id = random.randrange(100000000)
         self.name = name
@@ -54,4 +62,4 @@ class User():
         return "TODO"
 
 
-print(Quiz())
+pp.pprint(vars(Quiz()))
