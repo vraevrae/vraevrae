@@ -16,7 +16,7 @@ class Quiz ():
         self.users = [User("somename")]
 
     isStarted = False
-    activeQuestion = "34856389465"
+    activeQuestion = 0
 
     def addPlayer():
         return "TODO"
