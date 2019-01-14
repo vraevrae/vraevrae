@@ -1,4 +1,4 @@
-from uuid import uuid1
+from uuid import uuid4
 from models.Question import Question
 from models.User import User
 
@@ -7,7 +7,7 @@ class Quiz ():
     "Class that defines the quiz itself"
 
     def __init__(self):
-        quizId = uuid1()
+        quizId = str(uuid4())
         self.quizId = quizId
         self.questions = [Question(quizId) for question in range(10)]
         self.users = [User("somename")]

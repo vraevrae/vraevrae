@@ -1,11 +1,11 @@
-from uuid import uuid1
+from uuid import uuid4
 
 
 class User():
     "Class that defines the participants in a quiz"
 
     def __init__(self, name):
-        self.userId = uuid1()
+        self.userId = str(uuid4())
         self.name = name
         self.score = 1
         self.isOwner = False
