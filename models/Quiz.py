@@ -17,7 +17,7 @@ class Quiz ():
         self.isFinished = False
         self.currentQuestion = 0
         self.currentTimer = 0
-        self.maxTime = 0
+        self.maxTime = 10
 
     def addPlayer(self):
         "Adds a player to the quiz"
