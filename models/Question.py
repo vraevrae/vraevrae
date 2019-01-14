@@ -11,6 +11,6 @@ class Question():
         self.answers = question["answers"]
         self.timer = 10
 
-    def checkAnswer():
+    def checkAnswer(self):
         "Checks the answer to the question"
         print("TODO")

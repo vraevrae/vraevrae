@@ -23,7 +23,7 @@ class Quiz ():
         "Adds a player to the quiz"
         print("TODO")
 
-    def getCurrentQuestion():
+    def getCurrentQuestion(self):
         "Gets the current question for the quiz"
         print("TODO")
 
