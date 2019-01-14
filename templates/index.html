@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('index') }}" method="post">
+        <fieldset>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Name" type="text"/>
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" name="gamecode" placeholder="Gamecode" type="text"/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" name="join" type="submit">Join</button>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" name="newgame" type="submit">Create new game</button>
+            </div>
+        </fieldset>
+    </form>
+    {% endif %}
+{% endblock %}
