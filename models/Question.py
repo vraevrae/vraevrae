@@ -2,7 +2,7 @@ from uuid import uuid1
 
 
 def apiQuestion():
-    "function that calls the API for a new question"
+    "Function that calls the API for a new question"
     return {"question": "a question",
             "answers": [
                 "answer 1",
