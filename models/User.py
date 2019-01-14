@@ -10,5 +10,6 @@ class User():
         self.score = 1
         self.isOwner = False
 
-    def updateScore():
+    def addScore(self):
+        "Adds the score to the users score"
         return "TODO"

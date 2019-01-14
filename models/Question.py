@@ -19,8 +19,8 @@ class Question():
     def __init__(self, quizId):
         question = apiQuestion()
 
+        self.quizId = quizId
         self.questionId = uuid1()
         self.question = question["question"]
         self.answers = question["answers"]
         self.timer = 10
-        self.quizId = quizId

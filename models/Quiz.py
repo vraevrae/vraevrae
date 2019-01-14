@@ -11,18 +11,28 @@ class Quiz ():
         self.quizId = quizId
         self.questions = [Question(quizId) for question in range(10)]
         self.users = [User("somename")]
+        self.isStarted = False
+        self.isFinished = False
+        self.currentQuestion = 0
+        self.currentTimer = 0
+        self.maxTime = 0
 
-    isStarted = False
-    activeQuestion = 0
-
-    def addPlayer():
+    def addPlayer(self):
         "Adds a player to the quiz"
-        return "TODO"
+        print("TODO")
 
-    def nextQuestion():
+    def getCurrentQuestion():
+        "Gets the current question for the quiz"
+        print("TODO")
+
+    def checkAnswer(self, questionId, userId):
+        "Checks an question and adds the score to the appropriate user"
+        print("TODO")
+
+    def nextQuestion(self):
         "Increments the quiz to to the next question"
-        return "TODO"
+        print("TODO")
 
-    def finished():
-        "End the quiz and redirects the players"
-        return "TODO"
+    def finish(self):
+        "Ends the quiz"
+        print("TODO")
