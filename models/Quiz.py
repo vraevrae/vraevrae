@@ -1,10 +1,6 @@
-from Question import Question
-from User import User
 from uuid import uuid1
-import random
-import pprint
-import py
-pp = pprint.PrettyPrinter(depth=6)
+from models.Question import Question
+from models.User import User
 
 
 class Quiz ():
@@ -20,13 +16,13 @@ class Quiz ():
     activeQuestion = 0
 
     def addPlayer():
+        "Voegt een speler aan de quiz toe"
         return "TODO"
 
     def nextQuestion():
+        "Gaat naar de volgende vraagt"
         return "TODO"
 
     def finished():
+        "Sluit de quiz af"
         return "TODO"
-
-
-pp.pprint(vars(Quiz()))
