@@ -3,13 +3,25 @@ from models.Question import Question
 from models.User import User
 
 
+def apiQuestions(numQuestions):
+    "Fake function that simulates an API call"
+    return [{"question": "a question",
+             "answers": [
+                 "answer 1",
+                 "answer 2",
+                 "answer 3",
+                 "answer 4",
+             ]} for question in range(numQuestions)]
+
+
 class Quiz ():
     "Class that defines the quiz itself"
 
     def __init__(self):
         quizId = str(uuid4())
         self.quizId = quizId
-        self.questions = [Question(quizId) for question in range(10)]
+        self.questions = [Question(quizId, question)
+                          for question in apiQuestions(10)]
         self.users = [User("somename")]
         self.isStarted = False
         self.isFinished = False
