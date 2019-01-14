@@ -1,3 +1,0 @@
-# Projectvoorstel
-
-*todo*
