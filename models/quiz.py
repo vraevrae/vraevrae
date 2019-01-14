@@ -1,5 +1,6 @@
 import random
 import pprint
+from uuid import uuid1
 pp = pprint.PrettyPrinter(depth=6)
 
 
@@ -18,8 +19,8 @@ class Quiz ():
     "Class that defines the quiz itself"
 
     def __init__(self):
-        quizId = random.randrange(100000000)
-        self.id = quizId
+        quizId = uuid1()
+        self.quizId = quizId
         self.questions = [Question(quizId) for question in range(10)]
         self.users = [User("somename")]
 
@@ -42,7 +43,7 @@ class Question():
     def __init__(self, quizId):
         question = apiQuestion()
 
-        self.id = random.randrange(100000000)
+        self.questionId = uuid1()
         self.question = question["question"]
         self.answers = question["answers"]
         self.timer = 10
@@ -53,7 +54,7 @@ class User():
     "Class that defines the participants in a quiz"
 
     def __init__(self, name):
-        self.id = random.randrange(100000000)
+        self.userId = uuid1()
         self.name = name
         self.score = 1
         self.isOwner = False
@@ -62,4 +63,4 @@ class User():
         return "TODO"
 
 
-pp.pprint(vars(Quiz()))
+pp.pprint(Quiz().quizId)
