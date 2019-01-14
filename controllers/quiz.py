@@ -1,33 +1,57 @@
+import random
+
+
+def apiQuestion():
+    return {"question": "a question",
+            "answers": [
+                "answer 1",
+                "answer 2",
+                "answer 3",
+                "answer 4",
+            ]
+            }
+
+
 class Quiz ():
-    self.id = highestId + 1
-    self.quizvragen = [QuizQuestion(question) for question in range(10)]
-    self.users = [User(1), User(2)]
+    def __init__(self):
+        quizId = random.randrange(100000000)
+        self.id = quizId
+        self.questions = [Question(quizId) for question in range(10)]
+        self.users = [User("somename")]
+
     isStarted = False
     activeQuestion = "34856389465"
 
-    def nextQuestion()
+    def addPlayer():
+        return "TODO"
 
-    def finished()
+    def nextQuestion():
+        return "TODO"
+
+    def finished():
+        return "TODO"
 
 
-class QuizQuestion():
-    tempQuestion = API.createQuestion()
+class Question():
+    def __init__(self, quizId):
+        question = apiQuestion()
 
-    self.id = random()
-    self.question = tempQuestion.question
-    self.answers = [Answers() for awnser in tempQuestion.answers]
-    self.timer = 10
-
-    self.quiz = "843756387465"
+        self.id = random.randrange(100000000)
+        self.question = question["question"]
+        self.answers = question["answers"]
+        self.timer = 10
+        self.quizId = quizId
 
 
 class User():
-    self.id = random()
-    self.name = form.name
-    self.score = 1
-    isOwner = False
+    def __init__(self, name):
+        self.id = random.randrange(100000000)
+        self.name = name
+        self.score = 1
+        self.isOwner = False
 
     def updateScore():
+        return "TODO"
 
 
-nieuwQuiz = Quiz()
+print(Quiz())
