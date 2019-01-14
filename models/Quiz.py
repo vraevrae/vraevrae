@@ -5,7 +5,7 @@ from helpers.fake import apiQuestions
 
 
 class Quiz ():
-    "Defines the quiz, most of the game logic happens here"
+    "The central class of the application, nothing happens outside of a quiz"
 
     def __init__(self):
         quizId = str(uuid4())

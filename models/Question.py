@@ -2,7 +2,7 @@ from uuid import uuid4
 
 
 class Question():
-    "Defines the questions of a quiz"
+    "A quiz takes a user through many questions"
 
     def __init__(self, quizId, question):
         self.quizId = quizId
