@@ -28,4 +28,4 @@ class Quiz ():
         return "TODO"
 
 
-pp.pprint(Quiz().quizId)
+pp.pprint(vars(Quiz()))
