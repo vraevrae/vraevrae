@@ -16,13 +16,13 @@ class Quiz ():
     activeQuestion = 0
 
     def addPlayer():
-        "Voegt een speler aan de quiz toe"
+        "Adds a player to the quiz"
         return "TODO"
 
     def nextQuestion():
-        "Gaat naar de volgende vraagt"
+        "Increments the quiz to to the next question"
         return "TODO"
 
     def finished():
-        "Sluit de quiz af"
+        "End the quiz and redirects the players"
         return "TODO"
