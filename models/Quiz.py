@@ -17,7 +17,8 @@ class Quiz ():
         self.isFinished = False
         self.currentQuestion = 0
         self.currentTimer = 0
-        self.maxTime = 10
+
+    maxTime = 10
 
     def addPlayer(self):
         """Adds a player to the quiz"""
@@ -30,7 +31,7 @@ class Quiz ():
         print("TODO")
 
     def checkAnswer(self, questionId, userId):
-        """Checks an question and adds the score to the appropriate user"""
+        """Asks the question wether the answer is correct, and adds the score to the user"""
         # TODO
         print("TODO")
 
