@@ -13,5 +13,4 @@ class User():
     def addScore(self):
         """Adds the score to the users score"""
         # TODO
-
-        return "TODO"
+        pass

@@ -14,4 +14,4 @@ class Question():
     def checkAnswer(self):
         """"Checks the answer to the question"""
         # TODO
-        print("TODO")
+        pass

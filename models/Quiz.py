@@ -23,24 +23,24 @@ class Quiz ():
     def addPlayer(self):
         """Adds a player to the quiz"""
         # TODO
-        print("TODO")
+        pass
 
     def getCurrentQuestion(self):
         """Gets the current question for the quiz"""
         # TODO
-        print("TODO")
+        pass
 
     def checkAnswer(self, questionId, userId):
         """Asks the question wether the answer is correct, and adds the score to the user"""
         # TODO
-        print("TODO")
+        pass
 
     def nextQuestion(self):
         """Increments the quiz to to the next question"""
         # TODO
-        print("TODO")
+        pass
 
     def finish(self):
         """Ends the quiz"""
         # TODO
-        print("TODO")
+        pass
