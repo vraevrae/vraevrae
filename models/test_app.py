@@ -127,9 +127,4 @@ def test_filled_app():
     assert len(app.answers) == answerCount
     assert len(app.users) == userCount
 
-    print("(should be 1)", len(app.quizes))
-    print("(should be 2)", len(app.questions))
-    print("(should be 6)", len(app.answers))
-    print("(should be 7)", len(app.users))
-
     lcprint(vars(app), "a filled app:")
