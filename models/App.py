@@ -10,5 +10,6 @@ class App ():
         self.users = {}
         self.answers = {}
 
-    def getQuiz(self, quizId):
-        return self.quizes[quizId]
+    def newQuiz(self):
+        newQuiz = Quiz()
+        self.quizes[newQuiz.quizId] = newQuiz
