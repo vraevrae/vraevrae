@@ -1,26 +1,17 @@
-from uuid import uuid1
-
-
-def apiQuestion():
-    "Function that calls the API for a new question"
-    return {"question": "a question",
-            "answers": [
-                "answer 1",
-                "answer 2",
-                "answer 3",
-                "answer 4",
-            ]
-            }
+from uuid import uuid4
 
 
 class Question():
-    "Class that defines the questions of a quiz"
+    """"A quiz takes a user through many questions"""
 
-    def __init__(self, quizId):
-        question = apiQuestion()
-
-        self.questionId = uuid1()
+    def __init__(self, quizId, question):
+        self.quizId = quizId
+        self.questionId = str(uuid4())
         self.question = question["question"]
         self.answers = question["answers"]
         self.timer = 10
-        self.quizId = quizId
+
+    def checkAnswer(self):
+        """"Checks the answer to the question"""
+        # TODO
+        pass
