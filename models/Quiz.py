@@ -4,7 +4,7 @@ from models.User import User
 
 
 class Quiz ():
-    """The central class of the application, nothing happens outside of a quiz"""
+    """The central class of the application, nothing important happens outside of a quiz"""
 
     # Class attributes, should be the same for all quizes
     maxTime = 10
@@ -26,8 +26,8 @@ class Quiz ():
 
     def addUser(self):
         """Adds a player to the quiz"""
-        # TODO
-        pass
+        newUser = User(*args, **kwargs)
+        self.questions.append(newQuestion.questionId)
 
     def getCurrentQuestion(self):
         """Gets the current question for the quiz"""

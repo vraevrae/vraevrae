@@ -13,3 +13,6 @@ class App ():
     def newQuiz(self):
         newQuiz = Quiz()
         self.quizes[newQuiz.quizId] = newQuiz
+
+    def getQuiz(self, quizId):
+        return self.quizes[quizId]
