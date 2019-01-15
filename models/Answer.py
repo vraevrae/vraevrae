@@ -6,9 +6,9 @@ class Answer():
 
     def __init__(self, **kwargs):
         self.answerId = str(uuid4())
-        self.questionId = questionId
-        self.text = text
-        self.isCorrect = isCorrect
+        self.questionId = kwargs["questionId"]
+        self.text = kwargs["text"]
+        self.isCorrect = kwargs["isCorrect"]
 
     def checkAnswer(self):
         """"checks the answer to the question"""
