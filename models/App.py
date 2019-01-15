@@ -28,7 +28,7 @@ class App ():
         return [quiz for quiz in self.__quizes__]
 
     def createQuestion(self, quizId):
-        """create a new question and add it to the app"""
+        """create a new question and add it to the app and to the quiz"""
         newQuestion = Question(**apiQuestion())
         self.readQuiz(quizId).addQuestionById(newQuestion.questionId)
         self.__questions__[newQuestion.questionId] = newQuestion
