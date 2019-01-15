@@ -5,6 +5,10 @@ class App ():
     """The application itself, holds the stores and some lookup functions"""
 
     def __init__(self, **kwargs):
-        pass
+        self.quizes = {}
+        self.questions = {}
+        self.users = {}
+        self.answers = {}
 
-    def
+    def getQuiz(self, quizId):
+        return self.quizes[quizId]
