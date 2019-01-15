@@ -1,5 +1,6 @@
 from models.app import App
 from helpers.cprint import cprint, lcprint
+from random import randint
 
 
 def test_create_app():
@@ -98,29 +99,33 @@ def test_get_users():
 
 def test_filled_app():
     app = App()
-    quizId = app.createQuiz()
 
-    questionId = app.createQuestion(quizId)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    userId = app.createUser(quizId, {"name": "Someone"})
-    userId = app.createUser(quizId, {"name": "Someone"})
-    userId = app.createUser(quizId, {"name": "Someone"})
-    userId = app.createUser(quizId, {"name": "Someone"})
+    quizCount = 0
+    questionCount = 0
+    userCount = 0
+    answerCount = 0
 
-    questionId = app.createQuestion(quizId)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    userId = app.createUser(quizId, {"name": "Someone"})
-    userId = app.createUser(quizId, {"name": "Someone"})
-    userId = app.createUser(quizId, {"name": "Someone"})
+    for i in range(randint(1, 3)):
+        quizId = app.createQuiz()
+        quizCount += 1
 
-    assert len(app.quizes) == 1
-    assert len(app.questions) == 2
-    assert len(app.answers) == 6
-    assert len(app.users) == 7
+        for i in range(randint(1, 10)):
+            questionId = app.createQuestion(quizId)
+            questionCount += 1
+
+            for i in range(randint(2, 4)):
+                answerId = app.createAnswer(
+                    questionId, "some answer text", True)
+                answerCount += 1
+
+        for i in range(randint(1, 10)):
+            userId = app.createUser(quizId, {"name": "Someone"})
+            userCount += 1
+
+    assert len(app.quizes) == quizCount
+    assert len(app.questions) == questionCount
+    assert len(app.answers) == answerCount
+    assert len(app.users) == userCount
 
     print("(should be 1)", len(app.quizes))
     print("(should be 2)", len(app.questions))
