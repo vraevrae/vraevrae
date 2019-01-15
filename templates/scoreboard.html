@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="static/styles.css" />
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,21 +12,33 @@
   </body>
 </html>
 
-<div class="wrapper">
-    <div class="wrapper__header">
-      <div class="b_logo"><img src="https://seeklogo.com/images/C/Champions_Leauge_cup-logo-7CED62FFD7-seeklogo.com.jpg" width="40" alt=""/></div>
-      <div class="b_caption">
-        <p>VraeVrae <span>Leaderboard</span></p>
-      </div>
-    </div>
-    <div class="wrapper__content">
-      <ul>
-          {% for i in range(0,5)%}
-            <li>
-                <div class="graphic"><img src="http://globeleaks.com/images/user.png" alt=""/></div>
-                <div class="name"><span class="header">"user1"</span><span class="stat">"score"</span><span class="sub">B</span></div>
-            </li>
-          {% endfor %}
-      </ul>
-    </div>
-  </div>
+<div class="leaderboard">
+    <h1>
+    <svg class="ico-cup">
+      <use xlink:href="#cup"></use>
+    </svg>
+    Winners
+  </h1>
+    <ol>
+        <li>
+            <mark>User 1</mark>
+            <small>Points</small>
+        </li>
+        <li>
+            <mark>User 2</mark>
+            <small>Points</small>
+        </li>
+        <li>
+            <mark>User 3</mark>
+            <small>Points</small>
+        </li>
+        <li>
+            <mark>User 4</mark>
+            <small>Points</small>
+        </li>
+        <li>
+            <mark>User 5</mark>
+            <small>Points</small>
+        </li>
+    </ol>
+</div>
