@@ -1,26 +1,27 @@
 from uuid import uuid4
 from models.Question import Question
 from models.User import User
-from helpers.fake import apiQuestions
 
 
 class Quiz ():
     """The central class of the application, nothing happens outside of a quiz"""
 
-    def __init__(self):
-        quizId = str(uuid4())
-        self.quizId = quizId
-        self.questions = [Question(quizId, question)
-                          for question in apiQuestions(10)]
-        self.users = [User("somename")]
+    def __init__(self, **kwargs):
+        self.quizId = str(uuid4())
+        self.questions = []
+        self.users = []
         self.isStarted = False
         self.isFinished = False
-        self.currentQuestion = 0
+        self.currentQuestion = ""
         self.currentTimer = 0
 
     maxTime = 10
 
-    def addPlayer(self):
+    def addQuestion(self, *args, **kwargs):
+        """Adds a question to the quiz"""
+        self.questions.append(Question(*args, **kwargs))
+
+    def addUser(self):
         """Adds a player to the quiz"""
         # TODO
         pass

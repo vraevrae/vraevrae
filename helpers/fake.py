@@ -1,9 +1,15 @@
-def apiQuestions(numQuestions):
+def apiQuestion():
     "Fake function that simulates an API call"
-    return [{"question": "a question",
-             "answers": [
-                 "answer 1",
-                 "answer 2",
-                 "answer 3",
-                 "answer 4",
-             ]} for question in range(numQuestions)]
+    return {"text": "a question",
+            "answers": [
+                {"text": "",
+                 "correct": True},
+                {"text": "",
+                 "correct": True},
+                {"text": "",
+                 "correct": True},
+                {"text": "",
+                 "correct": True},
+            ],
+            "category": "finance",
+            "difficulty": "hard"}
