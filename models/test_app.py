@@ -1,10 +1,11 @@
 from models.app import App
 from helpers.cprint import cprint, lcprint
 
+app = App()
+
 
 def test_create_app():
     """Apps can be created"""
-    app = App()
     assert app
 
     lcprint(vars(app), "an initialized app:")
@@ -12,7 +13,6 @@ def test_create_app():
 
 def test_create_quiz():
     """quizes can be created"""
-    app = App()
     quizId = app.createQuiz()
     assert app.quizes[quizId]
 
@@ -21,7 +21,6 @@ def test_create_quiz():
 
 def test_get_quiz():
     """quizes can be retrieved from the app"""
-    app = App()
     quizId = app.createQuiz()
     assert app.getQuiz(quizId)
 
@@ -30,7 +29,6 @@ def test_get_quiz():
 
 def test_create_question():
     """questions can be added to a app and quiz"""
-    app = App()
     quizId = app.createQuiz()
     questionId = app.createQuestion(quizId)
     question = app.questions[questionId]
@@ -41,7 +39,6 @@ def test_create_question():
 
 def test_get_question():
     """users can be retrieved from the app"""
-    app = App()
     quizId = app.createQuiz()
     questionId = app.createQuestion(quizId)
     question = app.getQuestion(questionId)
@@ -52,7 +49,6 @@ def test_get_question():
 
 def test_create_user():
     """users can be added to the app and quiz"""
-    app = App()
     quizId = app.createQuiz()
     userId = app.createUser(quizId, {"name": "Someone"})
     user = app.users[userId]
@@ -63,7 +59,6 @@ def test_create_user():
 
 def test_get_users():
     """users can be retrieved from the app"""
-    app = App()
     quizId = app.createQuiz()
     userId = app.createUser(quizId, {"name": "Someone"})
     user = app.getUser(userId)
