@@ -1,4 +1,4 @@
-from models.App import App
+from models.app import App
 from helpers.cprint import cprint
 
 
@@ -61,6 +61,11 @@ def test_create_user():
 
 def test_get_users():
     """users can be retrieved from the app"""
-    firstUserId = list(app.users.values())[0].userId
+    app = App()
+    quizId = app.createQuiz()
+    userId = app.createUser(quizId, {"name": "Someone"})
+    user = app.getUser(userId)
+    assert user
+
     print("A user:")
-    cprint(vars(app.getUser(firstUserId)))
+    cprint(vars(user))

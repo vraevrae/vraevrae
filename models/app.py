@@ -1,6 +1,6 @@
-from models.Quiz import Quiz
-from models.Question import Question
-from models.User import User
+from models.quiz import Quiz
+from models.question import Question
+from models.user import User
 from helpers.fake import apiQuestion
 
 

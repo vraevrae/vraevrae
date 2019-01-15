@@ -1,6 +1,6 @@
 from uuid import uuid4
-from models.Question import Question
-from models.User import User
+from models.question import Question
+from models.user import User
 
 
 class Quiz ():
