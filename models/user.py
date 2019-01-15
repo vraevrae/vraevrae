@@ -10,7 +10,7 @@ class User():
         self.sessionId = kwargs["sessionId"]
         self.name = kwargs["name"]
         self.score = 0
-        self.isOwner = False
+        self.isOwner = kwargs["isOwner"]
 
     def addScore(self):
         """adds the score to the users score"""

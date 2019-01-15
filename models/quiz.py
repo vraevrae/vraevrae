@@ -10,7 +10,7 @@ class Quiz ():
     maxTime = 10
 
     # Object attributes, different for each quiz
-    def __init__(self, **kwargs):
+    def __init__(self, Source):
         self.quizId = str(uuid4())
         self.question = []
         self.users = []
@@ -19,6 +19,7 @@ class Quiz ():
         self.isDeleted = False
         self.currentQuestion = ""
         self.currentTime = 0
+        self.source = Source()
 
     def addQuestionById(self, questionId):
         """adds a question to the quiz"""

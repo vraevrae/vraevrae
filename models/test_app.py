@@ -15,7 +15,7 @@ def test_create_app():
 def test_create_quiz():
     """quizes can be created"""
     app = App()
-    quizId = app.createQuiz()
+    quizId = app.createQuiz(FakeSource)
     assert app.quizes[quizId]
 
     lcprint(vars(app), "an app with an quiz:")
@@ -24,7 +24,7 @@ def test_create_quiz():
 def test_get_quiz():
     """quizes can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz()
+    quizId = app.createQuiz(FakeSource)
     assert app.getQuiz(quizId)
 
     lcprint(vars(app.getQuiz(quizId)), "a quiz:")
@@ -33,7 +33,7 @@ def test_get_quiz():
 def test_create_question():
     """questions can be added to a app and quiz"""
     app = App()
-    quizId = app.createQuiz()
+    quizId = app.createQuiz(FakeSource)
     questionId = app.createQuestion(
         quizId, {"text": "some question", "difficulty": "medium", "category": "some category"})
     question = app.questions[questionId]
@@ -45,8 +45,8 @@ def test_create_question():
 def test_create_question_from_source():
     """questions can be added form a source"""
     app = App()
-    quizId = app.createQuiz()
-    questionId = app.createQuestionFromSource(FakeSource, quizId)
+    quizId = app.createQuiz(FakeSource)
+    questionId = app.createQuestionFromSource(quizId)
     question = app.questions[questionId]
     assert question
 
@@ -56,8 +56,8 @@ def test_create_question_from_source():
 def test_get_question():
     """questions can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz()
-    questionId = app.createQuestionFromSource(FakeSource, quizId)
+    quizId = app.createQuiz(FakeSource)
+    questionId = app.createQuestionFromSource(quizId)
     question = app.getQuestion(questionId)
     assert question
 
@@ -67,8 +67,8 @@ def test_get_question():
 def test_create_answer():
     """answers can be added to a app and quiz"""
     app = App()
-    quizId = app.createQuiz()
-    questionId = app.createQuestionFromSource(FakeSource, quizId)
+    quizId = app.createQuiz(FakeSource)
+    questionId = app.createQuestionFromSource(quizId)
     answerId = app.createAnswer(questionId, "some answer text", True)
     answer = app.answers[answerId]
     assert answer
@@ -79,8 +79,8 @@ def test_create_answer():
 def test_get_answer():
     """answers can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz()
-    questionId = app.createQuestionFromSource(FakeSource, quizId)
+    quizId = app.createQuiz(FakeSource)
+    questionId = app.createQuestionFromSource(quizId)
     answerId = app.createAnswer(questionId, "some answer text", True)
     answer = app.getAnswer(answerId)
     assert answer
@@ -91,9 +91,9 @@ def test_get_answer():
 def test_create_user():
     """users can be added to the app and quiz"""
     app = App()
-    quizId = app.createQuiz()
+    quizId = app.createQuiz(FakeSource)
     userId = app.createUser(quizId, "Someone",
-                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
+                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
     user = app.users[userId]
     assert user
 
@@ -103,9 +103,9 @@ def test_create_user():
 def test_get_users():
     """users can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz()
+    quizId = app.createQuiz(FakeSource)
     userId = app.createUser(quizId, "Someone",
-                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
+                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
     user = app.getUser(userId)
     assert user
 
@@ -122,11 +122,11 @@ def test_filled_app():
     answerCount = 0
 
     for _ in range(randint(1, 3)):
-        quizId = app.createQuiz()
+        quizId = app.createQuiz(FakeSource)
         quizCount += 1
 
         for _ in range(randint(1, 10)):
-            questionId = app.createQuestionFromSource(FakeSource, quizId)
+            questionId = app.createQuestionFromSource(quizId)
             questionCount += 1
 
             for _ in range(randint(2, 4)):
@@ -136,7 +136,7 @@ def test_filled_app():
 
         for _ in range(randint(1, 10)):
             app.createUser(quizId, "Someone",
-                           "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
+                           "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
             userCount += 1
 
     assert len(app.quizes) == quizCount
@@ -150,5 +150,5 @@ def test_filled_app():
 def test_new_quiz():
     """Tests the creation of a new default quiz"""
     app = App()
-    app.newQuiz("some name", "BIG-SESSION-TOKEN")
+    app.newQuiz("some name", "BIG-SESSION-TOKEN", FakeSource)
     assert True
