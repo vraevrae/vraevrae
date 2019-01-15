@@ -19,7 +19,8 @@ class Quiz ():
 
     def addQuestion(self, *args, **kwargs):
         """Adds a question to the quiz"""
-        self.questions.append(Question(*args, **kwargs))
+        newQuestion = Question(*args, **kwargs)
+        self.questions.append(newQuestion.questionId)
 
     def addUser(self):
         """Adds a player to the quiz"""
