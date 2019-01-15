@@ -57,3 +57,10 @@ def test_create_user():
 
     print("A quiz with a user:")
     cprint(vars(user))
+
+
+def test_get_users():
+    """users can be retrieved from the app"""
+    firstUserId = list(app.users.values())[0].userId
+    print("A user:")
+    cprint(vars(app.getUser(firstUserId)))
