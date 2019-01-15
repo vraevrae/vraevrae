@@ -12,7 +12,7 @@ class Quiz ():
     # Object attributes, different for each quiz
     def __init__(self, **kwargs):
         self.quizId = str(uuid4())
-        self.questions = []
+        self.question = []
         self.users = []
         self.isStarted = False
         self.isFinished = False
@@ -20,14 +20,13 @@ class Quiz ():
         self.currentQuestion = ""
         self.currentTimer = 0
 
-    def addQuestion(self, *args, **kwargs):
+    def addQuestionById(self, questionId):
         """Adds a question to the quiz"""
-        newQuestion = Question(*args, **kwargs)
-        self.questions = [*self.questions, newQuestion.questionId]
+        self.questions = [*self.question, questionId]
 
     def addUserById(self, userId):
         """Adds a player to the quiz"""
-        self.users.append(userId)
+        self.users = [*self.users, userId]
 
     def getCurrentQuestion(self):
         """Gets the current question for the quiz"""
