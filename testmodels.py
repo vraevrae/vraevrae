@@ -1,10 +1,13 @@
 from models.Quiz import Quiz
 from helpers.cprint import cprint
 
-from helpers.fake import apiQuestions
+from helpers.fake import apiQuestion
 
 myQuiz = Quiz()
-myQuiz.addQuestion()
+myQuiz.addQuestion(**apiQuestion())
+myQuiz.addQuestion(**apiQuestion())
+myQuiz.addQuestion(**apiQuestion())
+myQuiz.addQuestion(**apiQuestion())
+myQuiz.addQuestion(**apiQuestion())
 
 cprint(vars(myQuiz))
-cprint(apiQuestions(1))

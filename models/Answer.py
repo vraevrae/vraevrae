@@ -4,7 +4,7 @@ from uuid import uuid4
 class Answer():
     """A quiz takes a user through many questions"""
 
-    def __init__(self, questionId, text, isCorrect):
+    def __init__(self, **kwargs):
         self.answerId = str(uuid4())
         self.questionId = questionId
         self.text = text

@@ -6,10 +6,10 @@ from models.User import User
 class Quiz ():
     """The central class of the application, nothing happens outside of a quiz"""
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.quizId = str(uuid4())
         self.questions = []
-        self.users = [User("somename")]
+        self.users = []
         self.isStarted = False
         self.isFinished = False
         self.currentQuestion = ""
@@ -17,12 +17,11 @@ class Quiz ():
 
     maxTime = 10
 
-    def addQuestion(text, answers, difficulty, category):
-        """Adds a player to the quiz"""
-        self.questions.append(Question(text, answers, difficulty, category))
-        pass
+    def addQuestion(self, *args, **kwargs):
+        """Adds a question to the quiz"""
+        self.questions.append(Question(*args, **kwargs))
 
-    def addPlayer(self):
+    def addUser(self):
         """Adds a player to the quiz"""
         # TODO
         pass

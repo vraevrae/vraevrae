@@ -4,7 +4,7 @@ from uuid import uuid4
 class User():
     """Quiz users, only exist within the scope of a quiz"""
 
-    def __init__(self, name):
+    def __init__(self, **kwargs):
         self.userId = str(uuid4())
         self.name = name
         self.score = 1
