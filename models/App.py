@@ -20,14 +20,15 @@ class App ():
         self.createQuestion(newQuiz.quizId)
 
     def readQuiz(self, quizId):
-        """gets a quiz from the app"""
+        """read a quiz from the app"""
         return self.__quizes__[quizId]
 
     def readQuizIds(self):
-        """gets a quiz from the app"""
+        """read a quiz from the app"""
         return [quiz for quiz in self.__quizes__]
 
     def createQuestion(self, quizId):
+        """create a new question and add it to the app"""
         newQuestion = Question(**apiQuestion())
         self.readQuiz(quizId).addQuestionById(newQuestion.questionId)
         self.__questions__[newQuestion.questionId] = newQuestion
@@ -39,9 +40,9 @@ class App ():
         self.readQuiz(quizId).addUserById(newUser.userId)
 
     def readUser(self, userId):
-        """Gets a specific user from the app"""
+        """Reads a specific user from the app"""
         return self.__users__[userId]
 
     def readUserIds(self):
-        """Gets a list of userIds from the app"""
+        """Reads a list of userIds from the app"""
         return [user for user in self.__users__]
