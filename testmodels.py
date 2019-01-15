@@ -1,13 +1,7 @@
-from models.Quiz import Quiz
+from models.App import App
 from helpers.cprint import cprint
 
-from helpers.fake import apiQuestion
+app = App()
+app.newQuiz()
 
-myQuiz = Quiz()
-myQuiz.addQuestion(**apiQuestion())
-myQuiz.addQuestion(**apiQuestion())
-myQuiz.addQuestion(**apiQuestion())
-myQuiz.addQuestion(**apiQuestion())
-myQuiz.addQuestion(**apiQuestion())
-
-cprint(vars(myQuiz))
+cprint(vars(app))

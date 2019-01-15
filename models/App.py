@@ -1,4 +1,5 @@
 from models.Quiz import Quiz
+from helpers.fake import apiQuestion
 
 
 class App ():
@@ -12,6 +13,9 @@ class App ():
 
     def newQuiz(self):
         newQuiz = Quiz()
+        newQuiz.addQuestion(**apiQuestion())
+        newQuiz.addQuestion(**apiQuestion())
+        print(vars(newQuiz))
         self.quizes[newQuiz.quizId] = newQuiz
 
     def getQuiz(self, quizId):
