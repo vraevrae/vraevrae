@@ -4,27 +4,30 @@ from models.User import User
 
 
 class Quiz ():
-    """The central class of the application, nothing happens outside of a quiz"""
+    """The central class of the application, nothing important happens outside of a quiz"""
 
+    # Class attributes, should be the same for all quizes
+    maxTime = 10
+
+    # Object attributes, different for each quiz
     def __init__(self, **kwargs):
         self.quizId = str(uuid4())
         self.questions = []
         self.users = []
         self.isStarted = False
         self.isFinished = False
+        self.isDeleted = False
         self.currentQuestion = ""
         self.currentTimer = 0
 
-    maxTime = 10
-
     def addQuestion(self, *args, **kwargs):
         """Adds a question to the quiz"""
-        self.questions.append(Question(*args, **kwargs))
+        newQuestion = Question(*args, **kwargs)
+        self.questions.append(newQuestion.questionId)
 
-    def addUser(self):
+    def addUserById(self, userId):
         """Adds a player to the quiz"""
-        # TODO
-        pass
+        self.users.append(userId)
 
     def getCurrentQuestion(self):
         """Gets the current question for the quiz"""
