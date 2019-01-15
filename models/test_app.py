@@ -79,7 +79,8 @@ def test_create_user():
     """users can be added to the app and quiz"""
     app = App()
     quizId = app.createQuiz()
-    userId = app.createUser(quizId, {"name": "Someone"})
+    userId = app.createUser(quizId, "Someone",
+                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
     user = app.users[userId]
     assert user
 
@@ -90,7 +91,8 @@ def test_get_users():
     """users can be retrieved from the app"""
     app = App()
     quizId = app.createQuiz()
-    userId = app.createUser(quizId, {"name": "Someone"})
+    userId = app.createUser(quizId, "Someone",
+                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
     user = app.getUser(userId)
     assert user
 
@@ -119,7 +121,8 @@ def test_filled_app():
                 answerCount += 1
 
         for _ in range(randint(1, 10)):
-            app.createUser(quizId, {"name": "Someone"})
+            app.createUser(quizId, "Someone",
+                           "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS")
             userCount += 1
 
     assert len(app.quizes) == quizCount

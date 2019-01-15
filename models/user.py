@@ -6,6 +6,7 @@ class User():
 
     def __init__(self, *args, **kwargs):
         self.userId = str(uuid4())
+        self.sessionId = kwargs["sessionId"]
         self.name = kwargs["name"]
         self.score = 0
         self.isOwner = False
