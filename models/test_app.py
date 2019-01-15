@@ -1,5 +1,5 @@
 from models.app import App
-from helpers.cprint import cprint
+from helpers.cprint import cprint, lcprint
 
 
 def test_create_app():
@@ -7,9 +7,7 @@ def test_create_app():
     app = App()
     assert app
 
-    print("An initialized app:")
-    cprint(vars(app))
-    print("")
+    lcprint(vars(app), "an initialized app:")
 
 
 def test_create_quiz():
@@ -18,9 +16,7 @@ def test_create_quiz():
     quizId = app.createQuiz()
     assert app.quizes[quizId]
 
-    print("An app with an quiz:")
-    cprint(vars(app))
-    print("")
+    lcprint(vars(app), "an app with an quiz:")
 
 
 def test_get_quiz():
@@ -29,9 +25,7 @@ def test_get_quiz():
     quizId = app.createQuiz()
     assert app.getQuiz(quizId)
 
-    print("A quiz:")
-    cprint(vars(app.getQuiz(quizId)))
-    print("")
+    lcprint(vars(app.getQuiz(quizId)), "a quiz:")
 
 
 def test_create_question():
@@ -42,9 +36,7 @@ def test_create_question():
     question = app.questions[questionId]
     assert question
 
-    print("A question:")
-    cprint(vars(question))
-    print("")
+    lcprint(vars(question), "a question:")
 
 
 def test_create_user():
@@ -55,8 +47,7 @@ def test_create_user():
     user = app.users[userId]
     assert user
 
-    print("A quiz with a user:")
-    cprint(vars(user))
+    lcprint(vars(user), "a quiz with a user:")
 
 
 def test_get_users():
@@ -67,5 +58,4 @@ def test_get_users():
     user = app.getUser(userId)
     assert user
 
-    print("A user:")
-    cprint(vars(user))
+    lcprint(vars(user), "a user:")
