@@ -18,7 +18,7 @@ class Quiz ():
         self.isFinished = False
         self.isDeleted = False
         self.currentQuestion = ""
-        self.currentTimer = 0
+        self.currentTime = 0
 
     def addQuestionById(self, questionId):
         """Adds a question to the quiz"""

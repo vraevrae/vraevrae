@@ -8,41 +8,37 @@ class App ():
     """The application itself, holds the stores and some lookup functions"""
 
     def __init__(self, **kwargs):
-        self.__quizes__ = {}
-        self.__questions__ = {}
-        self.__answers__ = {}
-        self.__users__ = {}
+        self.quizes = {}
+        self.questions = {}
+        self.answers = {}
+        self.users = {}
 
     def createQuiz(self):
         """Creates a new quiz and adds it to the app"""
         newQuiz = Quiz()
-        self.__quizes__[newQuiz.quizId] = newQuiz
+        self.quizes[newQuiz.quizId] = newQuiz
         self.createQuestion(newQuiz.quizId)
 
-    def readQuiz(self, quizId):
-        """read a quiz from the app"""
-        return self.__quizes__[quizId]
-
-    def readQuizIds(self):
-        """read a quiz from the app"""
-        return [quiz for quiz in self.__quizes__]
+    def getQuiz(self, quizId):
+        """read a specific quiz from the app by quizId"""
+        return self.quizes[quizId]
 
     def createQuestion(self, quizId):
         """create a new question and add it to the app and to the quiz"""
         newQuestion = Question(**apiQuestion())
-        self.readQuiz(quizId).addQuestionById(newQuestion.questionId)
-        self.__questions__[newQuestion.questionId] = newQuestion
+        self.getQuiz(quizId).addQuestionById(newQuestion.questionId)
+        self.questions[newQuestion.questionId] = newQuestion
+
+    def getQuestion(self, questionId):
+        """reads a specific question from the app by questionId"""
+        return self.questions[questionId]
 
     def createUser(self, quizId, user):
         """adds a user to the app"""
         newUser = User(**user)
-        self.__users__[newUser.userId] = newUser
-        self.readQuiz(quizId).addUserById(newUser.userId)
+        self.users[newUser.userId] = newUser
+        self.getQuiz(quizId).addUserById(newUser.userId)
 
-    def readUser(self, userId):
-        """Reads a specific user from the app"""
-        return self.__users__[userId]
-
-    def readUserIds(self):
-        """Reads a list of userIds from the app"""
-        return [user for user in self.__users__]
+    def getUser(self, userId):
+        """Reads a specific user from the app  by userId"""
+        return self.users[userId]
