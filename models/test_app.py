@@ -39,6 +39,17 @@ def test_create_question():
     lcprint(vars(question), "a question:")
 
 
+def test_get_question():
+    """users can be retrieved from the app"""
+    app = App()
+    quizId = app.createQuiz()
+    questionId = app.createQuestion(quizId)
+    question = app.getQuestion(questionId)
+    assert question
+
+    lcprint(vars(question), "a user:")
+
+
 def test_create_user():
     """users can be added to the app and quiz"""
     app = App()
