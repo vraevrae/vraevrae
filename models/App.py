@@ -18,6 +18,7 @@ class App ():
         newQuiz = Quiz()
         self.quizes[newQuiz.quizId] = newQuiz
         self.createQuestion(newQuiz.quizId)
+        return newQuiz.quizId
 
     def getQuiz(self, quizId):
         """read a specific quiz from the app by quizId"""

@@ -1,21 +1,14 @@
 from models.App import App
-from helpers.cprint import cprint
-from helpers.fake import apiQuestion
+
 
 # initialize the app
-app = App()
-print("An initialized app:")
-cprint(vars(app))
+
 
 # add a quiz to the app
-app.createQuiz()
-print("An app with an quiz:")
-cprint(vars(app))
+
 
 # get a quiz
-firstQuizId = list(app.quizes.values())[0].quizId
-print("A quiz:")
-cprint(vars(app.getQuiz(firstQuizId)))
+
 
 # get a question
 firstQuestionId = list(app.questions.values())[0].questionId
