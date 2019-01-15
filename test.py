@@ -13,7 +13,7 @@ def test_create_app():
 
 
 def test_create_quiz():
-    """Quizes can be created"""
+    """quizes can be created"""
     app = App()
     quizId = app.createQuiz()
     assert app.quizes[quizId]
@@ -24,7 +24,7 @@ def test_create_quiz():
 
 
 def test_get_quiz():
-    """Quizes can be retrieved"""
+    """quizes can be retrieved from the app"""
     app = App()
     quizId = app.createQuiz()
     assert app.getQuiz(quizId)
@@ -32,3 +32,28 @@ def test_get_quiz():
     print("A quiz:")
     cprint(vars(app.getQuiz(quizId)))
     print("")
+
+
+def test_create_question():
+    """questions can be added to a app and quiz"""
+    app = App()
+    quizId = app.createQuiz()
+    questionId = app.createQuestion(quizId)
+    question = app.questions[questionId]
+    assert question
+
+    print("A question:")
+    cprint(vars(question))
+    print("")
+
+
+def test_create_user():
+    """users can be added to the app and quiz"""
+    app = App()
+    quizId = app.createQuiz()
+    userId = app.createUser(quizId, {"name": "Someone"})
+    user = app.users[userId]
+    assert user
+
+    print("A quiz with a user:")
+    cprint(vars(user))

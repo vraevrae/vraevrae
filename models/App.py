@@ -29,6 +29,7 @@ class App ():
         newQuestion = Question(**apiQuestion())
         self.getQuiz(quizId).addQuestionById(newQuestion.questionId)
         self.questions[newQuestion.questionId] = newQuestion
+        return newQuestion.questionId
 
     def getQuestion(self, questionId):
         """reads a specific question from the app by questionId"""
@@ -39,6 +40,7 @@ class App ():
         newUser = User(**user)
         self.users[newUser.userId] = newUser
         self.getQuiz(quizId).addUserById(newUser.userId)
+        return newUser.userId
 
     def getUser(self, userId):
         """reads a specific user from the app  by userId"""
