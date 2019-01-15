@@ -57,8 +57,7 @@ class App ():
         """reads a specific user from the app  by userId"""
         return self.users[userId]
 
-    def newQuizRequested(self, userId):
+    def newQuiz(self, name, sessionId):
         """creates a full new quiz"""
-        newQuiz = self.createQuiz(userId)
-        self.quizes[newQuiz.quizId] = newQuiz
-        return newQuiz.quizId
+        quizId = self.createQuiz()
+        userId = self.createUser(quizId=quizId, name=name, sessionId=sessionId)

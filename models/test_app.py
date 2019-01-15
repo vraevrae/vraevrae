@@ -131,3 +131,9 @@ def test_filled_app():
     assert len(app.users) == userCount
 
     lcprint(vars(app), "a filled app:")
+
+
+def test_new_quiz():
+    app = App()
+    app.newQuiz("some name", "BIG-SESSION-TOKEN")
+    assert True
