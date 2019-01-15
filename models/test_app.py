@@ -105,21 +105,21 @@ def test_filled_app():
     userCount = 0
     answerCount = 0
 
-    for i in range(randint(1, 3)):
+    for _ in range(randint(1, 3)):
         quizId = app.createQuiz()
         quizCount += 1
 
-        for i in range(randint(1, 10)):
+        for _ in range(randint(1, 10)):
             questionId = app.createQuestion(quizId)
             questionCount += 1
 
-            for i in range(randint(2, 4)):
-                answerId = app.createAnswer(
+            for _ in range(randint(2, 4)):
+                app.createAnswer(
                     questionId, "some answer text", True)
                 answerCount += 1
 
-        for i in range(randint(1, 10)):
-            userId = app.createUser(quizId, {"name": "Someone"})
+        for _ in range(randint(1, 10)):
+            app.createUser(quizId, {"name": "Someone"})
             userCount += 1
 
     assert len(app.quizes) == quizCount
