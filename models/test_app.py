@@ -44,7 +44,7 @@ def test_get_question():
     question = app.getQuestion(questionId)
     assert question
 
-    lcprint(vars(question), "a user:")
+    lcprint(vars(question), "a question:")
 
 
 def test_create_answer():
@@ -55,7 +55,7 @@ def test_create_answer():
     answer = app.answers[answerId]
     assert answer
 
-    lcprint(vars(answer), "a question:")
+    lcprint(vars(answer), "a answer:")
 
 
 def test_get_answer():
@@ -76,7 +76,7 @@ def test_create_user():
     user = app.users[userId]
     assert user
 
-    lcprint(vars(user), "a quiz with a user:")
+    lcprint(vars(user), "a user:")
 
 
 def test_get_users():
