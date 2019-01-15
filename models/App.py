@@ -5,7 +5,7 @@ from helpers.fake import apiQuestion
 
 
 class App ():
-    """The application itself, holds the stores and some lookup functions"""
+    """the application itself, holds the stores and some lookup functions"""
 
     def __init__(self, **kwargs):
         self.quizes = {}
@@ -14,7 +14,7 @@ class App ():
         self.users = {}
 
     def createQuiz(self):
-        """Creates a new quiz and adds it to the app"""
+        """creates a new quiz and adds it to the app"""
         newQuiz = Quiz()
         self.quizes[newQuiz.quizId] = newQuiz
         self.createQuestion(newQuiz.quizId)
@@ -40,5 +40,5 @@ class App ():
         self.getQuiz(quizId).addUserById(newUser.userId)
 
     def getUser(self, userId):
-        """Reads a specific user from the app  by userId"""
+        """reads a specific user from the app  by userId"""
         return self.users[userId]

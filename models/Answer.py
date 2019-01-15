@@ -2,7 +2,7 @@ from uuid import uuid4
 
 
 class Answer():
-    """A quiz takes a user through many questions"""
+    """an answer fundamentally belongs to a question, but is stored normalized for easy access"""
 
     def __init__(self, **kwargs):
         self.answerId = str(uuid4())
@@ -11,6 +11,6 @@ class Answer():
         self.isCorrect = isCorrect
 
     def checkAnswer(self):
-        """"Checks the answer to the question"""
+        """"checks the answer to the question"""
         # TODO
         pass

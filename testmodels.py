@@ -12,20 +12,25 @@ app.createQuiz()
 print("An app with an quiz:")
 cprint(vars(app))
 
-# Get a quiz
-firstQuiz = list(app.quizes.values())[0].quizId
+# get a quiz
+firstQuizId = list(app.quizes.values())[0].quizId
 print("A quiz:")
-cprint(vars(app.getQuiz(firstQuiz)))
+cprint(vars(app.getQuiz(firstQuizId)))
+
+# get a question
+firstQuestionId = list(app.questions.values())[0].questionId
+print("A question:")
+cprint(vars(app.getQuestion(firstQuestionId)))
 
 # add a user to the first quiz
-app.createUser(firstQuiz, {"name": "Someone"})
+app.createUser(firstQuizId, {"name": "Someone"})
 print("A quiz with a user:")
-cprint(vars(app.getQuiz(firstQuiz)))
+cprint(vars(app.getQuiz(firstQuizId)))
 
-# Get a user
-firstUser = list(app.users.values())[0].userId
+# get a user
+firstUserId = list(app.users.values())[0].userId
 print("A user:")
-cprint(vars(app.getUser(firstUser)))
+cprint(vars(app.getUser(firstUserId)))
 
 # print out with colors the things inside the app
 print("The final appstate:")

@@ -2,7 +2,7 @@ from uuid import uuid4
 
 
 class User():
-    """Quiz users"""
+    """quiz users"""
 
     def __init__(self, *args, **kwargs):
         self.userId = str(uuid4())
@@ -11,5 +11,5 @@ class User():
         self.isOwner = False
 
     def addScore(self):
-        """Adds the score to the users score"""
+        """adds the score to the users score"""
         pass
