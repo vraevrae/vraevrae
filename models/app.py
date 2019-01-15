@@ -2,7 +2,7 @@ from models.quiz import Quiz
 from models.question import Question
 from models.user import User
 from models.answer import Answer
-from helpers.fake import apiQuestion
+from helpers.fake import FakeSource
 
 
 class App ():
@@ -24,9 +24,16 @@ class App ():
         """read a specific quiz from the app by quizId"""
         return self.quizes[quizId]
 
-    def createQuestion(self, quizId):
+    def createQuestionFromSource(self, Source, quizId):
+        """Creates a question with answers from a given source"""
+        tempQuestion = Source().getQuestion()
+        questionId = self.createQuestion(quizId, tempQuestion)
+        return questionId
+
+    def createQuestion(self, quizId, tempQuestion):
         """create a new question and add it to the app and to the quiz"""
-        newQuestion = Question(**apiQuestion())
+
+        newQuestion = Question(**tempQuestion)
         self.getQuiz(quizId).addQuestionById(newQuestion.questionId)
         self.questions[newQuestion.questionId] = newQuestion
         return newQuestion.questionId
