@@ -18,7 +18,6 @@ class App ():
         """creates a new quiz and adds it to the app"""
         newQuiz = Quiz()
         self.quizes[newQuiz.quizId] = newQuiz
-        self.createQuestion(newQuiz.quizId)
         return newQuiz.quizId
 
     def getQuiz(self, quizId):
