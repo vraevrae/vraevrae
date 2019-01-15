@@ -16,6 +16,7 @@ class Quiz ():
         self.users = []
         self.isStarted = False
         self.isFinished = False
+        self.isDeleted = False
         self.currentQuestion = ""
         self.currentTimer = 0
 
@@ -24,10 +25,9 @@ class Quiz ():
         newQuestion = Question(*args, **kwargs)
         self.questions.append(newQuestion.questionId)
 
-    def addUser(self):
+    def addUserById(self, userId):
         """Adds a player to the quiz"""
-        newUser = User(*args, **kwargs)
-        self.questions.append(newQuestion.questionId)
+        self.users.append(userId)
 
     def getCurrentQuestion(self):
         """Gets the current question for the quiz"""

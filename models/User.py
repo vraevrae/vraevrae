@@ -2,11 +2,11 @@ from uuid import uuid4
 
 
 class User():
-    """Quiz users, only exist within the scope of a quiz"""
+    """Quiz users"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.userId = str(uuid4())
-        self.name = kwargs.name
+        self.name = kwargs["name"]
         self.score = 0
         self.isOwner = False
 
