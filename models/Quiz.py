@@ -17,9 +17,9 @@ class Quiz ():
 
     maxTime = 10
 
-    def addQuestion(self):
+    def addQuestion(text, answers, difficulty, category):
         """Adds a player to the quiz"""
-        # TODO
+        self.questions.append(Question(text, answers, difficulty, category))
         pass
 
     def addPlayer(self):

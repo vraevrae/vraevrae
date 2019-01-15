@@ -1,6 +1,6 @@
 def apiQuestions(numQuestions):
     "Fake function that simulates an API call"
-    return {"question": "a question",
+    return {"test": "a question",
             "answers": [
                 {"text": "",
                  "correct": True},
