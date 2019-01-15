@@ -1,4 +1,5 @@
 from models.Quiz import Quiz
+from models.Question import Question
 from models.User import User
 from helpers.fake import apiQuestion
 
@@ -9,34 +10,39 @@ class App ():
     def __init__(self, **kwargs):
         self.__quizes__ = {}
         self.__questions__ = {}
-        self.__users__ = {}
         self.__answers__ = {}
+        self.__users__ = {}
 
-    def newQuiz(self):
+    def createQuiz(self):
         """Creates a new quiz and adds it to the app"""
         newQuiz = Quiz()
-        newQuiz.addQuestion(**apiQuestion())
-        newQuiz.addQuestion(**apiQuestion())
         self.__quizes__[newQuiz.quizId] = newQuiz
+        self.createQuestion(newQuiz.quizId)
 
-    def getQuiz(self, quizId):
-        """gets a quiz from the app"""
+    def readQuiz(self, quizId):
+        """read a quiz from the app"""
         return self.__quizes__[quizId]
 
-    def getQuizIds(self):
-        """gets a quiz from the app"""
+    def readQuizIds(self):
+        """read a quiz from the app"""
         return [quiz for quiz in self.__quizes__]
 
-    def newUser(self, quizId, user):
+    def createQuestion(self, quizId):
+        """create a new question and add it to the app and to the quiz"""
+        newQuestion = Question(**apiQuestion())
+        self.readQuiz(quizId).addQuestionById(newQuestion.questionId)
+        self.__questions__[newQuestion.questionId] = newQuestion
+
+    def createUser(self, quizId, user):
         """adds a user to the app"""
         newUser = User(**user)
         self.__users__[newUser.userId] = newUser
-        self.getQuiz(quizId).addUserById(newUser.userId)
+        self.readQuiz(quizId).addUserById(newUser.userId)
 
-    def getUser(self, userId):
-        """Gets a specific user from the app"""
+    def readUser(self, userId):
+        """Reads a specific user from the app"""
         return self.__users__[userId]
 
-    def getUserIds(self):
-        """Gets a list of userIds from the app"""
+    def readUserIds(self):
+        """Reads a list of userIds from the app"""
         return [user for user in self.__users__]
