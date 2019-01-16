@@ -5,26 +5,22 @@
 {% block main %}
     <center>
         <form id="join" action="/join" method="get">
-            <div class="squares">
-                    <div class="icon1">
-                       <p>Icon</p>
-                    </div>
-            </div>
             <div id="p1">
-                <h1><span>Game Code</span></h1>
-                <input type="number" inputmode="numeric" class="pin" pattern="\d*" title="Non-negative integral number" id="join_number" name="join_number" min="100000" max="999999" autocomplete="off" autofocus>
-                <h1><span>Username</span></h1>
-
-                <input type="text" name="name" class="name" autocomplete="off" autocorrect="off" id="name" pattern=".{3,}" required title="3 characters minimum">
-                <br />
-                <br />
-                    <button type="button" onclick="check('test');">
-                        Join!
-                    </button>
-                    <div>
-                        <button type="button" class="move" onclick="TODO">
-                            Create new game </button>
-                    </div>
+                    <form class="form-horizontal">
+                            <fieldset class="form-group">
+                                <div class="col-lg-4 col-lg-offset-4">
+                                  <input type="text" class="form-control" id="Username" placeholder="Username">
+                                </div>
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <div class="col-lg-4 col-lg-offset-4">
+                                    <input type="text" class="form-control" id="Game_Code" placeholder="Game Code">
+                                </div>
+                              </div>
+                            </fieldset>
+                    </form>
+                <a href="#" class="btn btn-success">Join!</a>
+                <a href="#" class="btn btn-success">Create New Game</a>
         </form>
     </center>
 {% endblock %}
