@@ -13,72 +13,75 @@ class App ():
         self.answers = {}
         self.users = {}
 
-    def createQuiz(self, Source):
+    def create_quiz(self, Source):
         """creates a new quiz and adds it to the store"""
-        newQuiz = Quiz(Source)
-        self.quizes[newQuiz.quizId] = newQuiz
-        return newQuiz.quizId
+        new_quiz = Quiz(Source)
+        self.quizes[new_quiz.quiz_id] = new_quiz
+        return new_quiz.quiz_id
 
-    def getQuiz(self, quizId):
+    def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
-        return self.quizes[quizId]
+        return self.quizes[quiz_id]
 
-    def createQuestionFromSource(self, quizId):
+    def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        tempQuestion = self.getQuiz(quizId).source.getQuestion()
+        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
 
         # add the question to the store
-        questionId = self.createQuestion(quizId, tempQuestion)
+        question_id = self.create_question(quiz_id, temp_question)
 
         # add the answers to the question and the store
-        for answer in tempQuestion["answers"]:
-            self.createAnswer(questionId, answer["text"], answer["isCorrect"])
+        for answer in temp_question["answers"]:
+            self.create_answer(
+                question_id, answer["text"], answer["is_correct"])
 
-        return questionId
+        return question_id
 
-    def createQuestion(self, quizId, tempQuestion):
+    def create_question(self, quiz_id, temp_question):
         """create a new question and add it to the store and to the quiz"""
 
-        newQuestion = Question(**tempQuestion)
-        self.getQuiz(quizId).addQuestionById(newQuestion.questionId)
-        self.questions[newQuestion.questionId] = newQuestion
-        return newQuestion.questionId
+        new_question = Question(**temp_question)
+        self.get_quiz_by_id(quiz_id).add_question_by_id(
+            new_question.question_id)
+        self.questions[new_question.question_id] = new_question
+        return new_question.question_id
 
-    def getQuestion(self, questionId):
+    def get_question_by_id(self, question_id):
         """reads a specific question from the store by questionId"""
-        return self.questions[questionId]
+        return self.questions[question_id]
 
-    def createAnswer(self, questionId, text, isCorrect):
+    def create_answer(self, question_id, text, is_correct):
         """create a new question and add it to the store and to the quiz"""
-        newAnswers = Answer(questionId, text, isCorrect)
-        self.getQuestion(questionId).addAnswerById(newAnswers.answerId)
-        self.answers[newAnswers.answerId] = newAnswers
-        return newAnswers.answerId
+        new_answers = Answer(question_id, text, is_correct)
+        self.get_question_by_id(question_id).add_answer_by_id(
+            new_answers.answer_id)
+        self.answers[new_answers.answer_id] = new_answers
+        return new_answers.answer_id
 
-    def getAnswer(self, answerId):
+    def get_answer_by_id(self, answer_id):
         """reads a specific question from the store by questionId"""
-        return self.answers[answerId]
+        return self.answers[answer_id]
 
-    def createUser(self, quizId, name, sessionId, isOwner):
+    def create_user(self, quiz_id, name, session_id, is_owner):
         """adds a user to the app"""
-        newUser = User(quizId=quizId, name=name,
-                       sessionId=sessionId, isOwner=isOwner)
-        self.users[newUser.userId] = newUser
-        self.getQuiz(quizId).addUserById(newUser.userId)
-        return newUser.userId
+        new_user = User(quiz_id=quiz_id, name=name,
+                        session_id=session_id, is_owner=is_owner)
+        self.users[new_user.user_id] = new_user
+        self.get_quiz_by_id(quiz_id).add_user_by_id(new_user.user_id)
+        return new_user.user_id
 
-    def getUser(self, userId):
+    def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
-        return self.users[userId]
+        return self.users[user_id]
 
-    def newQuiz(self, name, sessionId, Source):
+    def new_quiz(self, name, session_id, Source):
         """creates a default quiz"""
-        quizId = self.createQuiz(Source)
-        userId = self.createUser(
-            quizId=quizId, name=name, sessionId=sessionId, isOwner=True)
+        quiz_id = self.create_quiz(Source)
+        self.create_user(quiz_id=quiz_id, name=name,
+                         session_id=session_id, is_owner=True)
 
         for _ in range(10):
-            self.createQuestionFromSource(quizId)
+            self.create_question_from_source(quiz_id)
 
-        return quizId
+        return quiz_id

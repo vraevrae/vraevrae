@@ -4,13 +4,13 @@ from uuid import uuid4
 class Answer():
     """an answer to a question, stored on the app for easy access"""
 
-    def __init__(self, questionId, text, isCorrect):
-        self.answerId = str(uuid4())
-        self.questionId = questionId
+    def __init__(self, question_id, text, is_correct):
+        self.answer_id = str(uuid4())
+        self.question_id = question_id
         self.text = text
-        self.isCorrect = isCorrect
+        self.is_correct = is_correct
 
-    def checkAnswer(self):
+    def check_answer(self):
         """"checks the answer to the question"""
         # TODO
         pass
