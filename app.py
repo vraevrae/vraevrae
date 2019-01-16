@@ -2,12 +2,7 @@ from flask import Flask, flash, redirect, render_template, request, session, url
 from flask_session import Session
 from tempfile import mkdtemp
 
-from api.api import api
-from api.quiz import quiz
-
 app = Flask(__name__)
-app.register_blueprint(api)
-app.register_blueprint(quiz)
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:
