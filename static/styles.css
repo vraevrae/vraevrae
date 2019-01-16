@@ -4,15 +4,11 @@ html {
 }
 
 body {
-  /*margin:0;
-  padding:0;*/
-  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/31787/stars.jpg) no-repeat center center fixed; 
+  background-image: url("/static/pictures/background.jpg"); 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
-  background-size: cover;
-  
-
+  background-size: cover; 
 }
 
 .container
@@ -24,4 +20,22 @@ body {
 
 .main {
   max-width: 30rem;
+}
+
+.squares {
+  width: 200px;
+  height: 200px;
+  background: #55F8FA;
+  display: flex;
+  justify-content: center;
+}
+.icon1{
+    width: 200px;
+    height: 200px;
+    background: #55F8FA;
+    margin-right: 10%;
+    border-style: ridge;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

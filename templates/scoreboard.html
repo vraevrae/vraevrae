@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "layout.html" %} 
 {% block title %} 
 Scoreboard 
@@ -16,3 +17,35 @@ Scoreboard
 </div>
 
 {% endblock %}
+=======
+{% extends "layout.html" %}
+
+{% block title %}Score{% endblock %}
+
+{% block main %}
+    <div id="Leaderboard">
+        <h1><span>Top players</span></h1>
+        <br />
+        <table>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+            </tr>
+        </table>
+        <div id="Leaderboard_content" class="Leaderboard_content">
+        </div>
+    </div>
+    <div id="Finish" style="display:none">
+        <font size="7">And this winner is... <br /></font>
+        <font size="7" id="Finish_name"></font>
+        <font size="6"><br />with </font>
+        <font size="7" id="Finish_score"></font>
+        <font size="6">points!</font>
+        <br/>
+        <br/>
+        <button type="button" class="Return_home" onclick="location.href='/';">
+            Return to home page
+        </button>
+    </div>
+{% endblock %}
+>>>>>>> de14de717ab01977115043c4e93eb36a4cff55e8
