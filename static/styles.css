@@ -21,3 +21,21 @@ body {
 .main {
   max-width: 30rem;
 }
+
+.squares {
+  width: 200px;
+  height: 200px;
+  background: #55F8FA;
+  display: flex;
+  justify-content: center;
+}
+.icon1{
+    width: 200px;
+    height: 200px;
+    background: #55F8FA;
+    margin-right: 10%;
+    border-style: ridge;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
