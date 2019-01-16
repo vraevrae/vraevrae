@@ -77,5 +77,8 @@ class App ():
         quizId = self.createQuiz(Source)
         userId = self.createUser(
             quizId=quizId, name=name, sessionId=sessionId, isOwner=True)
+
         for _ in range(10):
             self.createQuestionFromSource(quizId)
+
+        return quizId

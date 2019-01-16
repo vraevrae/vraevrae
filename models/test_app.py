@@ -143,5 +143,8 @@ def test_filled_app():
 def test_new_quiz():
     """Tests the creation of a new default quiz"""
     app = App()
-    app.newQuiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    assert True
+    quizId = app.newQuiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    quiz = app.getQuiz(quizId)
+    assert quiz
+
+    lcprint(vars(quiz), "a quiz:")
