@@ -1,81 +1,49 @@
-import requests
 import config
-from random import shuffle
+from .sources import opentdb
 
 
 class Datasource:
     """Class for getting and reformatting apidata from an external API"""
 
     # create variable for saving apidata between functions
-    apidata = None
+    source = None
+    cache_data = []
+    current_question = 0
 
     def __init__(self, source=config.DEFAULT_DATASOURCE):
-        print(config.DEFAULT_DATASOURCE, source)
         # if source is not possible (not coded) raise an error
         if source not in config.POSSIBLE_DATASOURCES:
             raise NameError("[Datasource] source does not exist! Source: " + source.__str__())
 
-        # print all given apidata for debug purposes
+        # print all given apidata for debug purposes if DEBUG is True
         print("[Datasource] source:", source) if config.DEBUG else None
 
-        # get new apidata
-        self.get_new_question(source)
-
-    def get_new_question(self, source=config.DEFAULT_DATASOURCE):
+        # define source
         if source == "opentdb":
-            self.apidata = self._opentdb()
+            self.source = opentdb.OpenTDB()
 
-    @staticmethod
-    def _opentdb(amountofquestions=50):
-        """Internal function to get apidata from Open Trivia DB"""
-
-        # try to get a correct request from Open Trivia DB
-        try:
-            # do request to Open Trivia DB API and format to JSON
-            r = requests.get("https://opentdb.com/api.php?amount=" + str(amountofquestions) + "&type=multiple")
-            json = r.json()
-
-            # check if request was correct
-            if json["response_code"] == 0:
-                # return apidata
-                return json["results"]
-            else:
-                # raise an exception if the request was not correct
-                raise Exception("[Datasource] opentdb response_code is not 0, request incorrect. Request URL: "
-                                + "https://opentdb.com/api.php?amount=" + str(amountofquestions) + "&type=multiple")
-
-        # raise an exception if there is an error with the request
-        except requests.exceptions.RequestException as e:
-            print(e) if config.DEBUG is True else None
-            raise Exception("[Datasource] opentdb request has an error: " + e.__str__())
+        # save questions to cache_data
+        self.update_cache_data()
 
     @staticmethod
     def get_datasources() -> list:
         """Return all possible datasources (as noted in config)"""
         return config.POSSIBLE_DATASOURCES
 
-    def get_raw_data(self) -> list:
-        """Return raw apidata used in class"""
-        return self.apidata
+    def update_cache_data(self) -> None:
+        """Save questions to cache_data"""
+        self.cache_data = self.get_all_questions()
 
-    def get_data(self, questionnumber=0):
-        """function to format data for use"""
+    def get_all_questions(self) -> list:
+        """Function that returns all questions (formatted)"""
+        return self.source.get_formatted_data()
 
-        # shuffle answers to make sure the correct answer is not at the same place in the list
-        answers = [
-            {"answer": self.apidata[questionnumber]["incorrect_answers"][0],
-             "correct": False},
-            {"answer": self.apidata[questionnumber]["incorrect_answers"][1],
-             "correct": False},
-            {"answer": self.apidata[questionnumber]["incorrect_answers"][2],
-             "correct": False},
-            {"answer": self.apidata[questionnumber]["correct_answer"],
-             "correct": True},
-        ]
+    def get_question(self, current_question=current_question) -> dict:
+        """Function that returns a question (that should not have been send in the current session)"""
+        current_question = current_question % len(self.cache_data)
+        self.current_question += 1
 
-        # return dictionary
-        return {"question": self.apidata[questionnumber]["question"],
-                "answers": shuffle(answers),
-                "category": self.apidata[questionnumber]["category"],
-                "difficulty": self.apidata[questionnumber]["difficulty"],
-                "type": self.apidata[questionnumber]["type"]}
+        if len(self.cache_data) - 5 == self.current_question:
+            self.update_cache_data()
+
+        return self.cache_data[current_question]
