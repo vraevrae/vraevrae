@@ -22,9 +22,16 @@ Session(app)
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    if request.method == "GET":
-        return render_template("index.html")
+    return render_template("index.html")
 
-    else:
-        # TODO
-        return render_template("index.html")
+@app.route('/lobby', methods=["GET", "POST"])
+def lobby():
+    return render_template("lobby.html")
+
+@app.route('/quiz', methods=["GET", "POST"])
+def quiz():
+    return render_template("quiz.html")
+
+@app.route('/scoreboard', methods=["GET", "POST"])
+def scoreboard():
+    return render_template("scoreboard.html", users=users)
