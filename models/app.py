@@ -32,7 +32,7 @@ class App ():
         quiz = self.store.get_quiz_by_id(user.quizes[-1])
 
         if not quiz.is_started:
-            return View("lobby", {})
+            return View("lobby", {"users": [self.store.get_user_by_id(user_id) for user_id in quiz.users]})
 
         if quiz.is_started:
             return View("question", {})
