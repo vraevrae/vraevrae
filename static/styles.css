@@ -3,12 +3,12 @@ html {
   height: 100%;
 }
 
-.body {
+body {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image:https://wallpaperplay.com/walls/full/2/5/0/200799;
+  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/31787/stars.jpg);
 }
 
 .main {
