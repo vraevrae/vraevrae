@@ -36,6 +36,35 @@ def test_join_quiz():
     # lcprint(vars(joined_quiz), "the joined quiz:")
 
 
+def test_start_quiz():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
+    quiz_id = app.start_quiz(session_token)
+
+    quiz = app.store.get_quiz_by_id(quiz_id)
+
+    assert quiz.is_started is True
+
+    # lcprint(vars(quiz), "the started quest:")
+
+
+def test_finish_quiz():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
+    quiz = app.store.get_quiz_by_id(quiz_id)
+
+    quiz.finish()
+
+    assert quiz.is_finished is True
+    # lcprint(vars(quiz), "the ended quest:")
+
+
 def test_get_view_lobby():
     """a user can be retrieved from the app"""
     app = App()
@@ -48,17 +77,6 @@ def test_get_view_lobby():
     assert type(view.data["users"]) is list
 
     # lcprint(vars(view), "the returned view:")
-
-
-def test_start_quiz():
-    app = App()
-    session_token = "BIG-SESSION-TOKEN"
-
-    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
-
-    quiz_id = app.start_quiz(session_token)
-
-    # lcprint(vars(app.store.get_quiz_by_id(quiz_id)), "the started quest:")
 
 
 def test_get_view_question():

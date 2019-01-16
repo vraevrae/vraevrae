@@ -47,4 +47,4 @@ class App ():
         user = self.store.get_user_by_session_id(session_id)
 
         if user.is_owner:
-            return self.store.get_quiz_by_id(user.quiz).start_quiz()
+            return self.store.get_quiz_by_id(user.quiz).start()

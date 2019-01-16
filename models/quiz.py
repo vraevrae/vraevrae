@@ -30,14 +30,13 @@ class Quiz ():
         """adds a player to the quiz"""
         self.users = [*self.users, user_id]
 
-    def start_quiz(self):
+    def start(self):
         self.is_started = True
         return self.quiz_id
 
-    def get_current_question(self):
-        """gets the current question for the quiz"""
-        # TODO
-        pass
+    def finish(self):
+        self.is_finished = True
+        return self.quiz_id
 
     def check_answer(self, question_id, user_id):
         """asks the question wether the answer is correct, and adds the score to the user"""
@@ -46,10 +45,5 @@ class Quiz ():
 
     def next_question(self):
         """increments the quiz to to the next question"""
-        # TODO
-        pass
-
-    def finish(self):
-        """ends the quiz"""
         # TODO
         pass
