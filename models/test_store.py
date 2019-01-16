@@ -137,6 +137,21 @@ def test_get_user_by_id():
     # lcprint(vars(user), "a user:")
 
 
+def test_get_users_by_id():
+    """answers can be retrieved from the app"""
+    app = App()
+    quiz_id = app.store.create_quiz(FakeSource)
+    user_id_one = app.store.create_user(quiz_id, "Someone",
+                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user_id_two = app.store.create_user(quiz_id, "Someone",
+                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDssdfsdfFNAS", False)
+
+    users = app.store.get_users_by_id([user_id_one, user_id_two])
+    assert type(users) is list
+
+    # lcprint(users, "a list of users:")
+
+
 def test_get_user_by_session_id():
     """a user can be retrieved from the app"""
     app = App()
