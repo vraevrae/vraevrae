@@ -228,4 +228,4 @@ def test_get_view():
     view = app.get_view(session_token)
     assert view
 
-    lcprint(vars(view), "the returned view:")
+    # lcprint(vars(view), "the returned view:")
