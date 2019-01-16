@@ -1,29 +1,42 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VraeVrae</title>
+    <link rel="stylesheet" type="text/css" href="../static/quiz.css" />
+    <link href="https://fonts.googleapis.com/css?family=Ravi+Prakash" rel="stylesheet">
+</head>
 
-<div class="container-fluid bg-info">
-    <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h3><span class="label label-warning" id="qid">Question</span></h3>
+<body>
+    <center>
+        <div id="question">
+            <div id="title" style="display:inline">
+            </div>
+            <table>
+                <tr>
+                    <td>
+                        <button type="button" class="button_A" onclick="send_answer('A');">
+                            A
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="button_B" onclick="send_answer('B');">
+                            B
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" class="button_C" onclick="send_answer('C');">
+                            C
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="button_D" onclick="send_answer('D');">
+                            D
+                        </button>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="modal-body">
-            <div class="col-xs-3 col-xs-offset-5">
-               <div id="loadbar" style="display: none;">
-              </div>
-          </div>
-
-          <div class="quiz" id="quiz" data-toggle="buttons">
-           <label class="element-animation1 btn btn-lg btn-primary btn-block"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> <input type="radio" name="q_answer" value="1"></label>
-           <label class="element-animation2 btn btn-lg btn-primary btn-block"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> <input type="radio" name="q_answer" value="2"></label>
-           <label class="element-animation3 btn btn-lg btn-primary btn-block"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> <input type="radio" name="q_answer" value="3"></label>
-           <label class="element-animation4 btn btn-lg btn-primary btn-block"><span class="btn-label"><i class="glyphicon glyphicon-chevron-right"></i></span> <input type="radio" name="q_answer" value="4"></label>
-       </div>
-   </div>
-   <div class="modal-footer text-muted">
-    <span id="answer"></span>
-</div>
-</div>
-</div>
-</div>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../static/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/home.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <title>VraeVrae</title>
+    <script src="home.js"></script>
+</head>
+
+<body>
+    <center>
+        <form id="join" action="/join" method="get">
+            <div id="p1">
+                <h1><span>Game Code</span></h1>
+
+                <input type="number" inputmode="numeric" class="pin" pattern="\d*" title="Non-negative integral number" id="join_number" name="join_number" min="100000" max="999999" autocomplete="off" autofocus>
+                <h1><span>Username</span></h1>
+
+                <input type="text" name="name" class="name" autocomplete="off" autocorrect="off" id="name" pattern=".{3,}" required title="3 characters minimum">
+                <br />
+                <br />
+                <button type="button" onclick="check_length_name()">
+
+                    <button type="button" onclick="check('test');">
+                        Join!
+                    </button>
+                    <div>
+                        <button type="button" class="move" onclick="TODO">
+                            Create new game </button>
+                    </div>
+        </form>
+
+    </center>
+</body>
+
+</html>

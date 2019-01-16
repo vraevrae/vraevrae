@@ -1,46 +1,32 @@
-<html lang="en">
-<link rel="stylesheet" href="../static/styles.css" />
+<!doctype html>
+<html>
+
 <head>
-    <meta charset="utf-8" />
-    <title>Table Style</title>
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; width=device-width;">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VraeVrae</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" type="text/css" href="lobby.css">
+    <script src="lobby.js"></script>
+    <link rel="icon" type="image/png" href="icon.png">
 </head>
 
-<body>
-    <div class="table-title">
-        <h3>Waiting For Users</h3>
+<center>
+    <div id="Connected Players" style="display:inline">
+        <h1><span>Now you can join the Game!</span><br /></h1>
+        <h2><span id="join_number"></span></h2>
+        <br />
+        <br />
+        <span id="br1">Connected players</span>
+        <br/>
+        <br/>
+        <span id="names">
+                </span>
+        <br/>
+        <br />
+        <br/>
+        <br/>
+        <button type="button" id="Start_playing" class="button_start" onclick="check_moveable()">
+            Start playing
+        </button>
     </div>
-    <table class="table-fill">
-        <thead>
-            <tr>
-                <th class="text-left">User Number</th>
-                <th class="text-left">Name</th>
-            </tr>
-        </thead>
-        <tbody class="table-hover">
-            <tr>
-                <td class="text-left">User 1</td>
-                <td class="text-left"></td>
-            </tr>
-            <tr>
-                <td class="text-left">User 2</td>
-                <td class="text-left"></td>
-            </tr>
-            <tr>
-                <td class="text-left">User 3</td>
-                <td class="text-left"></td>
-            </tr>
-            <tr>
-                <td class="text-left">User 4</td>
-                <td class="text-left"></td>
-            </tr>
-            <tr>
-                <td class="text-left">User 5</td>
-                <td class="text-left"></td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="button_cont">
-        <button class="example_b" name="join" type="submit">Start the Game</button>
-    </div>
-</body>

@@ -1,44 +1,48 @@
-<!DOCTYPE html>
-<link rel="stylesheet" href="static/styles.css" />
-<html lang="en">
-  <head>
+
+<!doctype html>
+<html>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>ScoreBoard</h1>
-  </body>
-</html>
+    <link rel="stylesheet" type="text/css" href="../static/common.css" />
+    <link rel="stylesheet" type="text/css" href="../static/home.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-<div class="leaderboard">
-    <h1>
-    <svg class="ico-cup">
-      <use xlink:href="#cup"></use>
-    </svg>
-    Winners
-  </h1>
-    <ol>
-        <li>
-            <mark>User 1</mark>
-            <small>Points</small>
-        </li>
-        <li>
-            <mark>User 2</mark>
-            <small>Points</small>
-        </li>
-        <li>
-            <mark>User 3</mark>
-            <small>Points</small>
-        </li>
-        <li>
-            <mark>User 4</mark>
-            <small>Points</small>
-        </li>
-        <li>
-            <mark>User 5</mark>
-            <small>Points</small>
-        </li>
-    </ol>
-</div>
+    <title>VraeVrae</title>
+    <script src="util.js"></script>
+    <script src="home.js"></script>
+</head>
+
+<body>
+    <html>
+    <div id="Leaderboard">
+        <h1><span>Top players</span></h1>
+        <br />
+        <table>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+            </tr>
+        </table>
+        <div id="Leaderboard_content" class="Leaderboard_content">
+        </div>
+    </div>
+    <div id="Finish" style="display:none">
+        <font size="7">And this winner is... <br /></font>
+        <font size="7" id="Finish_name"></font>
+        <font size="6"><br />with </font>
+        <font size="7" id="Finish_score"></font>
+        <font size="6">points!</font>
+        <br/>
+        <br/>
+        <button type="button" class="Return_home" onclick="location.href='/';">
+            Return to home page
+        </button>
+    </div>
+</body>
+</html>
