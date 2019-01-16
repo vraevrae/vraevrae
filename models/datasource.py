@@ -56,11 +56,12 @@ class Datasource:
 
     def get_raw_data(self) -> list:
         """Return raw apidata used in class"""
-        print(self.apidata)
         return self.apidata
 
     def get_data(self, questionnumber=0):
         """function to format data for use"""
+
+        # shuffle answers to make sure the correct answer is not at the same place in the list
         answers = [
             {"answer": self.apidata[questionnumber]["incorrect_answers"][0],
              "correct": False},
@@ -72,6 +73,7 @@ class Datasource:
              "correct": True},
         ]
 
+        # return dictionary
         return {"question": self.apidata[questionnumber]["question"],
                 "answers": shuffle(answers),
                 "category": self.apidata[questionnumber]["category"],
