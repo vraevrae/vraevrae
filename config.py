@@ -11,3 +11,4 @@ DEBUG = True
 VERSION = 1.0
 
 POSSIBLE_DATASOURCES = ["opentdb"]
+DATASOURCE_PROPERTIES = {"opentdb": {"maxRequest": 50}}
