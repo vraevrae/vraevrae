@@ -1,17 +1,17 @@
 class FakeSource():
 
-    def getQuestion(self):
+    def get_question(self):
         "Fake function that simulates an API call and returns a question with answers"
         return {"text": "a question",
                 "answers": [
-                    {"text": "",
-                     "correct": True},
-                    {"text": "",
-                     "correct": True},
-                    {"text": "",
-                     "correct": True},
-                    {"text": "",
-                     "correct": True},
+                    {"text": "something 1",
+                     "is_correct": False},
+                    {"text": "something 2",
+                     "is_correct": False},
+                    {"text": "something 3",
+                     "is_correct": False},
+                    {"text": "something 4",
+                     "is_correct": True},
                 ],
                 "category": "finance",
                 "difficulty": "hard"}

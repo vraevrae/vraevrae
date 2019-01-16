@@ -15,8 +15,8 @@ def test_create_app():
 def test_create_quiz():
     """quizes can be created"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    assert app.quizes[quizId]
+    quiz_id = app.create_quiz(FakeSource)
+    assert app.quizes[quiz_id]
 
     lcprint(vars(app), "an app with an quiz:")
 
@@ -24,19 +24,20 @@ def test_create_quiz():
 def test_get_quiz():
     """quizes can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    assert app.getQuiz(quizId)
+    quiz_id = app.create_quiz(FakeSource)
+    quiz = app.get_quiz_by_id(quiz_id)
+    assert quiz
 
-    lcprint(vars(app.getQuiz(quizId)), "a quiz:")
+    lcprint(vars(quiz), "a quiz:")
 
 
 def test_create_question():
     """questions can be added to a app and quiz"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    questionId = app.createQuestion(
-        quizId, {"text": "some question", "difficulty": "medium", "category": "some category"})
-    question = app.questions[questionId]
+    quiz_id = app.create_quiz(FakeSource)
+    question_id = app.create_question(
+        quiz_id, {"text": "some question", "difficulty": "medium", "category": "some category"})
+    question = app.questions[question_id]
     assert question
 
     lcprint(vars(question), "a question:")
@@ -45,9 +46,9 @@ def test_create_question():
 def test_create_question_from_source():
     """questions can be added form a source"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    questionId = app.createQuestionFromSource(quizId)
-    question = app.questions[questionId]
+    quiz_id = app.create_quiz(FakeSource)
+    question_id = app.create_question_from_source(quiz_id)
+    question = app.questions[question_id]
     assert question
 
     lcprint(vars(question), "a question:")
@@ -56,9 +57,9 @@ def test_create_question_from_source():
 def test_get_question():
     """questions can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    questionId = app.createQuestionFromSource(quizId)
-    question = app.getQuestion(questionId)
+    quiz_id = app.create_quiz(FakeSource)
+    question_id = app.create_question_from_source(quiz_id)
+    question = app.get_question_by_id(question_id)
     assert question
 
     lcprint(vars(question), "a question:")
@@ -67,10 +68,10 @@ def test_get_question():
 def test_create_answer():
     """answers can be added to a app and quiz"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    questionId = app.createQuestionFromSource(quizId)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answer = app.answers[answerId]
+    quiz_id = app.create_quiz(FakeSource)
+    question_id = app.create_question_from_source(quiz_id)
+    answer_id = app.create_answer(question_id, "some answer text", True)
+    answer = app.answers[answer_id]
     assert answer
 
     lcprint(vars(answer), "a answer:")
@@ -79,10 +80,10 @@ def test_create_answer():
 def test_get_answer():
     """answers can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    questionId = app.createQuestionFromSource(quizId)
-    answerId = app.createAnswer(questionId, "some answer text", True)
-    answer = app.getAnswer(answerId)
+    quiz_id = app.create_quiz(FakeSource)
+    question_id = app.create_question_from_source(quiz_id)
+    answer_id = app.create_answer(question_id, "some answer text", True)
+    answer = app.get_answer_by_id(answer_id)
     assert answer
 
     lcprint(vars(answer), "a answer:")
@@ -91,10 +92,10 @@ def test_get_answer():
 def test_create_user():
     """users can be added to the app and quiz"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    userId = app.createUser(quizId, "Someone",
-                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
-    user = app.users[userId]
+    quiz_id = app.create_quiz(FakeSource)
+    user_id = app.create_user(quiz_id, "Someone",
+                              "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user = app.users[user_id]
     assert user
 
     lcprint(vars(user), "a user:")
@@ -103,10 +104,10 @@ def test_create_user():
 def test_get_users():
     """users can be retrieved from the app"""
     app = App()
-    quizId = app.createQuiz(FakeSource)
-    userId = app.createUser(quizId, "Someone",
-                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
-    user = app.getUser(userId)
+    quiz_id = app.create_quiz(FakeSource)
+    user_id = app.create_user(quiz_id, "Someone",
+                              "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user = app.get_user_by_id(user_id)
     assert user
 
     lcprint(vars(user), "a user:")
@@ -116,33 +117,25 @@ def test_filled_app():
     """Creates a somewhat larger app to test that no extra things are added"""
     app = App()
 
-    quizCount = 0
-    questionCount = 0
-    userCount = 0
-    answerCount = 0
+    quiz_count = 0
+    question_count = 0
+    user_count = 0
 
     for _ in range(randint(1, 3)):
-        quizId = app.createQuiz(FakeSource)
-        quizCount += 1
+        quiz_id = app.create_quiz(FakeSource)
+        quiz_count += 1
 
         for _ in range(randint(1, 10)):
-            questionId = app.createQuestionFromSource(quizId)
-            questionCount += 1
-
-            for _ in range(randint(2, 4)):
-                app.createAnswer(
-                    questionId, "some answer text", True)
-                answerCount += 1
+            app.create_question_from_source(quiz_id)
+            question_count += 1
 
         for _ in range(randint(1, 10)):
-            app.createUser(quizId, "Someone",
-                           "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
-            userCount += 1
+            app.create_user(quiz_id, "Someone", "BIG-SESSION-TOKEN", False)
+            user_count += 1
 
-    assert len(app.quizes) == quizCount
-    assert len(app.questions) == questionCount
-    assert len(app.answers) == answerCount
-    assert len(app.users) == userCount
+    assert len(app.quizes) == quiz_count
+    assert len(app.questions) == question_count
+    assert len(app.users) == user_count
 
     lcprint(vars(app), "a filled app:")
 
@@ -150,5 +143,15 @@ def test_filled_app():
 def test_new_quiz():
     """Tests the creation of a new default quiz"""
     app = App()
-    app.newQuiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    assert True
+    quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    quiz = app.get_quiz_by_id(quiz_id)
+
+    lcprint(vars(quiz), "a quiz:")
+    question = app.get_question_by_id(quiz.questions[0])
+    lcprint(vars(question), "a question inside the quiz:")
+    answer = app.get_answer_by_id(question.answers[0])
+    lcprint(vars(answer), "a answer inside the question:")
+
+    assert quiz
+    assert question
+    assert answer

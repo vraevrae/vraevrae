@@ -5,13 +5,13 @@ class User():
     """quiz users"""
 
     def __init__(self, **kwargs):
-        self.userId = str(uuid4())
-        self.quizId = kwargs["quizId"]
-        self.sessionId = kwargs["sessionId"]
+        self.user_id = str(uuid4())
+        self.quiz_id = kwargs["quiz_id"]
+        self.session_id = kwargs["session_id"]
         self.name = kwargs["name"]
         self.score = 0
-        self.isOwner = kwargs["isOwner"]
+        self.is_owner = kwargs["is_owner"]
 
-    def addScore(self):
+    def add_score(self):
         """adds the score to the users score"""
         pass

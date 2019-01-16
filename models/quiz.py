@@ -7,39 +7,39 @@ class Quiz ():
     """the central class of the application"""
 
     # Class attributes, should be the same for all quizes
-    maxTime = 10
+    max_time = 10
 
     # Object attributes, different for each quiz
     def __init__(self, Source):
-        self.quizId = str(uuid4())
-        self.question = []
+        self.quiz_id = str(uuid4())
+        self.questions = []
         self.users = []
-        self.isStarted = False
-        self.isFinished = False
-        self.isDeleted = False
-        self.currentQuestion = ""
-        self.currentTime = 0
+        self.is_started = False
+        self.is_finished = False
+        self.is_deleted = False
+        self.current_question = 0
+        self.current_time = 0
         self.source = Source()
 
-    def addQuestionById(self, questionId):
+    def add_question_by_id(self, question_id):
         """adds a question to the quiz"""
-        self.questions = [*self.question, questionId]
+        self.questions = [*self.questions, question_id]
 
-    def addUserById(self, userId):
+    def add_user_by_id(self, user_id):
         """adds a player to the quiz"""
-        self.users = [*self.users, userId]
+        self.users = [*self.users, user_id]
 
-    def getCurrentQuestion(self):
+    def get_current_question(self):
         """gets the current question for the quiz"""
         # TODO
         pass
 
-    def checkAnswer(self, questionId, userId):
+    def check_answer(self, question_id, user_id):
         """asks the question wether the answer is correct, and adds the score to the user"""
         # TODO
         pass
 
-    def nextQuestion(self):
+    def next_question(self):
         """increments the quiz to to the next question"""
         # TODO
         pass
