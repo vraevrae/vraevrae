@@ -5,10 +5,7 @@ html {
 
 body {
   height: 100%;
-  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/31787/stars.jpg) no-repeat center center fixed;
-  background-size: cover;
-  height: 100%;
-  overflow: hidden;
+  background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/31787/stars.jpg);
 }
 
 .container
