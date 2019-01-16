@@ -5,7 +5,7 @@ Quiz
 {% block main%}
 <div>
   <h1>{{ question.text }}</h1>
-  {% for answer in question.answers %}
+  {% for answer in answers %}
   <button id="Button" class="button" onclick="send_answer('A');">
     {{ answer.text }}
   </button>
