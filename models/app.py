@@ -27,6 +27,10 @@ class App ():
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
 
+    def get_quiz_by_code(self, code):
+        """read a specific quiz from the store by quizId"""
+        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
+
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
@@ -90,9 +94,10 @@ class App ():
 
         return quiz_id
 
-    # def join_quiz(self, name, session_id, code):
-    #     """joins a new user to a quiz"""
-    #     self.create_user(quiz_id=quiz_id, name=name,
-    #                      session_id=session_id, is_owner=False)
+    def join_quiz(self, name, session_id, code):
+        """joins a new user to a quiz"""
+        quiz = self.get_quiz_by_code(code)
+        self.create_user(quiz_id=quiz.quiz_id, name=name,
+                         session_id=session_id, is_owner=False)
 
-    #     return quiz_id
+        return quiz
