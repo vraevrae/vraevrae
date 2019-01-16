@@ -34,6 +34,9 @@ class Quiz ():
         self.is_started = True
         return self.quiz_id
 
+    def get_current_question_id(self):
+        return self.questions[self.current_question]
+
     def finish(self):
         self.is_finished = True
         return self.quiz_id

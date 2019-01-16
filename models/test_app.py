@@ -5,7 +5,7 @@ from random import randint
 
 
 def test_new_quiz():
-    """Tests the creation of a new default quiz"""
+    """creation of a new default quiz"""
     app = App()
     quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
     quiz = app.store.get_quiz_by_id(quiz_id)
@@ -23,7 +23,7 @@ def test_new_quiz():
 
 
 def test_join_quiz():
-    """tests if a user can join a quiz by code"""
+    """a user can join a quiz by code"""
     app = App()
     quiz_id = app.new_quiz("some creator of the quiz",
                            "BIG-SESSION-TOKEN", FakeSource)
@@ -66,7 +66,6 @@ def test_finish_quiz():
 
 
 def test_get_view_lobby():
-    """a user can be retrieved from the app"""
     app = App()
     session_token = "BIG-SESSION-TOKEN"
     quiz_id = app.new_quiz("some creator of the quiz",
@@ -80,7 +79,6 @@ def test_get_view_lobby():
 
 
 def test_get_view_question():
-    """a user can be retrieved from the app"""
     app = App()
     session_token = "BIG-SESSION-TOKEN"
     quiz_id = app.new_quiz("some creator",
@@ -92,5 +90,23 @@ def test_get_view_question():
     assert view.type == "question"
     assert view.data["question"]
     assert type(view.data["answers"]) is list
+
+    # lcprint(vars(view), "the returned view:")
+
+
+def test_get_view_scoreboard():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+    quiz_id = app.new_quiz("some creator",
+                           session_token, FakeSource)
+
+    quiz_id = app.start_quiz(session_token)
+    quiz = app.store.get_quiz_by_id(quiz_id)
+    quiz.finish()
+
+    view = app.get_view(session_token)
+
+    assert view.type == "scoreboard"
+    assert view.data["users"]
 
     # lcprint(vars(view), "the returned view:")

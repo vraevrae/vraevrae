@@ -32,16 +32,16 @@ class App ():
         quiz = self.store.get_quiz_by_id(user.quiz)
 
         if not quiz.is_started:
-            return View("lobby", {"users": [self.store.get_user_by_id(user_id) for user_id in quiz.users]})
+            return View("lobby", {"users": self.store.get_users_by_id(quiz.users)})
 
-        if quiz.is_started:
-            question = self.store.get_question_by_id(
-                quiz.questions[quiz.current_question])
+        if quiz.is_started and not quiz.is_finished:
+            question_id = quiz.get_current_question_id()
+            question = self.store.get_question_by_id(question_id)
             answers = self.store.get_answers_by_id(question.answers)
             return View("question", {"question": question, "answers": answers})
 
         if quiz.is_finished:
-            return View("scoreboard", {})
+            return View("scoreboard", {"users": self.store.get_users_by_id(quiz.users)})
 
     def start_quiz(self, session_id):
         user = self.store.get_user_by_session_id(session_id)
