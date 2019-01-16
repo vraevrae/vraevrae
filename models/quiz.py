@@ -30,6 +30,10 @@ class Quiz ():
         """adds a player to the quiz"""
         self.users = [*self.users, user_id]
 
+    def start_quiz(self):
+        self.is_started = True
+        return self.quiz_id
+
     def get_current_question(self):
         """gets the current question for the quiz"""
         # TODO

@@ -47,4 +47,32 @@ def test_get_view_lobby():
     assert view.type == "lobby"
     assert type(view.data["users"]) is list
 
-    lcprint(vars(view), "the returned view:")
+    # lcprint(vars(view), "the returned view:")
+
+
+def test_start_quiz():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
+    quiz_id = app.start_quiz(session_token)
+
+    # lcprint(vars(app.store.get_quiz_by_id(quiz_id)), "the started quest:")
+
+
+def test_get_view_question():
+    """a user can be retrieved from the app"""
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+    quiz_id = app.new_quiz("some creator",
+                           session_token, FakeSource)
+
+    quiz_id = app.start_quiz(session_token)
+    view = app.get_view(session_token)
+
+    assert view.type == "question"
+    assert view.data["question"]
+    assert type(view.data["answers"]) is list
+
+    # lcprint(vars(view), "the returned view:")

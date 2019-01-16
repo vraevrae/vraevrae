@@ -6,7 +6,7 @@ class User():
 
     def __init__(self, **kwargs):
         self.user_id = str(uuid4())
-        self.quizes = [kwargs["quiz_id"]]
+        self.quiz = kwargs["quiz_id"]
         self.session_id = kwargs["session_id"]
         self.name = kwargs["name"]
         self.score = 0
