@@ -9,7 +9,19 @@ def test_create_app():
     app = App()
     assert app
 
-    lcprint(vars(app), "an initialized app:")
+    # lcprint(vars(app), "an initialized app:")
+
+
+def test_app_has_store():
+    """Apps have a proper store"""
+    app = App()
+
+    assert "quizes" in dir(app)
+    assert "questions" in dir(app)
+    assert "answers" in dir(app)
+    assert "users" in dir(app)
+
+    # lcprint(dir(app), "the super class of an app (Store):")
 
 
 def test_create_quiz():
@@ -18,7 +30,7 @@ def test_create_quiz():
     quiz_id = app.create_quiz(FakeSource)
     assert app.quizes[quiz_id]
 
-    lcprint(vars(app), "an app with an quiz:")
+    # lcprint(vars(app), "an app with an quiz:")
 
 
 def test_get_quiz():
@@ -28,7 +40,7 @@ def test_get_quiz():
     quiz = app.get_quiz_by_id(quiz_id)
     assert quiz
 
-    lcprint(vars(quiz), "a quiz:")
+    # lcprint(vars(quiz), "a quiz:")
 
 
 def test_create_question():
@@ -40,7 +52,7 @@ def test_create_question():
     question = app.questions[question_id]
     assert question
 
-    lcprint(vars(question), "a question:")
+    # lcprint(vars(question), "a question:")
 
 
 def test_create_question_from_source():
@@ -51,7 +63,7 @@ def test_create_question_from_source():
     question = app.questions[question_id]
     assert question
 
-    lcprint(vars(question), "a question:")
+    # lcprint(vars(question), "a question:")
 
 
 def test_get_question():
@@ -62,7 +74,7 @@ def test_get_question():
     question = app.get_question_by_id(question_id)
     assert question
 
-    lcprint(vars(question), "a question:")
+    # lcprint(vars(question), "a question:")
 
 
 def test_create_answer():
@@ -74,7 +86,7 @@ def test_create_answer():
     answer = app.answers[answer_id]
     assert answer
 
-    lcprint(vars(answer), "a answer:")
+    # lcprint(vars(answer), "a answer:")
 
 
 def test_get_answer():
@@ -86,7 +98,7 @@ def test_get_answer():
     answer = app.get_answer_by_id(answer_id)
     assert answer
 
-    lcprint(vars(answer), "a answer:")
+    # lcprint(vars(answer), "a answer:")
 
 
 def test_create_user():
@@ -98,7 +110,7 @@ def test_create_user():
     user = app.users[user_id]
     assert user
 
-    lcprint(vars(user), "a user:")
+    # lcprint(vars(user), "a user:")
 
 
 def test_get_users():
@@ -110,7 +122,7 @@ def test_get_users():
     user = app.get_user_by_id(user_id)
     assert user
 
-    lcprint(vars(user), "a user:")
+    # lcprint(vars(user), "a user:")
 
 
 def test_filled_app():
@@ -137,7 +149,7 @@ def test_filled_app():
     assert len(app.questions) == question_count
     assert len(app.users) == user_count
 
-    lcprint(vars(app), "a filled app:")
+    # lcprint(vars(app), "a filled app:")
 
 
 def test_new_quiz():
@@ -146,15 +158,16 @@ def test_new_quiz():
     quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
     quiz = app.get_quiz_by_id(quiz_id)
 
-    lcprint(vars(quiz), "a quiz:")
     question = app.get_question_by_id(quiz.questions[0])
-    lcprint(vars(question), "a question inside the quiz:")
     answer = app.get_answer_by_id(question.answers[0])
-    lcprint(vars(answer), "a answer inside the question:")
 
     assert quiz
     assert question
     assert answer
+
+    # lcprint(vars(quiz), "a quiz:")
+    # lcprint(vars(question), "a question inside the quiz:")
+    # lcprint(vars(answer), "a answer inside the question:")
 
 
 def test_quiz_codes():
@@ -169,7 +182,7 @@ def test_quiz_codes():
 
     assert len(quiz_codes) is len(set(quiz_codes))
 
-    lcprint(quiz_codes, "the quiz codes:")
+    # lcprint(quiz_codes, "the quiz codes:")
 
 
 def test_get_quiz_by_code():
@@ -181,7 +194,7 @@ def test_get_quiz_by_code():
 
     assert quiz_by_code
 
-    lcprint(vars(quiz_by_code), "the quiz by code:")
+    # lcprint(vars(quiz_by_code), "the quiz by code:")
 
 
 def test_join_quiz():
@@ -192,6 +205,7 @@ def test_join_quiz():
     quiz = app.get_quiz_by_id(quiz_id)
     joined_quiz = app.join_quiz(
         "someone who wants to join", "BIG-SESSION-TOKEN", quiz.code)
+
     assert joined_quiz
 
-    lcprint(vars(joined_quiz), "the joined quiz:")
+    # lcprint(vars(joined_quiz), "the joined quiz:")
