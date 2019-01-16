@@ -4,11 +4,15 @@ html {
 }
 
 body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   background-image:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/31787/stars.jpg);
+}
+
+.container
+{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .main {
