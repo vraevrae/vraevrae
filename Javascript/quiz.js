@@ -25,3 +25,9 @@ function send_answer(letter) {
 		}
 	);
 }
+
+$('.button_B').click(function(e) {
+    $('.Button').not(this).removeClass('active');    
+    $(this).toggleClass('active');
+    e.preventDefault();
+});
