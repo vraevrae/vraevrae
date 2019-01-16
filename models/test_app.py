@@ -144,6 +144,13 @@ def test_new_quiz():
     app = App()
     quizId = app.newQuiz("some name", "BIG-SESSION-TOKEN", FakeSource)
     quiz = app.getQuiz(quizId)
-    assert quiz
 
     lcprint(vars(quiz), "a quiz:")
+    question = app.getQuestion(quiz.questions[0])
+    lcprint(vars(question), "a question inside the quiz:")
+    answer = app.getAnswer(question.answers[0])
+    lcprint(vars(answer), "a answer inside the question:")
+
+    assert quiz
+    assert question
+    assert answer
