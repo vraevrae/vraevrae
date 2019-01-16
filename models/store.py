@@ -81,3 +81,7 @@ class Store():
     def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
         return self.users[user_id]
+
+    def get_user_by_session_id(self, session_id):
+        """reads a specific user from the store by session_id"""
+        return [user for user in self.users.values() if user.session_id is session_id]
