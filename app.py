@@ -19,15 +19,11 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-game = game()
-
-
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
         return render_template("index.html")
 
-    if request.method == "POST":
     else:
         # TODO
         return render_template("index.html")

@@ -99,7 +99,7 @@ def test_get_answer():
 
 
 def test_create_user():
-    """users can be added to the app and quiz"""
+    """a user can be added to the store and quiz"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
     user_id = app.store.create_user(quiz_id, "Someone",
@@ -110,8 +110,8 @@ def test_create_user():
     # lcprint(vars(user), "a user:")
 
 
-def test_get_users():
-    """users can be retrieved from the app"""
+def test_get_user_by_id():
+    """a user can be retrieved from the app"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
     user_id = app.store.create_user(quiz_id, "Someone",
@@ -120,6 +120,16 @@ def test_get_users():
     assert user
 
     # lcprint(vars(user), "a user:")
+
+
+def test_get_user_by_session_id():
+    """a user can be retrieved from the app"""
+    app = App()
+    quiz_id = app.store.create_quiz(FakeSource)
+    session_token = "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS"
+    user_id = app.store.create_user(quiz_id, "Someone", session_token, False)
+    user = app.store.get_user_by_session_id(session_token)
+    assert user
 
 
 def test_filled_app():
@@ -207,3 +217,15 @@ def test_join_quiz():
     assert joined_quiz
 
     # lcprint(vars(joined_quiz), "the joined quiz:")
+
+
+def test_get_view():
+    """a user can be retrieved from the app"""
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+    quiz_id = app.new_quiz("some creator of the quiz",
+                           session_token, FakeSource)
+    view = app.get_view(session_token)
+    assert view
+
+    lcprint(vars(view), "the returned view:")

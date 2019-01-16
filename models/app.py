@@ -1,4 +1,5 @@
 from models.store import Store
+from models.view import View
 
 
 class App ():
@@ -25,3 +26,6 @@ class App ():
                                session_id=session_id, is_owner=False)
 
         return quiz
+
+    def get_view(self, session_id):
+        return View(self.store.get_user_by_session_id(session_id))
