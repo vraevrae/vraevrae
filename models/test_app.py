@@ -157,7 +157,8 @@ def test_new_quiz():
     assert answer
 
 
-def test_quiz_by_code():
+def test_quiz_codes():
+    """tests if each quiz has an unique human readable code"""
     app = App()
     app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
     app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
@@ -167,3 +168,17 @@ def test_quiz_by_code():
     quiz_codes = [quiz.code for quiz in app.quizes.values()]
 
     assert len(quiz_codes) is len(set(quiz_codes))
+
+    lcprint(quiz_codes, "the quiz codes:")
+
+
+def test_get_quiz_by_code():
+    """tests if a specific quiz can be found by code"""
+    app = App()
+    quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    quiz = app.get_quiz_by_id(quiz_id)
+    quiz_by_code = app.get_quiz_by_code(quiz.code)
+
+    assert quiz_by_code
+
+    lcprint(vars(quiz_by_code), "the quiz by code:")
