@@ -157,7 +157,13 @@ def test_new_quiz():
     assert answer
 
 
-# def test_quiz_by_code():
-#     app = App()
-#     app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-#     print([quiz.code for quiz in app.quizes.values()])
+def test_quiz_by_code():
+    app = App()
+    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    quiz_codes = [quiz.code for quiz in app.quizes.values()]
+
+    assert len(quiz_codes) is len(set(quiz_codes))
