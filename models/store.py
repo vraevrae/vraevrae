@@ -5,10 +5,12 @@ from models.answer import Answer
 
 
 class Store():
-    quizes = {}
-    questions = {}
-    answers = {}
-    users = {}
+
+    def __init__(self):
+        self.quizes = {}
+        self.questions = {}
+        self.answers = {}
+        self.users = {}
 
     def create_quiz(self, Source):
         """creates a new quiz and adds it to the store"""
