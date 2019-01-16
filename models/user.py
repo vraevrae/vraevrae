@@ -6,7 +6,7 @@ class User():
 
     def __init__(self, **kwargs):
         self.user_id = str(uuid4())
-        self.quiz_id = kwargs["quiz_id"]
+        self.quizes = [kwargs["quiz_id"]]
         self.session_id = kwargs["session_id"]
         self.name = kwargs["name"]
         self.score = 0
@@ -15,3 +15,6 @@ class User():
     def add_score(self):
         """adds the score to the users score"""
         pass
+
+    def get_screen(self):
+        return "some screen depending on"
