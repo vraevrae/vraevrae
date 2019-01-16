@@ -19,14 +19,10 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-game = game()
-
-
 @app.route('/', methods=["GET", "POST"])
 def index():
     return render_template("index.html")
 
-<<<<<<< HEAD
 @app.route('/lobby', methods=["GET", "POST"])
 def lobby():
     return render_template("lobby.html")
@@ -37,10 +33,4 @@ def quiz():
 
 @app.route('/scoreboard', methods=["GET", "POST"])
 def scoreboard():
-    return render_template("scoreboard.html", users=users)
-=======
-    if request.method == "POST":
-    else:
-        # TODO
-        return render_template("index.html")
->>>>>>> 5740443e0690036257fb4f47e59222f0c95519af
+    return render_template("scoreboard.html", users=[])
