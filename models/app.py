@@ -94,9 +94,10 @@ class App ():
 
         return quiz_id
 
-    # def join_quiz(self, name, session_id, code):
-    #     """joins a new user to a quiz"""
-    #     self.create_user(quiz_id=quiz_id, name=name,
-    #                      session_id=session_id, is_owner=False)
+    def join_quiz(self, name, session_id, code):
+        """joins a new user to a quiz"""
+        quiz = self.get_quiz_by_code(code)
+        self.create_user(quiz_id=quiz.quiz_id, name=name,
+                         session_id=session_id, is_owner=False)
 
-    #     return quiz_id
+        return quiz

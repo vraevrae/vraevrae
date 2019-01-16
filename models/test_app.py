@@ -182,3 +182,16 @@ def test_get_quiz_by_code():
     assert quiz_by_code
 
     lcprint(vars(quiz_by_code), "the quiz by code:")
+
+
+def test_join_quiz():
+    """tests if a user can join a quiz by code"""
+    app = App()
+    quiz_id = app.new_quiz("some creator of the quiz",
+                           "BIG-SESSION-TOKEN", FakeSource)
+    quiz = app.get_quiz_by_id(quiz_id)
+    joined_quiz = app.join_quiz(
+        "someone who wants to join", "BIG-SESSION-TOKEN", quiz.code)
+    assert joined_quiz
+
+    lcprint(vars(joined_quiz), "the joined quiz:")
