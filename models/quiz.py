@@ -10,8 +10,9 @@ class Quiz ():
     max_time = 10
 
     # Object attributes, different for each quiz
-    def __init__(self, Source):
+    def __init__(self, Source, code):
         self.quiz_id = str(uuid4())
+        self.code = code
         self.questions = []
         self.users = []
         self.is_started = False

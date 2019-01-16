@@ -15,7 +15,11 @@ class App ():
 
     def create_quiz(self, Source):
         """creates a new quiz and adds it to the store"""
-        new_quiz = Quiz(Source)
+        code = 1
+        if len(self.questions) is not 0:
+            code = max([quiz.code for quiz in self.quizes.values()]) + 1
+
+        new_quiz = Quiz(Source, code)
         self.quizes[new_quiz.quiz_id] = new_quiz
         return new_quiz.quiz_id
 
@@ -78,10 +82,17 @@ class App ():
     def new_quiz(self, name, session_id, Source):
         """creates a default quiz"""
         quiz_id = self.create_quiz(Source)
-        self.create_user(quiz_id=quiz_id, name=name,
-                         session_id=session_id, is_owner=True)
-
         for _ in range(10):
             self.create_question_from_source(quiz_id)
 
+        self.create_user(quiz_id=quiz_id, name=name,
+                         session_id=session_id, is_owner=True)
+
         return quiz_id
+
+    # def join_quiz(self, name, session_id, code):
+    #     """joins a new user to a quiz"""
+    #     self.create_user(quiz_id=quiz_id, name=name,
+    #                      session_id=session_id, is_owner=False)
+
+    #     return quiz_id
