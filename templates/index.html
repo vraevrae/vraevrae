@@ -1,18 +1,8 @@
-<!doctype html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% block title %}Home{% endblock %}
 
-    <title>VraeVrae</title>
-    <script src="index.js"></script>
-</head>
-
-<body>
+{% block main %}
     <center>
         <form id="join" action="/join" method="get">
             <div id="p1">
@@ -24,8 +14,6 @@
                 <input type="text" name="name" class="name" autocomplete="off" autocorrect="off" id="name" pattern=".{3,}" required title="3 characters minimum">
                 <br />
                 <br />
-                <button type="button" onclick="check_length_name()">
-
                     <button type="button" onclick="check('test');">
                         Join!
                     </button>
@@ -35,6 +23,4 @@
                     </div>
         </form>
     </center>
-</body>
-
-</html>
+{% endblock %}
