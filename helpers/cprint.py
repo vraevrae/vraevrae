@@ -6,3 +6,11 @@ from pygments import highlight
 
 def cprint(obj):
     print(highlight(pformat(obj), PythonLexer(), Terminal256Formatter()))
+
+
+def lcprint(obj, *args):
+    print("")
+    print("")
+    print(*args)
+    cprint(obj)
+    print("")

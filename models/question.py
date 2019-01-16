@@ -2,21 +2,21 @@ from uuid import uuid4
 
 
 class Question():
-    """A quiz takes a user through many questions"""
+    """a questions is a fundamental stepping stone in a quiz"""
 
     def __init__(self, *args, **kwargs):
         self.questionId = str(uuid4())
         self.text = kwargs["text"]
         self.difficulty = kwargs["difficulty"]
         self.category = kwargs["category"]
-        self.anwsers = []
+        self.answers = []
         self.timer = 10
 
-    def addAnswer(self):
-        """"Adds an answer to the quiz"""
-        pass
+    def addAnswerById(self, answerId):
+        """"adds an answer to the quiz"""
+        self.answers = [*self.answers, answerId]
 
     def checkAnswer(self):
-        """"Checks the answer to the question"""
+        """"checks the answer to the question"""
         # TODO
         pass
