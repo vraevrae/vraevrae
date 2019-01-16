@@ -217,3 +217,15 @@ def test_join_quiz():
     assert joined_quiz
 
     # lcprint(vars(joined_quiz), "the joined quiz:")
+
+
+def test_get_view():
+    """a user can be retrieved from the app"""
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+    quiz_id = app.new_quiz("some creator of the quiz",
+                           session_token, FakeSource)
+    view = app.get_view(session_token)
+    assert view
+
+    lcprint(vars(view), "the returned view:")

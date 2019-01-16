@@ -1,4 +1,5 @@
 from models.store import Store
+from models.view import View
 
 
 class App ():
@@ -27,4 +28,4 @@ class App ():
         return quiz
 
     def get_view(self, session_id):
-        return View(self.store.get_user_by_session(session_id))
+        return View(self.store.get_user_by_session_id(session_id))
