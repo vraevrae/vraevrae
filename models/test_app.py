@@ -129,8 +129,7 @@ def test_filled_app():
             questionCount += 1
 
         for _ in range(randint(1, 10)):
-            app.createUser(quizId, "Someone",
-                           "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+            app.createUser(quizId, "Someone", "BIG-SESSION-TOKEN", False)
             userCount += 1
 
     assert len(app.quizes) == quizCount

@@ -12,18 +12,18 @@ class Quiz ():
     # Object attributes, different for each quiz
     def __init__(self, Source):
         self.quizId = str(uuid4())
-        self.question = []
+        self.questions = []
         self.users = []
         self.isStarted = False
         self.isFinished = False
         self.isDeleted = False
-        self.currentQuestion = ""
+        self.currentQuestion = 0
         self.currentTime = 0
         self.source = Source()
 
     def addQuestionById(self, questionId):
         """adds a question to the quiz"""
-        self.questions = [*self.question, questionId]
+        self.questions = [*self.questions, questionId]
 
     def addUserById(self, userId):
         """adds a player to the quiz"""
