@@ -1,16 +1,8 @@
-<!doctype html>
-<html>
+{% extends "layout.html" %}
 
-<head>
+{% block title %}Lobby{% endblock %}
 
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>VraeVrae</title>
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="stylesheet" type="text/css" href="lobby.css">
-    <script src="lobby.js"></script>
-    <link rel="icon" type="image/png" href="icon.png">
-</head>
-
+{% block main %}
 <center>
     <div id="Connected Players" style="display:inline">
         <h1><span>Now you can join the Game!</span><br /></h1>
@@ -30,3 +22,5 @@
             Start playing
         </button>
     </div>
+</center>
+{% endblock %}

@@ -1,14 +1,8 @@
-<!doctype html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>VraeVrae</title>
-    <link rel="stylesheet" type="text/css" href="../static/quiz.css" />
-    <link href="https://fonts.googleapis.com/css?family=Ravi+Prakash" rel="stylesheet">
-    <script src="../Javascript/quiz.js"></script>
-</head>
+{% extends "layout.html" %}
 
-<body>
+{% block title %}Quiz{% endblock %}
+
+{% block main %}
     <center>
         <div id="question">
             <div id="title" style="display:inline">
@@ -40,4 +34,6 @@
                 </tr>
             </table>
         </div>
-</html>
+        <script src="quiz.js"></script>
+    </center>
+{% endblock %}
