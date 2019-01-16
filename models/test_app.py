@@ -119,7 +119,6 @@ def test_filled_app():
     quizCount = 0
     questionCount = 0
     userCount = 0
-    answerCount = 0
 
     for _ in range(randint(1, 3)):
         quizId = app.createQuiz(FakeSource)
@@ -129,11 +128,6 @@ def test_filled_app():
             questionId = app.createQuestionFromSource(quizId)
             questionCount += 1
 
-            for _ in range(randint(2, 4)):
-                app.createAnswer(
-                    questionId, "some answer text", True)
-                answerCount += 1
-
         for _ in range(randint(1, 10)):
             app.createUser(quizId, "Someone",
                            "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
@@ -141,7 +135,6 @@ def test_filled_app():
 
     assert len(app.quizes) == quizCount
     assert len(app.questions) == questionCount
-    assert len(app.answers) == answerCount
     assert len(app.users) == userCount
 
     lcprint(vars(app), "a filled app:")
