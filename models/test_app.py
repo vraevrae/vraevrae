@@ -36,6 +36,10 @@ def test_join_quiz():
     # lcprint(vars(joined_quiz), "the joined quiz:")
 
 
+def test_answer_question():
+    assert False
+
+
 def test_start_quiz():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
@@ -49,6 +53,25 @@ def test_start_quiz():
     assert quiz.is_started is True
 
     # lcprint(vars(quiz), "the started quest:")
+
+
+def test_game_loop():
+    assert False
+
+
+def test_next_question():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
+    quiz = app.store.get_quiz_by_id(quiz_id)
+
+    quiz.finish()
+
+    assert False
+    assert quiz.is_finished is True
+    # lcprint(vars(quiz), "the ended quest:")
 
 
 def test_finish_quiz():
