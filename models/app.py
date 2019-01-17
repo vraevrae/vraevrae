@@ -2,7 +2,7 @@ from models.store import Store
 from models.view import View
 
 
-class App ():
+class App:
     """the application itself, holds user interactions"""
 
     def __init__(self):
