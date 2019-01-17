@@ -86,7 +86,7 @@ def test_create_answer():
     # lcprint(vars(answer), "a answer:")
 
 
-def test_get_answer():
+def test_get_answer_by_id():
     """answers can be retrieved from the app"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
@@ -96,6 +96,21 @@ def test_get_answer():
     assert answer
 
     # lcprint(vars(answer), "a answer:")
+
+
+def test_get_answers_by_id():
+    """answers can be retrieved from the app"""
+    app = App()
+    quiz_id = app.store.create_quiz(FakeSource)
+    question_id = app.store.create_question_from_source(quiz_id)
+    answer_id_one = app.store.create_answer(
+        question_id, "some answer text", True)
+    answer_id_two = app.store.create_answer(
+        question_id, "some answer text", False)
+    answers = app.store.get_answers_by_id([answer_id_one, answer_id_two])
+    assert type(answers) is list
+
+    # lcprint(answers, "a answer:")
 
 
 def test_create_user():
@@ -120,6 +135,21 @@ def test_get_user_by_id():
     assert user
 
     # lcprint(vars(user), "a user:")
+
+
+def test_get_users_by_id():
+    """answers can be retrieved from the app"""
+    app = App()
+    quiz_id = app.store.create_quiz(FakeSource)
+    user_id_one = app.store.create_user(quiz_id, "Someone",
+                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user_id_two = app.store.create_user(quiz_id, "Someone",
+                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDssdfsdfFNAS", False)
+
+    users = app.store.get_users_by_id([user_id_one, user_id_two])
+    assert type(users) is list
+
+    # lcprint(users, "a list of users:")
 
 
 def test_get_user_by_session_id():

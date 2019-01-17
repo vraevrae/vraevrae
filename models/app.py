@@ -29,13 +29,34 @@ class App ():
 
     def get_view(self, session_id):
         user = self.store.get_user_by_session_id(session_id)
-        quiz = self.store.get_quiz_by_id(user.quizes[-1])
+        quiz = self.store.get_quiz_by_id(user.quiz)
 
         if not quiz.is_started:
-            return View("lobby", {"users": [self.store.get_user_by_id(user_id) for user_id in quiz.users]})
+            return View("lobby", {"users": self.store.get_users_by_id(quiz.users)})
 
-        if quiz.is_started:
-            return View("question", {})
+        if quiz.is_started and not quiz.is_finished:
+            question_id = quiz.get_current_question_id()
+            question = self.store.get_question_by_id(question_id)
+            answers = self.store.get_answers_by_id(question.answers)
+            return View("question", {"question": question, "answers": answers})
 
         if quiz.is_finished:
-            return View("scoreboard", {})
+            return View("scoreboard", {"users": self.store.get_users_by_id(quiz.users)})
+
+    def start_quiz(self, session_id):
+        user = self.store.get_user_by_session_id(session_id)
+
+        if user.is_owner:
+            return self.store.get_quiz_by_id(user.quiz).start()
+
+    def answer_question(self, session_id, answer_id):
+        answer = self.store.get_answer_by_id(answer_id)
+        user = self.store.get_user_by_session_id(session_id)
+
+        if answer.is_correct:
+            question = self.store.get_question_by_id(answer.question_id)
+            user.score += question.score
+
+            return True
+
+        return False

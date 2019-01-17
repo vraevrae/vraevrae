@@ -23,7 +23,7 @@ class Store():
         return new_quiz.quiz_id
 
     def create_answer(self, question_id, text, is_correct):
-        """create a new question and add it to the store and to the quiz"""
+        """create a new answer and add it to the store and to the quiz"""
         new_answers = Answer(question_id, text, is_correct)
         self.get_question_by_id(question_id).add_answer_by_id(
             new_answers.answer_id)
@@ -40,7 +40,6 @@ class Store():
 
     def create_question(self, quiz_id, temp_question):
         """create a new question and add it to the store and to the quiz"""
-
         new_question = Question(**temp_question)
         self.get_quiz_by_id(quiz_id).add_question_by_id(
             new_question.question_id)
@@ -50,7 +49,10 @@ class Store():
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        try:
+            temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        except Exception:
+            print("Code written by Yunus has failed")
 
         # add the question to the store
         question_id = self.create_question(quiz_id, temp_question)
@@ -66,6 +68,10 @@ class Store():
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
 
+    def get_quiz_by_session_id(self, session_id):
+        user = get_user_by_session_id(session_id)
+        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
+
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
         return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
@@ -78,9 +84,16 @@ class Store():
         """reads a specific question from the store by questionId"""
         return self.answers[answer_id]
 
+    def get_answers_by_id(self, answer_ids):
+        """reads a specific question from the store by questionId"""
+        return [self.get_answer_by_id(answer_id) for answer_id in answer_ids]
+
     def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
         return self.users[user_id]
+
+    def get_users_by_id(self, user_ids):
+        return [self.get_user_by_id(user_id) for user_id in user_ids]
 
     def get_user_by_session_id(self, session_id):
         """reads a specific user from the store by session_id"""
