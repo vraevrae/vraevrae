@@ -7,7 +7,6 @@ import config
 
 class OpenTDB:
     source = "opentdb"
-    amount_of_questions = 0
 
     def __init__(self, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
         self.amount_of_questions = amount_of_questions
@@ -16,7 +15,7 @@ class OpenTDB:
     def _download_data(amount_of_questions=1) -> dict:
         """
         Internal function to get apidata from Open Trivia DB
-        :returns
+        :returns JSON data
         """
 
         # try to get a correct request from Open Trivia DB
@@ -45,23 +44,25 @@ class OpenTDB:
 
         # shuffle answers to make sure the correct answer is not at the same place in the list
         answers = [
-            {"answer": data["incorrect_answers"][0],
-             "correct": False},
-            {"answer": data["incorrect_answers"][1],
-             "correct": False},
-            {"answer": data["incorrect_answers"][2],
-             "correct": False},
-            {"answer": data["correct_answer"],
-             "correct": True},
+            {"text": data["incorrect_answers"][0],
+             "is_correct": False},
+            {"text": data["incorrect_answers"][1],
+             "is_correct": False},
+            {"text": data["incorrect_answers"][2],
+             "is_correct": False},
+            {"text": data["correct_answer"],
+             "is_correct": True},
         ]
 
+        shuffle(answers)
+
         # return dictonary
-        return {"question": data["question"],
-                "answers": shuffle(answers),
+        return {"text": data["question"],
+                "answers": answers,
                 "category": data["category"],
                 "difficulty": data["difficulty"],
                 "type": data["type"]}
 
-    def get_formatted_data(self, amount_of_questions=amount_of_questions) -> list:
+    def get_formatted_data(self) -> list:
         """function to return all formatted questions"""
-        return [self._format_opentdb_data(question) for question in self._download_data(amount_of_questions)]
+        return [self._format_opentdb_data(question) for question in self._download_data(self.amount_of_questions)]

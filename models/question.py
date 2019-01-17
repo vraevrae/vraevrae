@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 
-class Question():
+class Question:
     """a questions is a fundamental stepping stone in a quiz"""
 
     def __init__(self, *args, **kwargs):
