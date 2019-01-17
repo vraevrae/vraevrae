@@ -4,11 +4,7 @@ html {
 }
 
 body {
-  background-image: url("/static/pictures/background.jpg"); 
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover; 
+  background: #daebe8;
 }
 
 .container
