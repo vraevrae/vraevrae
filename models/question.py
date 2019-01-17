@@ -15,8 +15,3 @@ class Question:
     def add_answer_by_id(self, answer_id):
         """"adds an answer to the quiz"""
         self.answers = [*self.answers, answer_id]
-
-    def check_answer(self):
-        """"checks the answer to the question"""
-        # TODO
-        pass

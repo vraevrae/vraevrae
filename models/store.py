@@ -4,7 +4,7 @@ from models.user import User
 from models.answer import Answer
 
 
-class Store():
+class Store:
 
     def __init__(self):
         self.quizes = {}
