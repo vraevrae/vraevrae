@@ -7,9 +7,8 @@ from random import randint
 def test_new_quiz():
     """creation of a new default quiz"""
     app = App()
-    quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    quiz = app.store.get_quiz_by_id(quiz_id)
-
+    user_id = app.new_quiz("some name", FakeSource)
+    quiz = app.store.get_quiz_by_user_id(user_id)
     question = app.store.get_question_by_id(quiz.questions[0])
     answer = app.store.get_answer_by_id(question.answers[0])
 
@@ -25,25 +24,20 @@ def test_new_quiz():
 def test_join_quiz():
     """a user can join a quiz by code"""
     app = App()
-    quiz_id = app.new_quiz("some creator of the quiz",
-                           "BIG-SESSION-TOKEN", FakeSource)
-    quiz = app.store.get_quiz_by_id(quiz_id)
-    joined_quiz = app.join_quiz(
-        "someone who wants to join", "BIG-SESSION-TOKEN", quiz.code)
+    user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
+    quiz = app.store.get_quiz_by_user_id(user_id_creator)
+    user_id_joiner = app.join_quiz("a joiner", quiz.code)
 
-    assert joined_quiz
+    assert user_id_joiner
 
     # lcprint(vars(joined_quiz), "the joined quiz:")
 
 
 def test_start_quiz():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
-
-    quiz_id = app.start_quiz(session_token)
-
+    user_id = app.new_quiz("Creator", FakeSource)
+    quiz_id = app.start_quiz(user_id)
     quiz = app.store.get_quiz_by_id(quiz_id)
 
     assert quiz.is_started is True
@@ -54,15 +48,14 @@ def test_start_quiz():
 
 def test_answer_question_correctly():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    app.new_quiz("Creator", session_token, FakeSource)
-    app.start_quiz(session_token)
+    user_id = app.new_quiz("Creator", FakeSource)
+    app.start_quiz(user_id)
 
-    view = app.get_view(session_token)
+    view = app.get_view(user_id)
 
     answer_is_answered = app.answer_question(
-        session_token, view.data["answers"][3].answer_id)
+        user_id, view.data["answers"][3].answer_id)
 
     assert answer_is_answered
 
@@ -72,15 +65,14 @@ def test_answer_question_correctly():
 
 def test_answer_question_wrongly():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    app.new_quiz("Creator", session_token, FakeSource)
-    app.start_quiz(session_token)
+    user_id = app.new_quiz("Creator", FakeSource)
+    app.start_quiz(user_id)
 
-    view = app.get_view(session_token)
+    view = app.get_view(user_id)
 
     answer_is_answered = app.answer_question(
-        session_token, view.data["answers"][2].answer_id)
+        user_id, view.data["answers"][2].answer_id)
 
     assert not answer_is_answered
 
@@ -90,43 +82,40 @@ def test_answer_question_wrongly():
 
 def test_next_question():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+    user_id = app.new_quiz("Creator", FakeSource)
 
-    old_quiz = app.store.get_quiz_by_id(quiz_id)
+    old_quiz = app.store.get_quiz_by_user_id(user_id)
     old_quiz.start()
     old_quiz_current_question = old_quiz.current_question
     old_quiz.next_question()
 
-    new_quiz = app.store.get_quiz_by_id(quiz_id)
+    new_quiz = app.store.get_quiz_by_user_id(user_id)
 
     assert old_quiz_current_question is new_quiz.current_question - 1
 
 
 def test_next_question_causes_finish():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+    user_id = app.new_quiz("Creator", FakeSource)
 
-    quiz = app.store.get_quiz_by_id(quiz_id)
+    quiz = app.store.get_quiz_by_user_id(user_id)
     quiz.start()
     for _ in range(10):
         quiz.next_question()
 
-    new_quiz = app.store.get_quiz_by_id(quiz_id)
+    new_quiz = app.store.get_quiz_by_user_id(user_id)
 
     assert new_quiz.is_finished
 
 
 def test_finish_quiz():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
 
-    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+    user_id = app.new_quiz("Creator", FakeSource)
 
-    quiz = app.store.get_quiz_by_id(quiz_id)
+    quiz = app.store.get_quiz_by_user_id(user_id)
 
     quiz.finish()
 
@@ -136,10 +125,8 @@ def test_finish_quiz():
 
 def test_get_view_lobby():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
-    app.new_quiz("some creator of the quiz",
-                 session_token, FakeSource)
-    view = app.get_view(session_token)
+    user_id = app.new_quiz("some creator of the quiz", FakeSource)
+    view = app.get_view(user_id)
 
     assert view.type == "lobby"
     assert type(view.data["users"]) is list
@@ -149,12 +136,10 @@ def test_get_view_lobby():
 
 def test_get_view_question():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
-    app.new_quiz("some creator",
-                 session_token, FakeSource)
+    user_id = app.new_quiz("some creator", FakeSource)
 
-    app.start_quiz(session_token)
-    view = app.get_view(session_token)
+    app.start_quiz(user_id)
+    view = app.get_view(user_id)
 
     assert view.type == "question"
     assert view.data["question"]
@@ -165,15 +150,13 @@ def test_get_view_question():
 
 def test_get_view_scoreboard():
     app = App()
-    session_token = "BIG-SESSION-TOKEN"
-    quiz_id = app.new_quiz("some creator",
-                           session_token, FakeSource)
+    user_id = app.new_quiz("some creator", FakeSource)
 
-    quiz_id = app.start_quiz(session_token)
+    quiz_id = app.start_quiz(user_id)
     quiz = app.store.get_quiz_by_id(quiz_id)
     quiz.finish()
 
-    view = app.get_view(session_token)
+    view = app.get_view(user_id)
 
     assert view.type == "scoreboard"
     assert view.data["users"]

@@ -30,10 +30,9 @@ class Store():
         self.answers[new_answers.answer_id] = new_answers
         return new_answers.answer_id
 
-    def create_user(self, quiz_id, name, session_id, is_owner):
+    def create_user(self, quiz_id, name, is_owner):
         """adds a user to the app"""
-        new_user = User(quiz_id=quiz_id, name=name,
-                        session_id=session_id, is_owner=is_owner)
+        new_user = User(quiz_id=quiz_id, name=name, is_owner=is_owner)
         self.users[new_user.user_id] = new_user
         self.get_quiz_by_id(quiz_id).add_user_by_id(new_user.user_id)
         return new_user.user_id
@@ -72,6 +71,11 @@ class Store():
         """read a specific quiz from the store by quizId"""
         return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
 
+    def get_quiz_by_user_id(self, user_id):
+        """reads a specific question from the store by questionId"""
+        user = self.get_user_by_id(user_id)
+        return self.get_quiz_by_id(user.quiz)
+
     def get_question_by_id(self, question_id):
         """reads a specific question from the store by questionId"""
         return self.questions[question_id]
@@ -90,7 +94,3 @@ class Store():
 
     def get_users_by_id(self, user_ids):
         return [self.get_user_by_id(user_id) for user_id in user_ids]
-
-    def get_user_by_session_id(self, session_id):
-        """reads a specific user from the store by session_id"""
-        return [user for user in self.users.values() if user.session_id is session_id][0]

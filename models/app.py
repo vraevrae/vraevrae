@@ -8,26 +8,26 @@ class App:
     def __init__(self):
         self.store = Store()
 
-    def new_quiz(self, name, session_id, Source):
+    def new_quiz(self, name, Source):
         """creates a default quiz"""
         quiz_id = self.store.create_quiz(Source)
         for _ in range(10):
             self.store.create_question_from_source(quiz_id)
 
-        self.store.create_user(quiz_id=quiz_id, name=name,
-                               session_id=session_id, is_owner=True)
+        user_id = self.store.create_user(
+            quiz_id=quiz_id, name=name, is_owner=True)
 
-        return quiz_id
+        return user_id
 
-    def join_quiz(self, name, session_id, code):
+    def join_quiz(self, name, code):
         """joins a new user to a quiz"""
         quiz = self.store.get_quiz_by_code(code)
-        self.store.create_user(quiz_id=quiz.quiz_id, name=name,
-                               session_id=session_id, is_owner=False)
-        return quiz
+        user_id = self.store.create_user(
+            quiz_id=quiz.quiz_id, name=name, is_owner=False)
+        return user_id
 
-    def get_view(self, session_id):
-        user = self.store.get_user_by_session_id(session_id)
+    def get_view(self, user_id):
+        user = self.store.get_user_by_id(user_id)
         quiz = self.store.get_quiz_by_id(user.quiz)
 
         if not quiz.is_started:
@@ -42,15 +42,15 @@ class App:
         if quiz.is_finished:
             return View("scoreboard", {"users": self.store.get_users_by_id(quiz.users)})
 
-    def start_quiz(self, session_id):
-        user = self.store.get_user_by_session_id(session_id)
+    def start_quiz(self, user_id):
+        user = self.store.get_user_by_id(user_id)
 
         if user.is_owner:
             return self.store.get_quiz_by_id(user.quiz).start()
 
-    def answer_question(self, session_id, answer_id):
+    def answer_question(self, user_id, answer_id):
         answer = self.store.get_answer_by_id(answer_id)
-        user = self.store.get_user_by_session_id(session_id)
+        user = self.store.get_user_by_id(user_id)
 
         if answer.is_correct:
             question = self.store.get_question_by_id(answer.question_id)
