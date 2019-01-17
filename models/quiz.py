@@ -7,7 +7,8 @@ class Quiz ():
     """the central class of the application"""
 
     # Class attributes, should be the same for all quizes
-    max_time = 10
+    MAX_TIME = 10
+    MAX_QUESTIONS = 10 - 1
 
     # Object attributes, different for each quiz
     def __init__(self, Source, code):
@@ -45,5 +46,9 @@ class Quiz ():
 
     def next_question(self):
         """increments the quiz to to the next question"""
-        self.current_question += 1
+        if self.current_question < self.MAX_QUESTIONS:
+            self.current_question += 1
+        else:
+            self.is_finished = True
+
         return self.current_question

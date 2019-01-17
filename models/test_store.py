@@ -190,7 +190,7 @@ def test_filled_app():
     # lcprint(vars(app), "a filled app:")
 
 
-def test_quiz_codes():
+def test_quiz_codes_uniqueness():
     """tests if each quiz has an unique human readable code"""
     app = App()
     app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)

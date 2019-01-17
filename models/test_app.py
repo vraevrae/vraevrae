@@ -103,6 +103,22 @@ def test_next_question():
     assert old_quiz_current_question is new_quiz.current_question - 1
 
 
+def test_next_question_causes_finish():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
+    quiz = app.store.get_quiz_by_id(quiz_id)
+    quiz.start()
+    for _ in range(10):
+        quiz.next_question()
+
+    new_quiz = app.store.get_quiz_by_id(quiz_id)
+
+    assert new_quiz.is_finished
+
+
 def test_finish_quiz():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
