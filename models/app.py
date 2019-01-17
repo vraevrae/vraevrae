@@ -56,7 +56,6 @@ class App ():
         if answer.is_correct:
             question = self.store.get_question_by_id(answer.question_id)
             user.score += question.score
-
             return True
 
         return False

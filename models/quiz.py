@@ -17,7 +17,6 @@ class Quiz ():
         self.users = []
         self.is_started = False
         self.is_finished = False
-        self.is_deleted = False
         self.current_question = 0
         self.current_time = 0
         self.source = Source()
@@ -31,22 +30,20 @@ class Quiz ():
         self.users = [*self.users, user_id]
 
     def start(self):
+        """starts the quiz"""
         self.is_started = True
         return self.quiz_id
 
     def get_current_question_id(self):
+        """get the id of the current question"""
         return self.questions[self.current_question]
 
     def finish(self):
+        """finishes the quiz"""
         self.is_finished = True
         return self.quiz_id
 
-    def check_answer(self, question_id, user_id):
-        """asks the question wether the answer is correct, and adds the score to the user"""
-        # TODO
-        pass
-
     def next_question(self):
         """increments the quiz to to the next question"""
-        # TODO
-        pass
+        self.current_question += 1
+        return self.current_question

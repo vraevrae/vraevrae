@@ -93,13 +93,14 @@ def test_next_question():
 
     quiz_id = app.new_quiz("Creator", session_token, FakeSource)
 
-    quiz = app.store.get_quiz_by_id(quiz_id)
+    old_quiz = app.store.get_quiz_by_id(quiz_id)
+    old_quiz.start()
+    old_quiz_current_question = old_quiz.current_question
+    old_quiz.next_question()
 
-    quiz.finish()
+    new_quiz = app.store.get_quiz_by_id(quiz_id)
 
-    assert False
-    assert quiz.is_finished is True
-    # lcprint(vars(quiz), "the ended quest:")
+    assert old_quiz_current_question is new_quiz.current_question - 1
 
 
 def test_finish_quiz():
@@ -164,4 +165,5 @@ def test_get_view_scoreboard():
 
 
 def test_next_question_timer():
+
     assert False
