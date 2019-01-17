@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 
-class User():
+class User:
     """quiz users"""
 
     def __init__(self, **kwargs):

@@ -4,7 +4,7 @@ from models.user import User
 import datetime
 
 
-class Quiz ():
+class Quiz:
     """the central class of the application"""
 
     # Class attributes, should be the same for all quizes
