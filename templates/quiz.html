@@ -1,57 +1,24 @@
-<<<<<<< HEAD
 {% extends "layout.html" %} 
 {% block title %} 
 Quiz 
 {% endblock %} 
 {% block main%}
-<div>
+<div class="well well-lg">
   <h1>{{ question.text }}</h1>
+</div>
+
+<div>
   {% for answer in answers %}
-  <button id="Button" class="button" onclick="send_answer('A');">
+  <button id="Button" class="btn btn-primary btn-sm btn-block" onclick="send_answer('A');">
     {{ answer.text }}
   </button>
   {% endfor%}
 </div>
-<div><h1 id="time">10</h1></div>
-{% endblock %}
-=======
-{% extends "layout.html" %}
 
-{% block title %}Quiz{% endblock %}
-
-{% block main %}
-    <center>
-        <div id="question">
-            <div id="title" style="display:inline">
-            </div>
-            <table>
-                <tr>
-                    <td>
-                        <button id="Button" type="button" class="button_A" onclick="send_answer('A');">
-                            A
-                        </button>
-                    </td>
-                    <td>
-                        <button id ="Button" type="button" class="button_B" onclick="send_answer('B');">
-                            B
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <button id ="Button" type="button" class="button_C" onclick="send_answer('C');">
-                            C
-                        </button>
-                    </td>
-                    <td>
-                        <button id ="Button" type="button" class="button_D" onclick="send_answer('D');">
-                            D
-                        </button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <script src="quiz.js"></script>
-    </center>
+<div class="progress progress-striped active">
+<div class="progress-bar">
+style="width: 45%">
+<h1 id="time">10</h1>
+</div>
+</div>
 {% endblock %}
->>>>>>> de14de717ab01977115043c4e93eb36a4cff55e8
