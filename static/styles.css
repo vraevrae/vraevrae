@@ -18,3 +18,7 @@ body {
 .main {
   max-width: 30rem;
 }
+
+.color-black{
+  color: black;
+}
