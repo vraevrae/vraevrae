@@ -28,7 +28,7 @@ def index():
 
 @app.route('/lobby', methods=["GET", "POST"])
 def lobby():
-    owner=False
+    owner=True
     return render_template("lobby.html",
                            users=[{"name": "Username 1", "score": 6590}, {"text": "Username 1", "score": 6590},
                                   {"text": "Username 1", "score": 6590}, {"text": "Username 1", "score": 6590}], owner=owner)
