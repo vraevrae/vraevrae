@@ -157,7 +157,7 @@ def test_get_user_by_session_id():
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
     session_token = "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS"
-    user_id = app.store.create_user(quiz_id, "Someone", session_token, False)
+    app.store.create_user(quiz_id, "Someone", session_token, False)
     user = app.store.get_user_by_session_id(session_token)
     assert user
 
@@ -190,7 +190,7 @@ def test_filled_app():
     # lcprint(vars(app), "a filled app:")
 
 
-def test_quiz_codes():
+def test_quiz_codes_uniqueness():
     """tests if each quiz has an unique human readable code"""
     app = App()
     app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)

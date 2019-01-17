@@ -51,7 +51,7 @@ class Store():
         # get question from quiz source
         try:
             temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
-        except Exception:
+        except:
             print("Code written by Yunus has failed")
 
         # add the question to the store
@@ -67,10 +67,6 @@ class Store():
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
-
-    def get_quiz_by_session_id(self, session_id):
-        user = get_user_by_session_id(session_id)
-        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
 
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""

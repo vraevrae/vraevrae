@@ -4,7 +4,12 @@ html {
 }
 
 body {
-  background: #daebe8;
+  background-image: url("/static/pictures/background.jpg") ; 
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; 
 }
 
 .container
@@ -16,4 +21,21 @@ body {
 
 .main {
   max-width: 30rem;
+}
+
+.squares {
+  width: 200px;
+  height: 200px;
+  background: #55F8FA;
+  display: flex;
+  justify-content: center;
+}
+.icon1{
+    width: 200px;
+    height: 200px;
+    background: #55F8FA;
+    border-style: ridge;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

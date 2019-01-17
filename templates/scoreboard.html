@@ -1,30 +1,18 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} 
+{% block title %} 
+Scoreboard 
+{% endblock %} 
+{% block main%}
 
-{% block title %}Score{% endblock %}
+</div>
+  <button type="button" class="Return_home" onclick="location.href='/';">Return to home page</button>
+</div>
 
-{% block main %}
-    <div id="Leaderboard">
-        <h1><span>Top players</span></h1>
-        <br />
-        <table>
-            <tr>
-                <th>Player</th>
-                <th>Score</th>
-            </tr>
-        </table>
-        <div id="Leaderboard_content" class="Leaderboard_content">
-        </div>
-    </div>
-    <div id="Finish" style="display:none">
-        <font size="7">And this winner is... <br /></font>
-        <font size="7" id="Finish_name"></font>
-        <font size="6"><br />with </font>
-        <font size="7" id="Finish_score"></font>
-        <font size="6">points!</font>
-        <br/>
-        <br/>
-        <button type="button" class="Return_home" onclick="location.href='/';">
-            Return to home page
-        </button>
-    </div>
+<div>
+  <h1><span>User Scores</span></h1>
+  {% for user in users %}
+    <h1>{{user.name}} : {{ user.score }}</h1>
+  {% endfor %}
+</div>
+
 {% endblock %}

@@ -47,8 +47,9 @@ def test_start_quiz():
     quiz = app.store.get_quiz_by_id(quiz_id)
 
     assert quiz.is_started is True
+    assert quiz.start_time
 
-    # lcprint(vars(quiz), "the started quest:")
+    lcprint(vars(quiz), "the started quest:")
 
 
 def test_answer_question_correctly():
@@ -65,8 +66,8 @@ def test_answer_question_correctly():
 
     assert answer_is_answered
 
-    lcprint(vars(view.data["answers"][3]),
-            "the question view with a sepecific answer selected:")
+    # lcprint(vars(view.data["answers"][3]),
+    #         "the question view with a sepecific answer selected:")
 
 
 def test_answer_question_wrongly():
@@ -83,8 +84,8 @@ def test_answer_question_wrongly():
 
     assert not answer_is_answered
 
-    lcprint(vars(view.data["answers"][2]),
-            "the question view with a sepecific answer selected:")
+    # lcprint(vars(view.data["answers"][2]),
+    #         "the question view with a sepecific answer selected:")
 
 
 def test_next_question():
@@ -93,13 +94,30 @@ def test_next_question():
 
     quiz_id = app.new_quiz("Creator", session_token, FakeSource)
 
+    old_quiz = app.store.get_quiz_by_id(quiz_id)
+    old_quiz.start()
+    old_quiz_current_question = old_quiz.current_question
+    old_quiz.next_question()
+
+    new_quiz = app.store.get_quiz_by_id(quiz_id)
+
+    assert old_quiz_current_question is new_quiz.current_question - 1
+
+
+def test_next_question_causes_finish():
+    app = App()
+    session_token = "BIG-SESSION-TOKEN"
+
+    quiz_id = app.new_quiz("Creator", session_token, FakeSource)
+
     quiz = app.store.get_quiz_by_id(quiz_id)
+    quiz.start()
+    for _ in range(10):
+        quiz.next_question()
 
-    quiz.finish()
+    new_quiz = app.store.get_quiz_by_id(quiz_id)
 
-    assert False
-    assert quiz.is_finished is True
-    # lcprint(vars(quiz), "the ended quest:")
+    assert new_quiz.is_finished
 
 
 def test_finish_quiz():
@@ -119,8 +137,8 @@ def test_finish_quiz():
 def test_get_view_lobby():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
-    quiz_id = app.new_quiz("some creator of the quiz",
-                           session_token, FakeSource)
+    app.new_quiz("some creator of the quiz",
+                 session_token, FakeSource)
     view = app.get_view(session_token)
 
     assert view.type == "lobby"
@@ -132,10 +150,10 @@ def test_get_view_lobby():
 def test_get_view_question():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
-    quiz_id = app.new_quiz("some creator",
-                           session_token, FakeSource)
+    app.new_quiz("some creator",
+                 session_token, FakeSource)
 
-    quiz_id = app.start_quiz(session_token)
+    app.start_quiz(session_token)
     view = app.get_view(session_token)
 
     assert view.type == "question"
@@ -161,7 +179,3 @@ def test_get_view_scoreboard():
     assert view.data["users"]
 
     # lcprint(vars(view), "the returned view:")
-
-
-def test_next_question_timer():
-    assert False
