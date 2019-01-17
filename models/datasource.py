@@ -1,5 +1,5 @@
 import config
-from .sources import opentdb
+from .sources.opentdb import OpenTDB
 
 
 class Datasource:
@@ -20,7 +20,7 @@ class Datasource:
 
         # define source
         if source == "opentdb":
-            self.source = opentdb.OpenTDB()
+            self.source = OpenTDB()
 
         # save questions to cache_data
         self.update_cache_data()
