@@ -68,10 +68,6 @@ class Store():
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
 
-    def get_quiz_by_session_id(self, session_id):
-        user = get_user_by_session_id(session_id)
-        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
-
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
         return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
