@@ -120,8 +120,8 @@ def test_finish_quiz():
 def test_get_view_lobby():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
-    quiz_id = app.new_quiz("some creator of the quiz",
-                           session_token, FakeSource)
+    app.new_quiz("some creator of the quiz",
+                 session_token, FakeSource)
     view = app.get_view(session_token)
 
     assert view.type == "lobby"
@@ -133,10 +133,10 @@ def test_get_view_lobby():
 def test_get_view_question():
     app = App()
     session_token = "BIG-SESSION-TOKEN"
-    quiz_id = app.new_quiz("some creator",
-                           session_token, FakeSource)
+    app.new_quiz("some creator",
+                 session_token, FakeSource)
 
-    quiz_id = app.start_quiz(session_token)
+    app.start_quiz(session_token)
     view = app.get_view(session_token)
 
     assert view.type == "question"

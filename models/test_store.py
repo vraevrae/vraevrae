@@ -157,7 +157,7 @@ def test_get_user_by_session_id():
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
     session_token = "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS"
-    user_id = app.store.create_user(quiz_id, "Someone", session_token, False)
+    app.store.create_user(quiz_id, "Someone", session_token, False)
     user = app.store.get_user_by_session_id(session_token)
     assert user
 
