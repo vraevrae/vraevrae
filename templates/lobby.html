@@ -9,13 +9,13 @@ Lobby
                 <div class="col-lg-4  col-lg-offset-1">
                     <h1><span>Users</span></h1>
                     {% for user in users %}
-                        <div class="well well-lg">
-                            <h2 class="color-black">{{ user.name }}</h2>
+                        <div class="well well-sm">
+                            <h3 class="color-black">{{ user.name }}</h3>
                         </div>
                     {% endfor %}
                 </div>
                 {% if owner %}
-                    <div class="col-lg-4  col-lg-offset-1">
+                    <div class="col-lg-4 col-lg-offset-1">
                         <a href="#" id="start" class="btn btn-success btn-lg"><h1><strong>Start Game</strong></h1></a>
                     </div>
                 {% endif %}
