@@ -10,10 +10,3 @@ class User():
         self.name = kwargs["name"]
         self.score = 0
         self.is_owner = kwargs["is_owner"]
-
-    def add_score(self):
-        """adds the score to the users score"""
-        pass
-
-    def get_screen(self):
-        return "some screen depending on"
