@@ -47,11 +47,24 @@ class Quiz ():
         self.is_finished = True
         return self.quiz_id
 
+    def question_should_update_time(self):
+        print("TIMEDELTASTUFFF", )
+        old_time = self.start_time
+        print(old_time)
+        new_time = old_time - datetime.timedelta(hours=2, minutes=10)
+        print(new_time)
+        print("TIMEDELTASTUFFF-ENDEND", )
+        return True
+
+    def question_should_update_max_questions(self):
+        return self.current_question < self.MAX_QUESTIONS
+
     def next_question(self):
         """increments the quiz to to the next question"""
-        if self.current_question < self.MAX_QUESTIONS:
-            self.current_question += 1
-        else:
-            self.is_finished = True
+        if self.question_should_update_time():
+            if self.question_should_update_max_questions():
+                self.current_question += 1
+            else:
+                self.is_finished = True
 
         return self.current_question
