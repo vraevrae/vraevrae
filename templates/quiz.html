@@ -3,22 +3,23 @@
 Quiz 
 {% endblock %} 
 {% block main%}
-<div class="well well-lg">
-  <h1>{{ question.text }}</h1>
-</div>
+
+<script type="text/javascript" src="/static/quiz.js"></script>
+
+<div class="well well-lg"><h1>{{ question.text }}</h1></div>
 
 <div>
   {% for answer in answers %}
-  <button id="Button" class="btn btn-primary btn-sm btn-block" onclick="send_answer('A');">
+  <button id="Button" class="btn btn-primary btn-lg btn-block" onclick="send_answer('A');">
     {{ answer.text }}
   </button>
   {% endfor%}
 </div>
 
+<div><h1 id="time">10</h1></div>
+
 <div class="progress progress-striped active">
-<div class="progress-bar">
-style="width: 45%">
-<h1 id="time">10</h1>
+  <div id="quiz-progress" class="progress-bar" style="width:100%" value="100" max="100" id="progressBar"></div>
 </div>
-</div>
+
 {% endblock %}
