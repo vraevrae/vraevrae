@@ -4,7 +4,8 @@ html {
 }
 
 body {
-  background-image: url("/static/pictures/background.jpg"); 
+  background-image: url("/static/pictures/background.jpg") ; 
+  background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -33,7 +34,6 @@ body {
     width: 200px;
     height: 200px;
     background: #55F8FA;
-    margin-right: 10%;
     border-style: ridge;
     display: flex;
     align-items: center;
