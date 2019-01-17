@@ -20,20 +20,21 @@
   </head>
   <body class="body">
         <nav class="navbar navbar-inverse nav-color">
-                <div class="container-fluid">
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-                        <ul class="nav navbar-nav">
-                            <li><a href="{{ url_for('index') }}"><img src="static/pictures/logo4.png" width="100"height="28"></img></a></li>
-                        </ul>
-                    </div>
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="{{ url_for('index') }}">
+                                <img src="static/pictures/logo4.png" width="100"height="28" alt="Vrae Vrae logo">
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
         <main>
-            {% block main %}{% endblock %}
+            {% block main %}
+            {% endblock %}
         </main>
-          
-    </div>
-
   </body>
 </html>
