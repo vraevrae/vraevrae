@@ -3,7 +3,8 @@
 Quiz 
 {% endblock %} 
 {% block main%}
-<div class="well well-lg">
+<div 
+class="well well-lg">
   <h1>{{ question.text }}</h1>
 </div>
 
@@ -15,10 +16,10 @@ Quiz
   {% endfor%}
 </div>
 
+<div><h1 id="time">10</h1></div>
+
 <div class="progress progress-striped active">
-<div class="progress-bar">
-style="width: 45%">
-<h1 id="time">10</h1>
+  <div class="progress-bar" style="width: 45%"></div>
 </div>
-</div>
+
 {% endblock %}
