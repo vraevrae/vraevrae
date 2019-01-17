@@ -51,7 +51,7 @@ class Store():
         # get question from quiz source
         try:
             temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
-        except Exception:
+        except:
             print("Code written by Yunus has failed")
 
         # add the question to the store

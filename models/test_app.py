@@ -47,8 +47,9 @@ def test_start_quiz():
     quiz = app.store.get_quiz_by_id(quiz_id)
 
     assert quiz.is_started is True
+    assert quiz.start_time
 
-    # lcprint(vars(quiz), "the started quest:")
+    lcprint(vars(quiz), "the started quest:")
 
 
 def test_answer_question_correctly():
@@ -65,8 +66,8 @@ def test_answer_question_correctly():
 
     assert answer_is_answered
 
-    lcprint(vars(view.data["answers"][3]),
-            "the question view with a sepecific answer selected:")
+    # lcprint(vars(view.data["answers"][3]),
+    #         "the question view with a sepecific answer selected:")
 
 
 def test_answer_question_wrongly():
@@ -83,8 +84,8 @@ def test_answer_question_wrongly():
 
     assert not answer_is_answered
 
-    lcprint(vars(view.data["answers"][2]),
-            "the question view with a sepecific answer selected:")
+    # lcprint(vars(view.data["answers"][2]),
+    #         "the question view with a sepecific answer selected:")
 
 
 def test_next_question():
@@ -178,8 +179,3 @@ def test_get_view_scoreboard():
     assert view.data["users"]
 
     # lcprint(vars(view), "the returned view:")
-
-
-def test_next_question_timer():
-
-    assert False

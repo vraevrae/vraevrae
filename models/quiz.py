@@ -1,6 +1,7 @@
 from uuid import uuid4
 from models.question import Question
 from models.user import User
+import datetime
 
 
 class Quiz ():
@@ -17,6 +18,7 @@ class Quiz ():
         self.questions = []
         self.users = []
         self.is_started = False
+        self.start_time = None
         self.is_finished = False
         self.current_question = 0
         self.current_time = 0
@@ -33,6 +35,7 @@ class Quiz ():
     def start(self):
         """starts the quiz"""
         self.is_started = True
+        self.start_time = datetime.datetime.utcnow()
         return self.quiz_id
 
     def get_current_question_id(self):
