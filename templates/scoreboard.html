@@ -1,18 +1,22 @@
 {% extends "layout.html" %} 
 {% block title %} 
-Scoreboard 
+Scoreboard
 {% endblock %} 
 {% block main%}
-
-</div>
-  <button type="button" class="Return_home" onclick="location.href='/';">Return to home page</button>
-</div>
-
-<div>
-  <h1><span>User Scores</span></h1>
-  {% for user in users %}
-    <h1>{{user.name}} : {{ user.score }}</h1>
-  {% endfor %}
-</div>
-
+<form class="form-horizontal">
+    <fieldset class="form-group"></fieldset>
+    <fieldset class="form-group">
+            <div class="col-lg-4  col-lg-offset-1">
+                <h1><span>User Scores</span></h1>
+                {% for user in users %}
+                    <div class="well well-lg">
+                        <h2 class="color-black">{{user.name}} : {{ user.score }}</h2>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-lg-4  col-lg-offset-1">
+                    <a href="#" id="start" class="btn btn-success btn-lg onclick="location.href='/'><h1><strong>Return to home page</strong></h1></a>
+            </div>
+    </fieldset>
+</form>
 {% endblock %}

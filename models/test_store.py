@@ -117,8 +117,7 @@ def test_create_user():
     """a user can be added to the store and quiz"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
-    user_id = app.store.create_user(quiz_id, "Someone",
-                                    "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user_id = app.store.create_user(quiz_id, "Someone", False)
     user = app.store.users[user_id]
     assert user
 
@@ -129,8 +128,7 @@ def test_get_user_by_id():
     """a user can be retrieved from the app"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
-    user_id = app.store.create_user(quiz_id, "Someone",
-                                    "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
+    user_id = app.store.create_user(quiz_id, "Someone", False)
     user = app.store.get_user_by_id(user_id)
     assert user
 
@@ -141,25 +139,13 @@ def test_get_users_by_id():
     """answers can be retrieved from the app"""
     app = App()
     quiz_id = app.store.create_quiz(FakeSource)
-    user_id_one = app.store.create_user(quiz_id, "Someone",
-                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS", False)
-    user_id_two = app.store.create_user(quiz_id, "Someone",
-                                        "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDssdfsdfFNAS", False)
+    user_id_one = app.store.create_user(quiz_id, "Someone", False)
+    user_id_two = app.store.create_user(quiz_id, "Someone", False)
 
     users = app.store.get_users_by_id([user_id_one, user_id_two])
     assert type(users) is list
 
     # lcprint(users, "a list of users:")
-
-
-def test_get_user_by_session_id():
-    """a user can be retrieved from the app"""
-    app = App()
-    quiz_id = app.store.create_quiz(FakeSource)
-    session_token = "BIG-SESSION-TOKEN-ASDFKASLDFGJHKSADNFSAKDFNAS"
-    app.store.create_user(quiz_id, "Someone", session_token, False)
-    user = app.store.get_user_by_session_id(session_token)
-    assert user
 
 
 def test_filled_app():
@@ -179,8 +165,7 @@ def test_filled_app():
             question_count += 1
 
         for _ in range(randint(1, 10)):
-            app.store.create_user(quiz_id, "Someone",
-                                  "BIG-SESSION-TOKEN", False)
+            app.store.create_user(quiz_id, "Someone", False)
             user_count += 1
 
     assert len(app.store.quizes) == quiz_count
@@ -193,11 +178,11 @@ def test_filled_app():
 def test_quiz_codes_uniqueness():
     """tests if each quiz has an unique human readable code"""
     app = App()
-    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
+    app.new_quiz("some name", FakeSource)
+    app.new_quiz("some name", FakeSource)
+    app.new_quiz("some name", FakeSource)
+    app.new_quiz("some name", FakeSource)
+    app.new_quiz("some name", FakeSource)
     quiz_codes = [quiz.code for quiz in app.store.quizes.values()]
 
     assert len(quiz_codes) is len(set(quiz_codes))
@@ -208,8 +193,8 @@ def test_quiz_codes_uniqueness():
 def test_get_quiz_by_code():
     """tests if a specific quiz can be found by code"""
     app = App()
-    quiz_id = app.new_quiz("some name", "BIG-SESSION-TOKEN", FakeSource)
-    quiz = app.store.get_quiz_by_id(quiz_id)
+    user_id = app.new_quiz("some name", FakeSource)
+    quiz = app.store.get_quiz_by_user_id(user_id)
     quiz_by_code = app.store.get_quiz_by_code(quiz.code)
 
     assert quiz_by_code
