@@ -9,8 +9,3 @@ class Answer():
         self.question_id = question_id
         self.text = text
         self.is_correct = is_correct
-
-    def check_answer(self):
-        """"checks the answer to the question"""
-        # TODO
-        pass
