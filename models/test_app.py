@@ -49,7 +49,7 @@ def test_start_quiz():
     assert quiz.is_started is True
     assert quiz.start_time
 
-    lcprint(vars(quiz), "the started quest:")
+    # lcprint(vars(quiz), "the started quest:")
 
 
 def test_answer_question_correctly():

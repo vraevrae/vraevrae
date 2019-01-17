@@ -24,7 +24,6 @@ class App:
         quiz = self.store.get_quiz_by_code(code)
         self.store.create_user(quiz_id=quiz.quiz_id, name=name,
                                session_id=session_id, is_owner=False)
-
         return quiz
 
     def get_view(self, session_id):

@@ -8,8 +8,8 @@ class Quiz ():
     """the central class of the application"""
 
     # Class attributes, should be the same for all quizes
-    MAX_TIME = 10
-    MAX_QUESTIONS = 10 - 1
+    MAX_TIME_IN_SECONDS = 10
+    MAX_QUESTIONS = 10
 
     # Object attributes, different for each quiz
     def __init__(self, Source, code):
@@ -21,7 +21,6 @@ class Quiz ():
         self.start_time = None
         self.is_finished = False
         self.current_question = 0
-        self.current_time = 0
         self.source = Source()
 
     def add_question_by_id(self, question_id):
@@ -47,11 +46,26 @@ class Quiz ():
         self.is_finished = True
         return self.quiz_id
 
+    def question_should_update_time(self):
+        # print("TIMEDELTASTUFFF")
+
+        should_update_at = self.MAX_TIME_IN_SECONDS * self.current_question
+        current_time = datetime.datetime.utcnow()
+
+        # print("should update at", should_update_at)
+        # print("currente", current_time)
+        # print("TIMEDELTASTUFFF-ENDEND", )
+        return True
+
+    def question_should_update_max_questions(self):
+        return self.current_question < self.MAX_QUESTIONS - 1
+
     def next_question(self):
         """increments the quiz to to the next question"""
-        if self.current_question < self.MAX_QUESTIONS:
-            self.current_question += 1
-        else:
-            self.is_finished = True
+        if self.question_should_update_time():
+            if self.question_should_update_max_questions():
+                self.current_question += 1
+            else:
+                self.is_finished = True
 
         return self.current_question
