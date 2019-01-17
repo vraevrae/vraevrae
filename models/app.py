@@ -48,3 +48,15 @@ class App ():
 
         if user.is_owner:
             return self.store.get_quiz_by_id(user.quiz).start()
+
+    def answer_question(self, session_id, answer_id):
+        answer = self.store.get_answer_by_id(answer_id)
+        user = self.store.get_user_by_session_id(session_id)
+
+        if answer.is_correct:
+            question = self.store.get_question_by_id(answer.question_id)
+            user.score += question.score
+
+            return True
+
+        return False

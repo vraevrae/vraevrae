@@ -23,7 +23,7 @@ class Store():
         return new_quiz.quiz_id
 
     def create_answer(self, question_id, text, is_correct):
-        """create a new question and add it to the store and to the quiz"""
+        """create a new answer and add it to the store and to the quiz"""
         new_answers = Answer(question_id, text, is_correct)
         self.get_question_by_id(question_id).add_answer_by_id(
             new_answers.answer_id)
@@ -40,7 +40,6 @@ class Store():
 
     def create_question(self, quiz_id, temp_question):
         """create a new question and add it to the store and to the quiz"""
-
         new_question = Question(**temp_question)
         self.get_quiz_by_id(quiz_id).add_question_by_id(
             new_question.question_id)
@@ -50,7 +49,10 @@ class Store():
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        try:
+            temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        except Exception:
+            print("Code written by Yunus has failed")
 
         # add the question to the store
         question_id = self.create_question(quiz_id, temp_question)

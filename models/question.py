@@ -10,7 +10,7 @@ class Question():
         self.difficulty = kwargs["difficulty"]
         self.category = kwargs["category"]
         self.answers = []
-        self.timer = 10
+        self.score = 10
 
     def add_answer_by_id(self, answer_id):
         """"adds an answer to the quiz"""
