@@ -14,10 +14,11 @@ Lobby
                         </div>
                     {% endfor %}
                 </div>
-                <div class="col-lg-4  col-lg-offset-1">
+                {% if owner %}
+                    <div class="col-lg-4  col-lg-offset-1">
                         <a href="#" id="start" class="btn btn-success btn-lg"><h1><strong>Start Game</strong></h1></a>
-                </div>
+                    </div>
+                {% endif %}
         </fieldset>
 </form>
-<script src="lobby.js"></script>
 {% endblock %}
