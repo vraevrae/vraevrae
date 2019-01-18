@@ -1,7 +1,7 @@
-from models.quiz import Quiz
-from models.question import Question
-from models.user import User
 from models.answer import Answer
+from models.question import Question
+from models.quiz import Quiz
+from models.user import User
 
 
 class Store:
@@ -51,18 +51,21 @@ class Store:
         # get question from quiz source
         try:
             temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+
+            # add the question to the store
+            question_id = self.create_question(quiz_id, temp_question)
+
+            # add the answers to the question and the store
+            for answer in temp_question["answers"]:
+                self.create_answer(
+                    question_id, answer["text"], answer["is_correct"])
+
+            return question_id
+
         except:
             print("Code written by Yunus has failed")
 
-        # add the question to the store
-        question_id = self.create_question(quiz_id, temp_question)
-
-        # add the answers to the question and the store
-        for answer in temp_question["answers"]:
-            self.create_answer(
-                question_id, answer["text"], answer["is_correct"])
-
-        return question_id
+            return False
 
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
