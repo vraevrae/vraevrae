@@ -12,14 +12,14 @@ class Store:
         self.answers = {}
         self.users = {}
 
-    def create_quiz(self, Source):
+    def create_quiz(self, source):
         """creates a new quiz and adds it to the store"""
         # Get the lowest available code
         code = 1
         if len(self.questions) is not 0:
             code = max([quiz.code for quiz in self.quizes.values()]) + 1
 
-        new_quiz = Quiz(Source, code)
+        new_quiz = Quiz(source, code)
         self.quizes[new_quiz.quiz_id] = new_quiz
         return new_quiz.quiz_id
 
@@ -49,23 +49,17 @@ class Store:
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        try:
-            temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
 
-            # add the question to the store
-            question_id = self.create_question(quiz_id, temp_question)
+        # add the question to the store
+        question_id = self.create_question(quiz_id, temp_question)
 
-            # add the answers to the question and the store
-            for answer in temp_question["answers"]:
-                self.create_answer(
-                    question_id, answer["text"], answer["is_correct"])
+        # add the answers to the question and the store
+        for answer in temp_question["answers"]:
+            self.create_answer(
+                question_id, answer["text"], answer["is_correct"])
 
-            return question_id
-
-        except:
-            print("Code written by Yunus has failed")
-
-            return False
+        return question_id
 
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
