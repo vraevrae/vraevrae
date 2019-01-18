@@ -1,4 +1,4 @@
-# TODO FIX FILE, ALL COMMENTED BECAUSE MODELS/APP IS DELETED
+# TODO FIX FILE, ALL COMMENTED BECAUSE MODELS/APP IS DELETEDtes
 # from helpers.fake import FakeSource
 # from helpers.cprint import cprint, lcprint
 # from random import randint
