@@ -3,10 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta content="initial-scale=1, width=device-width" name="viewport" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta -->
-    <meta charset="utf-8"/>
-    <meta content="initial-scale=1, width=device-width" name="viewport"/>
-    
     <!-- documentation at http://getbootstrap.com/, alternative themes at https://www.bootstrapcdn.com/bootswatch/ -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="https://bootswatch.com/3/darkly/" rel="stylesheet"/> 
@@ -15,7 +11,6 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       
-    
     <title>Vrae Vrae: {% block title %}{% endblock %}</title>
   </head>
   <body class="body">
@@ -25,14 +20,15 @@
                     <ul class="nav navbar-nav">
                         <li>
                             <a href="{{ url_for('index') }}">
-                                <img src="static/pictures/logo4.png" width="100"height="28" alt="Vrae Vrae logo">
+                                <img src="{{ url_for('static', filename='images/logo4.png') }}" width="100" height="28"
+                                     alt="Vrae Vrae logo">
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-        <main>
+        <main class="container-fluid">
             {% block main %}
             {% endblock %}
         </main>
