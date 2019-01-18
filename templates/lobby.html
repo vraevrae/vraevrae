@@ -6,19 +6,41 @@ Lobby
 <form class="form-horizontal">
         <fieldset class="form-group"></fieldset>
         <fieldset class="form-group">
-                <div class="col-lg-4  col-lg-offset-1">
-                    <h1><span>Users</span></h1>
-                    {% for user in users %}
-                        <div class="well well-sm">
-                            <h3 class="color-black">{{ user.name }}</h3>
-                        </div>
-                    {% endfor %}
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Users</h2>
+                        {% if not owner%}
+                        <p class="mb-0">The game will start when ready</p>
+                        {% endif  %}
+                    </div>
+                    <div>
+                         <ul class="list-group list-group-flush">
+                         {% for user in users %} 
+                            <li class="list-group-item">{{ user.name }}</li>
+                         {% endfor %}
+                        </ul> 
+                    </div>
                 </div>
+
+
+
+        </fieldset>
+
+                        
                 {% if owner %}
                     <div class="col-lg-4 col-lg-offset-1">
                         <a href="#" id="start" class="btn btn-success"><h2><strong>Start Game</strong></h2></a>
                     </div>
                 {% endif %}
-        </fieldset>
 </form>
 {% endblock %}
+
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Cras justo odio</li>
+    <li class="list-group-item">Dapibus ac facilisis in</li>
+    <li class="list-group-item">Vestibulum at eros</li>
+  </ul>
+
+  <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>

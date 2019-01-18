@@ -28,3 +28,24 @@ body {
   border-color: #4CAE4C;
   border-radius: unset;
 }
+
+.card {
+  position: relative;
+  left: 100px;
+  width:400px;
+  height: 1000px;
+}
+
+.list-group-item{
+  color:black
+}
+
+#start{
+  position:absolute;
+  bottom: 5000%;
+  right:-380%;
+}
+
+.card-title{
+  font-size: large
+}
