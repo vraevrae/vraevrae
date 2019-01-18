@@ -1,29 +1,31 @@
 {% extends "layout.html" %}
 {% block title %}
-Home
+    Home
 {% endblock %}
 {% block main %}
-        <form id="join" action="/join" method="get">
-                    <form class="form-horizontal">
-                            <fieldset class="form-group "></fieldset>
-                            <fieldset class="form-group">
-                                <div class="col-lg-4  col-lg-offset-1">
-                                    <h1>Create a new game</h1>
-                                    <input type="text" class="form-control" id="Username" placeholder="Username">
-                                    <p></p>
-                                    <a href="#" class="btn btn-success">Create New Game!</a>
-                                </div>
-                                <div class="col-lg-4 col-lg-offset-2">
-                                    <h1>Join an existing game</h1>
-                                    <input type="text" class="form-control" id="Username" placeholder="Username">
-                                    <p></p>
-                                    <input type="text" class="form-control" id="Game_Code" placeholder="Game Code">
-                                    <p></p>
-                                    <a href="#" class="btn btn-success">Join!</a>
-                                </div>
-                            </fieldset>
-                    </form>
+    {% if error is defined %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div class="row form-horizontal">
+        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post" action="{{ url_for("index") }}">
+            <h1>Create a game</h1>
+            <input type="text" class="form-control" name="username" placeholder="Username">
+            <input type="submit" name="newgame" class="btn btn-success" value="Create New Game!">
+        </form>
+        <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for("index") }}">
+            <h1>Join existing game</h1>
+            <input type="text" class="form-control" name="username" placeholder="Username">
+            <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
+            <input type="submit" name="joingame" class="btn btn-success" value="Join!">
         </form>
 
-        <div><img src="static/pictures/logo3.png"width="500"height="251"></div>
+        <div>
+            <img src="{{ url_for('static', filename='images/untitled(1).svg') }}"
+                                     alt="Vrae Vrae logo">
+        </div>
+    </div>
+
 {% endblock %}

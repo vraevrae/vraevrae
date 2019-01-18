@@ -2,6 +2,7 @@ from models.app import App
 from helpers.fake import FakeSource
 from helpers.cprint import cprint, lcprint
 from random import randint
+from time import sleep
 
 
 def test_new_quiz():
@@ -88,6 +89,7 @@ def test_next_question():
     old_quiz = app.store.get_quiz_by_user_id(user_id)
     old_quiz.start()
     old_quiz_current_question = old_quiz.current_question
+    sleep(1.1)
     old_quiz.next_question()
 
     new_quiz = app.store.get_quiz_by_user_id(user_id)
@@ -103,6 +105,7 @@ def test_next_question_causes_finish():
     quiz = app.store.get_quiz_by_user_id(user_id)
     quiz.start()
     for _ in range(10):
+        sleep(1.1)
         quiz.next_question()
 
     new_quiz = app.store.get_quiz_by_user_id(user_id)
