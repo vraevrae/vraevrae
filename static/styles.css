@@ -6,6 +6,10 @@ html {
 body {
   background: #070F1C;
   color: white;
+  background-image: url("images/untitled(1).svg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 85% 90%; 
 }
 
 .container
@@ -27,6 +31,11 @@ body {
   background: #5CB85C;
   border-color: #4CAE4C;
   border-radius: unset;
+}
+
+#menulogo {
+  width: 30%;
+  height: auto;
 }
 
 .card {

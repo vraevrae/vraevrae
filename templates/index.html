@@ -12,20 +12,23 @@
     <div class="row form-horizontal">
         <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post" action="{{ url_for("index") }}">
             <h1>Create a game</h1>
+            <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
+            <p></p>
             <input type="submit" name="newgame" class="btn btn-success" value="Create New Game!">
+            <p></p>
         </form>
         <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for("index") }}">
             <h1>Join existing game</h1>
+            <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
+            <p></p>
             <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
+            <p></p>
             <input type="submit" name="joingame" class="btn btn-success" value="Join!">
         </form>
 
-        <div>
-            <img src="{{ url_for('static', filename='images/untitled(1).svg') }}"
-                                     alt="Vrae Vrae logo">
-        </div>
+        
     </div>
 
 {% endblock %}
