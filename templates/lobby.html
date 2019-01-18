@@ -22,6 +22,7 @@
     </div>
     {% if owner %}
     <div class="col-lg-4 col-lg-offset-1">
+        <h3><span id="gamecodetext">Game code:</span> {{ gamecode }}</h3>
         <form action="{{ url_for("game") }}" method="post">
             <div class="form-group">
                 <input name="action" type="hidden" value="start"/>

@@ -53,3 +53,7 @@ body {
 .card-title{
     font-size: large
 }
+
+#gamecodetext {
+    font-weight: bold;
+}
