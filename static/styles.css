@@ -4,8 +4,12 @@ html {
 }
 
 body {
-  color: white;
-    background: #070F1C url("images/logo.svg") no-repeat fixed 85% 90%;
+    color: white;
+    background-color: #070F1C;
+    background-image: url("images/logo.svg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 85% 90%;
 }
 
 .container
@@ -16,41 +20,41 @@ body {
 }
 
 .main {
-  max-width: 30rem;
+    max-width: 30rem;
 }
 
 .color-black {
-  color: black;
+    color: black;
 }
 
 .nav-color {
-  background: #5CB85C;
-  border-color: #4CAE4C;
-  border-radius: unset;
+    background: #5CB85C;
+    border-color: #4CAE4C;
+    border-radius: unset;
 }
 
 #menulogo {
-  width: 30%;
-  height: auto;
+    width: 30%;
+    height: auto;
 }
 
 .card {
-  position: relative;
-  left: 100px;
-  width:400px;
-  height: 1000px;
+    position: relative;
+    left: 100px;
+    width: 400px;
+    height: 1000px;
 }
 
 .list-group-item{
-  color:black
+    color: black
 }
 
 #start{
-  position:absolute;
-  bottom: 5000%;
-  right:-380%;
+    position: absolute;
+    bottom: 5000%;
+    right: -380%;
 }
 
 .card-title{
-  font-size: large
+    font-size: large
 }
