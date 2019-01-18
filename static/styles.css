@@ -4,12 +4,8 @@ html {
 }
 
 body {
-  background: #070F1C;
   color: white;
-  background-image: url("images/logo.svg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: 85% 90%; 
+    background: #070F1C url("images/logo.svg") no-repeat fixed 85% 90%;
 }
 
 .container
