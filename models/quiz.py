@@ -1,6 +1,7 @@
 from uuid import uuid4
 from models.question import Question
 from models.user import User
+import time
 import datetime
 
 
@@ -8,7 +9,7 @@ class Quiz:
     """the central class of the application"""
 
     # Class attributes, should be the same for all quizes
-    MAX_TIME_IN_SECONDS = 10
+    MAX_TIME_IN_SECONDS = 1
     MAX_QUESTIONS = 10
 
     # Object attributes, different for each quiz
@@ -47,15 +48,10 @@ class Quiz:
         return self.quiz_id
 
     def question_should_update_time(self):
-        # print("TIMEDELTASTUFFF")
-
-        should_update_at = self.MAX_TIME_IN_SECONDS * self.current_question
+        next_update = self.MAX_TIME_IN_SECONDS * (self.current_question + 1)
+        update_time = self.start_time + datetime.timedelta(seconds=next_update)
         current_time = datetime.datetime.utcnow()
-
-        # print("should update at", should_update_at)
-        # print("currente", current_time)
-        # print("TIMEDELTASTUFFF-ENDEND", )
-        return True
+        return current_time > update_time
 
     def question_should_update_max_questions(self):
         return self.current_question < self.MAX_QUESTIONS - 1

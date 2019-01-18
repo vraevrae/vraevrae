@@ -14,6 +14,7 @@ class Store:
 
     def create_quiz(self, Source):
         """creates a new quiz and adds it to the store"""
+        # Get the lowest available code
         code = 1
         if len(self.questions) is not 0:
             code = max([quiz.code for quiz in self.quizes.values()]) + 1
