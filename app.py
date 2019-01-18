@@ -54,7 +54,8 @@ def index():
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
 
-            user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
+            user_id = store.create_user(
+                quiz_id=quiz_id, name=username, is_owner=True)
 
             session["user_id"] = user_id
 
@@ -69,7 +70,8 @@ def index():
                 return render_template("index.html", error="Game code should not be empty!")
 
             quiz = store.get_quiz_by_code(gamecode)
-            user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
+            user_id = store.create_user(
+                quiz_id=quiz.quiz_id, name=username, is_owner=False)
 
             session["user_id"] = user_id
 
@@ -82,6 +84,8 @@ def game():
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
+        print(quiz)
+
         if not quiz.is_started:
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users), owner=user.is_owner)
 
@@ -89,7 +93,8 @@ def game():
             question_id = quiz.get_current_question_id()
             question = store.get_question_by_id(question_id)
             answers = store.get_answers_by_id(question.answers)
-
+            print([store.get_question_by_id(question_id).text
+                   for question_id in quiz.questions])
             return render_template("quiz.html", question=question, answers=answers)
 
         if quiz.is_finished:
