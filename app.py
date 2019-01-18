@@ -90,6 +90,7 @@ def game():
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users), owner=user.is_owner)
 
         if quiz.is_started and not quiz.is_finished:
+            quiz.next_question()
             question_id = quiz.get_current_question_id()
             question = store.get_question_by_id(question_id)
             answers = store.get_answers_by_id(question.answers)
