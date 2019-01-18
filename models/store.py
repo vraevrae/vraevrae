@@ -1,7 +1,7 @@
-from models.quiz import Quiz
-from models.question import Question
-from models.user import User
 from models.answer import Answer
+from models.question import Question
+from models.quiz import Quiz
+from models.user import User
 
 
 class Store:
@@ -41,7 +41,6 @@ class Store:
     def create_question(self, quiz_id, temp_question):
         """create a new question and add it to the store and to the quiz"""
         new_question = Question(**temp_question)
-        print("after constructor:  ", new_question.text)
         self.get_quiz_by_id(quiz_id).add_question_by_id(
             new_question.question_id)
         self.questions[new_question.question_id] = new_question
@@ -50,32 +49,23 @@ class Store:
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        print("")
-        print("")
-        print("")
         try:
             temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
-            print("After Yunus:   ", temp_question["text"])
-            print("")
+
+            # add the question to the store
+            question_id = self.create_question(quiz_id, temp_question)
+
+            # add the answers to the question and the store
+            for answer in temp_question["answers"]:
+                self.create_answer(
+                    question_id, answer["text"], answer["is_correct"])
+
+            return question_id
+
         except:
             print("Code written by Yunus has failed")
 
-        # add the question to the store
-        question_id = self.create_question(quiz_id, temp_question)
-        print("")
-        print("Retrieved from store in form_source:   ",
-              self.get_question_by_id(question_id).text)
-        print("")
-        print("")
-        print("")
-        print("")
-
-        # add the answers to the question and the store
-        for answer in temp_question["answers"]:
-            self.create_answer(
-                question_id, answer["text"], answer["is_correct"])
-
-        return question_id
+            return False
 
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
