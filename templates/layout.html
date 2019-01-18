@@ -16,15 +16,11 @@
   <body class="body">
         <nav class="navbar navbar-inverse nav-color">
             <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="{{ url_for('index') }}">
-                                <img src="{{ url_for('static', filename='images/logo.svg') }}"
+                <div class="navbar-header">
+                    <a class="navbar-brand" href={{ url_for('index') }}>
+                        <img src="{{ url_for('static', filename='images/logo.svg') }}"
                                      alt="Vrae Vrae logo" id="menulogo">
-                            </a>
-                        </li>
-                    </ul>
+                    </a>
                 </div>
             </div>
         </nav>
