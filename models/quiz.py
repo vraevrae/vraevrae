@@ -1,8 +1,9 @@
-from uuid import uuid4
-from models.question import Question
-from models.user import User
-import time
+# TODO Check unused imports! (RJ!)
+# from models.question import Question
+# from models.user import User
+# import time
 import datetime
+from uuid import uuid4
 
 
 class Quiz:
@@ -13,7 +14,7 @@ class Quiz:
     MAX_QUESTIONS = 10
 
     # Object attributes, different for each quiz
-    def __init__(self, Source, code):
+    def __init__(self, source, code):
         self.quiz_id = str(uuid4())
         self.code = code
         self.questions = []
@@ -22,7 +23,7 @@ class Quiz:
         self.start_time = None
         self.is_finished = False
         self.current_question = 0
-        self.source = Source()
+        self.source = source()
 
     def add_question_by_id(self, question_id):
         """adds a question to the quiz"""
