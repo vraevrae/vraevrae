@@ -89,6 +89,7 @@ def game():
             question_id = quiz.get_current_question_id()
             question = store.get_question_by_id(question_id)
             answers = store.get_answers_by_id(question.answers)
+
             return render_template("quiz.html", question=question, answers=answers)
 
         if quiz.is_finished:
