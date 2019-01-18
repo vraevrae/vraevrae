@@ -1,7 +1,10 @@
 from tempfile import mkdtemp
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
+
+import config
+from models import app as quizapp
 
 app = Flask(__name__)
 
@@ -23,7 +26,29 @@ Session(app)
 
 @app.route('/', methods=["GET", "POST"])
 def index():
-    return render_template("index.html")
+    if request.method == "GET":
+        return render_template("index.html")
+
+    elif request.method == "POST":
+        if request.form["newgame"]:
+            if request.form["username"] == "":
+                return render_template("index.html", error="Username should not be empty!")
+
+            session["user_id"] = quizapp.App.new_quiz(request.form["username"], config.DEFAULT_DATASOURCE)
+
+            return redirect(url_for("game"))
+        elif request.form["joingame"]:
+            if request.form["username"] == "":
+                return render_template("index.html", error="Username should not be empty!")
+            elif request.form["gamecode"] == "":
+                return render_template("index.html", error="Game code should not be empty!")
+
+            session["user_id"] = quizapp.App.join_quiz(request.form["username"], request.form["gamecode"])
+
+
+@app.route('/game', methods=["GET", "POST"])
+def game():
+    return render_template("quiz.html")
 
 
 @app.route('/lobby', methods=["GET", "POST"])

@@ -1,6 +1,6 @@
 html {
-  width: 100%;
-  height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
 body {
@@ -19,12 +19,16 @@ body {
   max-width: 30rem;
 }
 
-.color-black{
+.color-black {
   color: black;
 }
 
-.nav-color{
+.nav-color {
   background: #5CB85C;
   border-color: #4CAE4C;
   border-radius: unset;
+}
+
+input {
+    margin-top: 0.5em;
 }
