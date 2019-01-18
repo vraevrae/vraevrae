@@ -3,24 +3,22 @@
     Lobby
 {% endblock %} 
 {% block main%}
-    <form class="form-horizontal">
-        <div class="col-lg-4  col-lg-offset-1">
-            <h1>
-                <span>Users</span>
-            </h1>
-            {% for user in users %}
-                <div class="well well-sm">
-                    <h3 class="color-black">{{ user.name }}</h3>
-                </div>
-            {% endfor %}
-        </div>
-        {% if owner %}
-            <div class="col-lg-4 col-lg-offset-1">
-                <form action="{{ url_for("game") }}" method="post">
-                    <input name="action" type="hidden" value="start"/>
-                    <button class="btn btn-success" id="start" type="submit">Start Game</button>
-                </form>
+    <div class="col-lg-4  col-lg-offset-1">
+        <h1>
+            <span>Users</span>
+        </h1>
+        {% for user in users %}
+            <div class="well well-sm">
+                <h3 class="color-black">{{ user.name }}</h3>
             </div>
-        {% endif %}
-    </form>
+        {% endfor %}
+    </div>
+    {% if owner %}
+        <div class="col-lg-4 col-lg-offset-1">
+            <form action="{{ url_for("game") }}" method="post">
+                <input name="action" type="hidden" value="start"/>
+                <button class="btn btn-success" id="start" type="submit">Start Game</button>
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}

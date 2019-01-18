@@ -5,7 +5,6 @@ from flask_session import Session
 
 from models.datasource import Datasource
 from models.store import Store
-from models.view import View
 
 store = Store()
 
@@ -25,30 +24,6 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-
-def get_view(self, user_id):
-    user = self.store.get_user_by_id(user_id)
-    quiz = self.store.get_quiz_by_id(user.quiz)
-
-    if not quiz.is_started:
-        return View("lobby", {"users": self.store.get_users_by_id(quiz.users)})
-
-    if quiz.is_started and not quiz.is_finished:
-        question_id = quiz.get_current_question_id()
-        question = self.store.get_question_by_id(question_id)
-        answers = self.store.get_answers_by_id(question.answers)
-        return View("question", {"question": question, "answers": answers})
-
-    if quiz.is_finished:
-        return View("scoreboard", {"users": self.store.get_users_by_id(quiz.users)})
-
-
-def start_quiz(user_id):
-    user = store.get_user_by_id(user_id)
-
-    if user.is_owner:
-        return store.get_quiz_by_id(user.quiz).start()
 
 
 def answer_question(user_id, answer_id):
@@ -120,11 +95,20 @@ def game():
             return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
     elif request.method == "POST":
-        print("POST")
         action = request.form["action"]
         user = store.get_user_by_id(session["user_id"])
 
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
+
+            return redirect(url_for("game"))
+
+        elif action == "answer":
+            print(request.form)
+            answer = store.get_answer_by_id(request.form["answer_id"])
+
+            if answer.is_correct:
+                question = store.get_question_by_id(answer.question_id)
+                user.score += question.score
 
             return redirect(url_for("game"))
