@@ -15,7 +15,8 @@ Scoreboard
                 {% endfor %}
             </div>
             <div class="col-lg-4  col-lg-offset-1">
-                    <a href="#" id="start" class="btn btn-success btn-lg onclick="location.href='/'><h1><strong>Return to home page</strong></h1></a>
+                <a href="{{ url_for("index") }}" id="start" class="btn btn-success
+                    btn-lg"><h1><strong>Return to home page</strong></h1></a>
             </div>
     </fieldset>
 </form>

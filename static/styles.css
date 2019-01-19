@@ -13,13 +13,6 @@ body {
     background-position: 90% 90%;
 }
 
-.container
-{
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-}
-
 .main {
     max-width: 30rem;
 }
