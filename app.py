@@ -3,6 +3,8 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 
+import config
+from helpers.helpers import game_required
 from models.datasource import Datasource
 from models.store import Store
 
@@ -41,12 +43,24 @@ def answer_question(user_id, answer_id):
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
+        print("[ROUTE] GET /") if config.DEBUG else None
+
+        try:
+            error = request.args["error"]
+
+            if error == "1":
+                return render_template("index.html", error="Game does not exist anymore!")
+        except KeyError:
+            pass
+
         return render_template("index.html")
 
     elif request.method == "POST":
-        username = request.form["username"]
+        print("[ROUTE] POST /") if config.DEBUG else None
+        username = request.form.get("username", False)
 
-        if request.form["newgame"]:
+        if request.form.get("newgame", False):
+            print("[ROUTE] POST / (newgame)") if config.DEBUG else None
             if username == "":
                 return render_template("index.html", error="Username should not be empty!")
 
@@ -54,14 +68,14 @@ def index():
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
 
-            user_id = store.create_user(
-                quiz_id=quiz_id, name=username, is_owner=True)
+            user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
 
             session["user_id"] = user_id
 
             return redirect(url_for("game"))
 
-        elif request.form["joingame"]:
+        elif request.form.get("joingame", False):
+            print("[ROUTE] POST / (joingame)") if config.DEBUG else None
             gamecode = request.form["gamecode"]
 
             if username == "":
@@ -69,27 +83,40 @@ def index():
             elif gamecode == "":
                 return render_template("index.html", error="Game code should not be empty!")
 
-            quiz = store.get_quiz_by_code(gamecode)
-            user_id = store.create_user(
-                quiz_id=quiz.quiz_id, name=username, is_owner=False)
+            print(store.get_quiz_by_code(gamecode))
 
-            session["user_id"] = user_id
+            if gamecode in store.get_quiz_by_code(gamecode):
+                print("[ROUTE] POST / (joingame, GAMECODE IN STORE)") if config.DEBUG else None
+                quiz = store.get_quiz_by_code(gamecode)
+                user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
 
-            return redirect(url_for("game"))
+                session["user_id"] = user_id
+
+                return redirect(url_for("game"))
+            else:
+                print("[ROUTE] POST / (joingame, GAMECODE NOT IN STORE)") if config.DEBUG else None
+                return render_template("index.html", error="Game code does not exit!")
+        else:
+            print("[ROUTE] POST / (INVALID ACTION)") if config.DEBUG else None
+            return render_template("index.html", error="Action is invalid!")
 
 
 @app.route('/game', methods=["GET", "POST"])
+@game_required
 def game():
     if request.method == "GET":
+        print("[ROUTE] GET /game") if config.DEBUG else None
+
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
-        print(quiz)
-
         if not quiz.is_started:
-            return render_template("lobby.html", users=store.get_users_by_id(quiz.users), owner=user.is_owner)
+            print("[ROUTE] GET /game (QUIZ NOT STARTED)") if config.DEBUG else None
+            return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
+                                   owner=user.is_owner, gamecode=quiz.code)
 
         if quiz.is_started and not quiz.is_finished:
+            print("[ROUTE] GET /game (QUIZ STARTED AND NOT FINISHED)") if config.DEBUG else None
             quiz.next_question()
             question_id = quiz.get_current_question_id()
             question = store.get_question_by_id(question_id)
@@ -99,19 +126,22 @@ def game():
             return render_template("quiz.html", question=question, answers=answers)
 
         if quiz.is_finished:
+            print("[ROUTE] GET /game (QUIZ IS FINISHED") if config.DEBUG else None
             return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
     elif request.method == "POST":
+        print("[ROUTE] POST /game") if config.DEBUG else None
         action = request.form["action"]
         user = store.get_user_by_id(session["user_id"])
 
         if action == "start" and user.is_owner:
+            print("[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
             store.get_quiz_by_id(user.quiz).start()
 
             return redirect(url_for("game"))
 
         elif action == "answer":
-            print(request.form)
+            print("[ROUTE] POST /game (ACTION=ANSWER") if config.DEBUG else None
             answer = store.get_answer_by_id(request.form["answer_id"])
 
             if answer.is_correct:

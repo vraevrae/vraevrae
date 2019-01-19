@@ -5,7 +5,6 @@ from models.user import User
 
 
 class Store:
-
     def __init__(self):
         self.quizes = {}
         self.questions = {}
@@ -67,7 +66,9 @@ class Store:
 
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
-        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
+        data = [quiz for quiz in self.quizes.values() if quiz.code is code]
+
+        return data[0] if data != [] else [0]
 
     def get_quiz_by_user_id(self, user_id):
         """reads a specific question from the store by questionId"""
