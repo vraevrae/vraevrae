@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 
-class Answer():
+class Answer:
     """an answer to a question, stored on the app for easy access"""
 
     def __init__(self, question_id, text, is_correct):

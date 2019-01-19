@@ -38,7 +38,10 @@ class Datasource:
         return self.source.get_formatted_data()
 
     def get_question(self) -> dict:
-        """Function that returns a question (that should not have been send in the current session)"""
+        """
+        Function that returns a question
+        (that should not have been send in the current session)
+        """
 
         question = self.cache_data[0]
         self.cache_data.remove(question)

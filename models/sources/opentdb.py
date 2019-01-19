@@ -21,7 +21,8 @@ class OpenTDB:
         # try to get a correct request from Open Trivia DB
         try:
             # do request to Open Trivia DB API and format to JSON
-            r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&type=multiple")
+            r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) +
+                             "&type=multiple")
             json = r.json()
 
             # check if request was correct
@@ -30,8 +31,10 @@ class OpenTDB:
                 return json["results"]
             else:
                 # raise an exception if the request was not correct
-                raise Exception("[Datasource] opentdb response_code is not 0, request incorrect. Request URL: "
-                                + "https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&type=multiple")
+                raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
+                                " Request URL: "
+                                + "https://opentdb.com/api.php?amount=" + str(amount_of_questions)
+                                + "&type=multiple")
 
         # raise an exception if there is an error with the request
         except requests.exceptions.RequestException as e:
@@ -65,4 +68,5 @@ class OpenTDB:
 
     def get_formatted_data(self) -> list:
         """function to return all formatted questions"""
-        return [self._format_opentdb_data(question) for question in self._download_data(self.amount_of_questions)]
+        return [self._format_opentdb_data(question) for question in self._download_data(
+            self.amount_of_questions)]

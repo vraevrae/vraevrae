@@ -1,7 +1,8 @@
-class FakeSource():
+class FakeSource:
 
-    def get_question(self):
-        "Fake function that simulates an API call and returns a question with answers"
+    @staticmethod
+    def get_question():
+        """Fake function that simulates an API call and returns a question with answers"""
         return {"text": "a question",
                 "answers": [
                     {"text": "something 1",

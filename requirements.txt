@@ -1,3 +1,4 @@
+pygments
 Flask
 Flask-Session
 passlib

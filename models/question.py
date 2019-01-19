@@ -4,7 +4,7 @@ from uuid import uuid4
 class Question:
     """a questions is a fundamental stepping stone in a quiz"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         self.question_id = str(uuid4())
         self.text = kwargs["text"]
         self.difficulty = kwargs["difficulty"]
