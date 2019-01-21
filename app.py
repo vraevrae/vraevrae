@@ -28,18 +28,6 @@ Session(app)
 store = Store()
 
 
-def answer_question(user_id, answer_id):
-    answer = store.get_answer_by_id(answer_id)
-    user = store.get_user_by_id(user_id)
-
-    if answer.is_correct:
-        question = store.get_question_by_id(answer.question_id)
-        user.score += question.score
-        return True
-
-    return False
-
-
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
