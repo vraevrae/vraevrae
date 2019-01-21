@@ -58,3 +58,31 @@ body {
 .card-title{
   font-size: large
 }
+
+.jumbotron .btn {
+  color:#FFFFFF; 
+  font-size: 12px !important; 
+  margin-left:20px;
+}
+.jumbotron label {
+  font-size:12px;    
+}
+
+
+.prj-name{
+  font-weight:bold;
+  color:#FFFFFF;
+  position: fixed;
+  font-size: 24px
+  top: 50;
+  left: 50;
+  width: 150px;
+  }
+
+
+.list-group-item{
+  margin: 10px 0;
+  width: 350px;
+  top: 100px;
+  left: -100px
+}
