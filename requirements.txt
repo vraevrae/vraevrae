@@ -1,6 +1,7 @@
 pygments
 Flask
 Flask-Session
+flask-restful
 passlib
 SQLAlchemy
 requests
