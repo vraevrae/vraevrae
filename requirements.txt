@@ -4,3 +4,4 @@ Flask-Session
 passlib
 SQLAlchemy
 requests
+pytest-flask
