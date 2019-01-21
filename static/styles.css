@@ -4,85 +4,45 @@ html {
 }
 
 body {
-  background: #070F1C;
-  color: white;
-  background-image: url("images/untitled(1).svg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: 85% 90%; 
-}
-
-.container
-{
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    color: white;
+    background-color: #070F1C;
+    background-image: url("/static/images/logo.svg");
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 90% 90%;
 }
 
 .main {
-  max-width: 30rem;
+    max-width: 30rem;
 }
 
 .color-black {
-  color: black;
+    color: black;
 }
 
 .nav-color {
-  background: #5CB85C;
-  border-color: #4CAE4C;
-  border-radius: unset;
+    background: #5CB85C;
+    border-color: #4CAE4C;
+    border-radius: unset;
 }
 
 #menulogo {
-  width: 30%;
-  height: auto;
-}
-
-.card {
-  position: relative;
-  left: 100px;
-  width:400px;
-  height: 1000px;
+    width: 100%;
+    height: 100%;
 }
 
 .list-group-item{
-  color:black
+    color: black
 }
 
-#start{
-  position:absolute;
-  bottom: 5000%;
-  right:-380%;
-}
-
-.card-title{
-  font-size: large
-}
-
-.jumbotron .btn {
-  color:#FFFFFF; 
-  font-size: 12px !important; 
-  margin-left:20px;
-}
-.jumbotron label {
-  font-size:12px;    
-}
-
-
-.prj-name{
+.prj-name
+{
   font-weight:bold;
   color:#FFFFFF;
   position: fixed;
-  font-size: 24px
+  font-size: 24px;
   top: 50;
   left: 50;
   width: 150px;
-  }
-
-
-.list-group-item{
-  margin: 10px 0;
-  width: 350px;
-  top: 100px;
-  left: -100px
 }

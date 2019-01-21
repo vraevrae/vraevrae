@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg version="1.1" viewBox="0 0 459.39 126.33" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path id="d" d="m39.33 51.66l31.33 1-55 73.67 16-52.67-31.66-1 53.33-72.66-14 51.66z"/>
+        <path id="g" d="m98.26 27l2-3.67h-8v-7.67h12.34l9.66 65.67h2.67l10-65.67h9l-11.67 74.34h-17l-9-63z"/>
+        <path id="j" d="m146.6 15.66h8.66l-0.66 74.34h-8v-74.34z"/>
+        <path id="k"
+              d="m171.26 61.33l8-8.5v-26.17l-10-11h-14l1 9.34h8.67l6.33 6-0.66 18.66-6.67 7h-8.67v8.34h8.67l12 25h8.67l-13.34-28.67z"/>
+        <path id="l" d="m197.05 90l4.67-28 5.33-37.67h2.67l9 65.67h9l-11-74.34h-16.67l-11.33 74.34h8.33z"/>
+        <path id="a" d="m199.38 70.66h18.34v-9h-18.34v9z"/>
+        <path id="h" d="m268.38 24.33h-21.33v24.33h17.33v9h-17.33v23.34h21.33v9h-30.33v-74.34h30.33v8.67z"/>
+        <path id="f" d="m289.26 27l2-3.67h-8v-7.67h12.34l9.66 65.67h2.67l10-65.67h9l-11.67 74.34h-17l-9-63z"/>
+        <path id="e" d="m337.6 15.66h8.66l-0.66 74.34h-8v-74.34z"/>
+        <path id="i"
+              d="m362.26 61.33l8-8.5v-26.17l-10-11h-14l1 9.34h8.67l6.33 6-0.66 18.66-6.67 7h-8.67v8.34h8.67l12 25h8.67l-13.34-28.67z"/>
+        <path id="m" d="m388.05 90l4.67-28 5.33-37.67h2.67l9 65.67h9l-11-74.34h-16.67l-11.33 74.34h8.33z"/>
+        <path id="b" d="m390.38 70.66h18.34v-9h-18.34v9z"/>
+        <path id="c" d="m459.38 24.33h-21.33v24.33h17.33v9h-17.33v23.34h21.33v9h-30.33v-74.34h30.33v8.67z"/>
+    </defs>
+    <use fill="#ffffff" xlink:href="#d"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#d"/>
+    <use fill="#ffffff" xlink:href="#g"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#g"/>
+    <use fill="#ffffff" xlink:href="#j"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#j"/>
+    <use fill="#ffffff" xlink:href="#k"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#k"/>
+    <use fill="#ffffff" xlink:href="#l"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#l"/>
+    <use fill="#ffffff" xlink:href="#a"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#a"/>
+    <use fill="#ffffff" xlink:href="#h"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#h"/>
+    <use fill="#ffffff" xlink:href="#f"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#f"/>
+    <use fill="#ffffff" xlink:href="#e"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#e"/>
+    <use fill="#ffffff" xlink:href="#i"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#i"/>
+    <use fill="#ffffff" xlink:href="#m"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#m"/>
+    <use fill="#ffffff" xlink:href="#b"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#b"/>
+    <use fill="#ffffff" xlink:href="#c"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#c"/>
+</svg>

@@ -5,28 +5,24 @@
     <meta content="initial-scale=1, width=device-width" name="viewport" />
     <!-- documentation at http://getbootstrap.com/, alternative themes at https://www.bootstrapcdn.com/bootswatch/ -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="https://bootswatch.com/3/darkly/" rel="stylesheet"/> 
+    <link href="https://bootswatch.com/3/darkly/" rel="stylesheet"/>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet"/>
     <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
       
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      
+
     <title>Vrae Vrae: {% block title %}{% endblock %}</title>
   </head>
   <body class="body">
         <nav class="navbar navbar-inverse nav-color">
             <div class="container-fluid">
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-                    <ul class="nav navbar-nav">
-                        <li>
-                            <a href="{{ url_for('index') }}">
-                                <img src="{{ url_for('static', filename='images/untitled(1).svg') }}"
-                                     alt="Vrae Vrae logo" id="menulogo">
-                            </a>
-                        </li>
-                    </ul>
+                <div class="navbar-header">
+                    <a class="navbar-brand" href={{ url_for('index') }}>
+                        <img alt="Vrae Vrae logo" id="menulogo"
+                             src="{{ url_for('static', filename='images/logo.svg') }}">
+                    </a>
                 </div>
             </div>
         </nav>

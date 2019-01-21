@@ -8,7 +8,6 @@ class Datasource:
     # create variable for saving apidata between functions
     source = None
     cache_data = []
-    current_question = 0
 
     def __init__(self, source=config.DEFAULT_DATASOURCE):
         # if source is not possible (not coded) raise an error
@@ -38,12 +37,16 @@ class Datasource:
         """Function that returns all questions (formatted)"""
         return self.source.get_formatted_data()
 
-    def get_question(self, current_question=current_question) -> dict:
-        """Function that returns a question (that should not have been send in the current session)"""
-        current_question = current_question % len(self.cache_data)
-        self.current_question += 1
+    def get_question(self) -> dict:
+        """
+        Function that returns a question
+        (that should not have been send in the current session)
+        """
 
-        if len(self.cache_data) - 5 == self.current_question:
+        question = self.cache_data[0]
+        self.cache_data.remove(question)
+
+        if len(self.cache_data) <= 20:
             self.update_cache_data()
 
-        return self.cache_data[current_question]
+        return question

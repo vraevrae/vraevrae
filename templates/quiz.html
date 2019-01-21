@@ -1,25 +1,25 @@
 {% extends "layout.html" %} 
-{% block title %} 
-Quiz 
+{% block title %}
+    Game
 {% endblock %} 
 {% block main%}
+    <script type="text/javascript" src="/static/quiz.js"></script>
+    <div class="well well-lg">
+        <h1 class="color-black">{{ question.text }}</h1>
+    </div>
+    <form action="{{ url_for("game") }}" method="post">
+        <input type="hidden" name="action" value="answer">
+        {% for answer in answers %}
+            <button id="Button" class="btn btn-primary btn-lg btn-block" type="submit"
+                    name="answer_id" value={{ answer.answer_id }}>
+                {{ answer.text }}
+            </button>
+        {% endfor %}
+    </form>
+    <div class="progress progress-striped active">
+        <div id="quiz-progress" class="progress-bar" style="width:100%;">
 
-<script type="text/javascript" src="/static/quiz.js"></script>
-
-<div class="well well-lg"><h1 class="color-black">{{ question.text }}</h1></div>
-
-<div>
-  {% for answer in answers %}
-  <button id="Button" class="btn btn-primary btn-lg btn-block" onclick="send_answer('A');">
-    {{ answer.text }}
-  </button>
-  {% endfor%}
-</div>
-
-<div style="clear:both;"></div>
-
-<div class="progress progress-striped active">
-  <div id="quiz-progress" class="progress-bar" style="width:100%" value="100" max="100" id="progressBar"></div>
-</div>
+        </div>
+    </div>
 
 {% endblock %}

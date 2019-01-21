@@ -1,25 +1,24 @@
-from models.quiz import Quiz
-from models.question import Question
-from models.user import User
 from models.answer import Answer
+from models.question import Question
+from models.quiz import Quiz
+from models.user import User
 
 
 class Store:
-
     def __init__(self):
         self.quizes = {}
         self.questions = {}
         self.answers = {}
         self.users = {}
 
-    def create_quiz(self, Source):
+    def create_quiz(self, source):
         """creates a new quiz and adds it to the store"""
         # Get the lowest available code
         code = 1
         if len(self.questions) is not 0:
             code = max([quiz.code for quiz in self.quizes.values()]) + 1
 
-        new_quiz = Quiz(Source, code)
+        new_quiz = Quiz(source, code)
         self.quizes[new_quiz.quiz_id] = new_quiz
         return new_quiz.quiz_id
 
@@ -49,10 +48,7 @@ class Store:
     def create_question_from_source(self, quiz_id):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        try:
-            temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
-        except:
-            print("Code written by Yunus has failed")
+        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
 
         # add the question to the store
         question_id = self.create_question(quiz_id, temp_question)
@@ -70,7 +66,9 @@ class Store:
 
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
-        return [quiz for quiz in self.quizes.values() if quiz.code is code][0]
+        data = [quiz for quiz in self.quizes.values() if quiz.code is code]
+
+        return data[0] if data != [] else None
 
     def get_quiz_by_user_id(self, user_id):
         """reads a specific question from the store by questionId"""
