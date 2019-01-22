@@ -40,9 +40,12 @@ body {
 {
   font-weight:bold;
   color:#FFFFFF;
-  position: fixed;
   font-size: 24px;
   top: 50;
   left: 50;
   width: 150px;
+}
+
+.prj-name{
+  height: 100px;
 }
