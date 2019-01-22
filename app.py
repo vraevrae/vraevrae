@@ -28,6 +28,11 @@ Session(app)
 store = Store()
 
 
+@app.route('/404', methods=["GET", "POST"])
+def error():
+    return render_template("404.html")
+
+
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":

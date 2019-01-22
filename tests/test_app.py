@@ -2,45 +2,53 @@
 from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
+import flask
 import pytest
+import http
 
 from helpers.fake import FakeSource
 from helpers.cprint import cprint, lcprint
 from random import randint
 from time import sleep
 
-from app import app
+from app import app, store
 from models.store import Store
-
-
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    app.config['SERVER_NAME'] = "localhost.localdomain:5000"
-    with app.test_request_context():
-        yield app.test_client()
 
 
 def test_app_exists():
     assert app
 
 
-def test_index(client):
-    assert client.get(url_for('index')).status_code == 200
+def test_index():
+    with app.test_request_context():
+        client = app.test_client()
+        assert client.get(url_for('index')).status_code == 200
 
 
-# def test_new_quiz():
-#     """creation of a new default quiz"""
-#     assert client.get(url_for('index')).status_code == 200
+def test_new_quiz():
+    """creation of a new default quiz"""
 
-#     user_id = app.new_quiz("some name", FakeSource)
-#     quiz = store.get_quiz_by_user_id(user_id)
-#     question = store.get_question_by_id(quiz.questions[0])
-#     answer = store.get_answer_by_id(question.answers[0])
+    with app.test_request_context():
+        client = app.test_client()
 
-#     assert quiz
-#     assert question
-#     assert answer
+        rv = client.post(url_for('index'), data=dict(
+            username="pietje",
+            newgame="true"
+        ))
+
+        user_id = [
+            user.user_id for user in store.users.values() if user.name == "pietje"][0]
+
+        quiz = store.get_quiz_by_user_id(user_id)
+        question = store.get_question_by_id(quiz.questions[0])
+        answer = store.get_answer_by_id(question.answers[0])
+
+    assert quiz
+    assert question
+    assert answer
+    assert rv.status_code == 302
+
+    # lcprint(vars(store))
 
     # lcprint(vars(quiz), "a quiz:")
     # lcprint(vars(question), "a question inside the quiz:")
