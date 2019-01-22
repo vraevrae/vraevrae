@@ -68,7 +68,7 @@ class Store:
         """read a specific quiz from the store by quizId"""
         data = [quiz for quiz in self.quizes.values() if quiz.code is code]
         if len(data) != 0:
-            data[0]
+            return data[0]
 
         return None
 
