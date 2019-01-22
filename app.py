@@ -206,3 +206,10 @@ def game():
                 user.score += question.score
 
             return redirect(url_for("game"))
+
+        elif action == "start" and user.is_owner:
+            print(
+                "[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
+            store.get_quiz_by_id(user.quiz).start()
+
+            return redirect(url_for("game"))
