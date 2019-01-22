@@ -61,8 +61,6 @@ def test_join_quiz():
             joingame="True"
         )
 
-        lcprint(data)
-
         rv = client2.post(url_for('index'), data=data)
 
     assert rv.status_code == 200
