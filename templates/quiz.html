@@ -6,7 +6,7 @@
     <script type="text/javascript" src="/static/quiz.js"></script>
     <div class=test>
         <div class="well well-lg">
-            <h1 class="color-black">{{ question.text }}</h1>
+            <h1 class="color-black">{{ question.text | replace("&amp;", "&") }}</h1>
         </div>
         <form action="{{ url_for('game') }}" method="post">
             <input type="hidden" name="action" value="answer">

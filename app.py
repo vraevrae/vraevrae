@@ -3,7 +3,6 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 
-import config
 from helpers import helpers
 from models.datasource import Datasource
 from models.store import Store
@@ -83,34 +82,24 @@ def index():
 @app.route('/lobby/', methods=["GET", "POST"])
 def lobby():
     if request.method == "GET":
-        print("[ROUTE] GET /lobby") if config.DEBUG else None
-
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
         if not quiz.is_started:
-            print("[ROUTE] GET /lobby (QUIZ NOT STARTED)") if config.DEBUG else None
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
                                    owner=user.is_owner, gamecode=quiz.code)
         elif quiz.is_started and not quiz.is_finished:
-            print(
-                "[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
             return redirect(url_for("game"))
         elif quiz.is_finished:
-            print(
-                "[ROUTE] GET /lobby (QUIZ FINISHED -> REDIRECT SCOREBOARD)") if config.DEBUG else None
             return redirect(url_for("scoreboard"))
         else:
             return redirect(url_for(index, error=2))
 
     elif request.method == "POST":
-        print("[ROUTE] POST /lobby") if config.DEBUG else None
         action = request.form["action"]
         user = store.get_user_by_id(session["user_id"])
 
         if action == "start" and user.is_owner:
-            print(
-                "[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
             store.get_quiz_by_id(user.quiz).start()
 
             return redirect(url_for("game"))
@@ -118,26 +107,16 @@ def lobby():
 
 @app.route('/scoreboard/', methods=["GET"])
 def scoreboard():
-    print("[ROUTE] GET /scoreboard") if config.DEBUG else None
-
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
 
     if not quiz.is_started and not quiz.is_finished:
-        print("[ROUTE] GET /lobby (QUIZ NOT STARTED -> REDIRECT INDEX WITH ERROR)") if \
-            config.DEBUG else None
         return redirect(url_for("index", error=2))
     elif quiz.is_started and not quiz.is_finished:
-        print(
-            "[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
         return redirect(url_for("game"))
     elif quiz.is_finished:
-        print(
-            "[ROUTE] GET /scoreboard (QUIZ IS FINISHED") if config.DEBUG else None
         return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
     else:
-        print("[ROUTE] GET /scoreboard (ELSE -> REDIRECT INDEX WITH ERROR") if config.DEBUG else \
-            None
         return redirect(url_for(index, error=2))
 
 
@@ -145,34 +124,25 @@ def scoreboard():
 @helpers.game_required
 def game():
     if request.method == "GET":
-        print("[ROUTE] GET /game") if config.DEBUG else None
-
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
         if not quiz.is_started:
-            print("[ROUTE] GET /game (QUIZ NOT STARTED)") if config.DEBUG else None
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
                                    owner=user.is_owner, gamecode=quiz.code)
 
         if quiz.is_started and not quiz.is_finished:
-            print(
-                "[ROUTE] GET /game (QUIZ STARTED AND NOT FINISHED)") if config.DEBUG else None
             quiz.next_question()
             question_id = quiz.get_current_question_id()
             question = store.get_question_by_id(question_id)
             answers = store.get_answers_by_id(question.answers)
-            print([store.get_question_by_id(question_id).text
-                   for question_id in quiz.questions])
+
             return render_template("quiz.html", question=question, answers=answers)
 
         if quiz.is_finished:
-            print(
-                "[ROUTE] GET /game (QUIZ IS FINISHED") if config.DEBUG else None
             return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
     elif request.method == "POST":
-        print("[ROUTE] POST /game") if config.DEBUG else None
         try:
             action = request.form["action"]
             user = store.get_user_by_id(session["user_id"])
@@ -180,8 +150,6 @@ def game():
             return helpers.json_response()
 
         if action == "answer":
-            print("[ROUTE] POST /game (ACTION=ANSWER") if config.DEBUG else None
-
             try:
                 answer = store.create_user_answer(session["user_id"], request.form["answer_id"])
             except KeyError:
@@ -195,8 +163,6 @@ def game():
             return redirect(url_for("game"))
 
         elif action == "start" and user.is_owner:
-            print(
-                "[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
             store.get_quiz_by_id(user.quiz).start()
 
             return redirect(url_for("game"))
