@@ -199,9 +199,14 @@ def game():
 
         if action == "answer":
             print("[ROUTE] POST /game (ACTION=ANSWER") if config.DEBUG else None
-            answer = store.get_answer_by_id(request.form["answer_id"])
 
-            if answer.is_correct:
+            try:
+                answer = store.create_user_answer(session["user_id"], request.form["answer_id"])
+            except KeyError:
+                # TODO KeyError handling! (answer_id)
+                pass
+
+            if not answer:
                 question = store.get_question_by_id(answer.question_id)
                 user.score += question.score
 
