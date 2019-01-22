@@ -48,8 +48,8 @@ def index():
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
-            user_id = store.create_user(
-                quiz_id=quiz_id, name=username, is_owner=True)
+
+            user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
 
             return redirect(url_for("game"))
@@ -93,7 +93,7 @@ def lobby():
         elif quiz.is_finished:
             return redirect(url_for("scoreboard"))
         else:
-            return redirect(url_for(index, error=2))
+            return redirect(url_for(index))
 
     elif request.method == "POST":
         action = request.form["action"]
@@ -111,13 +111,13 @@ def scoreboard():
     quiz = store.get_quiz_by_id(user.quiz)
 
     if not quiz.is_started and not quiz.is_finished:
-        return redirect(url_for("index", error=2))
+        return redirect(url_for("index"))
     elif quiz.is_started and not quiz.is_finished:
         return redirect(url_for("game"))
     elif quiz.is_finished:
         return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
     else:
-        return redirect(url_for(index, error=2))
+        return redirect(url_for(index))
 
 
 @app.route('/game', methods=["GET", "POST"])
