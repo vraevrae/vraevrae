@@ -28,6 +28,11 @@ Session(app)
 store = Store()
 
 
+@app.route('/404', methods=["GET", "POST"])
+def error():
+    return render_template("404.html")
+
+
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -74,7 +79,7 @@ def index():
 
             print(store.get_quiz_by_code(gamecode))
 
-            if gamecode in store.get_quiz_by_code(gamecode):
+            if store.get_quiz_by_code(gamecode):
                 print(
                     "[ROUTE] POST / (joingame, GAMECODE IN STORE)") if config.DEBUG else None
                 quiz = store.get_quiz_by_code(gamecode)
@@ -106,7 +111,8 @@ def lobby():
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
                                    owner=user.is_owner, gamecode=quiz.code)
         elif quiz.is_started and not quiz.is_finished:
-            print("[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
+            print(
+                "[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
             return redirect(url_for("game"))
         elif quiz.is_finished:
             print(
@@ -121,7 +127,8 @@ def lobby():
         user = store.get_user_by_id(session["user_id"])
 
         if action == "start" and user.is_owner:
-            print("[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
+            print(
+                "[ROUTE] POST /game (ACTION=START AND USER IS OWNER") if config.DEBUG else None
             store.get_quiz_by_id(user.quiz).start()
 
             return redirect(url_for("game"))
@@ -139,10 +146,12 @@ def scoreboard():
             config.DEBUG else None
         return redirect(url_for("index", error=2))
     elif quiz.is_started and not quiz.is_finished:
-        print("[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
+        print(
+            "[ROUTE] GET /lobby (QUIZ STARTED -> REDIRECT GAME)") if config.DEBUG else None
         return redirect(url_for("game"))
     elif quiz.is_finished:
-        print("[ROUTE] GET /scoreboard (QUIZ IS FINISHED") if config.DEBUG else None
+        print(
+            "[ROUTE] GET /scoreboard (QUIZ IS FINISHED") if config.DEBUG else None
         return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
     else:
         print("[ROUTE] GET /scoreboard (ELSE -> REDIRECT INDEX WITH ERROR") if config.DEBUG else \
