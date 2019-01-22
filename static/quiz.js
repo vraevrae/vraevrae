@@ -8,8 +8,8 @@ $(function() {
         .attr("aria-valuenow", current_progress);
 
         if (current_progress === 0){
+            location.reload();
             clearInterval(interval);
-            window.location.href = window.location.pathname + window.location.search + window.location.hash;
         }
     }, 1000);
   });
