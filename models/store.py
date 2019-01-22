@@ -67,8 +67,10 @@ class Store:
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
         data = [quiz for quiz in self.quizes.values() if quiz.code is code]
+        if len(data) != 0:
+            data[0]
 
-        return data[0] if data != [] else None
+        return None
 
     def get_quiz_by_user_id(self, user_id):
         """reads a specific question from the store by questionId"""

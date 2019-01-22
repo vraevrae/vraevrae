@@ -48,22 +48,32 @@ def test_new_quiz():
     assert answer
     assert rv.status_code == 302
 
-    # lcprint(vars(store))
 
-    # lcprint(vars(quiz), "a quiz:")
-    # lcprint(vars(question), "a question inside the quiz:")
-    # lcprint(vars(answer), "a answer inside the question:")
+def test_join_quiz():
+    """a user can join a quiz by code"""
+    with app.test_request_context():
+        quiz_code = list(store.quizes.values())[0].code
+        client2 = app.test_client()
 
-    # def test_join_quiz():
-    #     """a user can join a quiz by code"""
-    #     app = App()
-    #     user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
-    #     quiz = app.store.get_quiz_by_user_id(user_id_creator)
-    #     user_id_joiner = app.join_quiz("a joiner", quiz.code)
+        data = dict(
+            username="klaasje",
+            gamecode=quiz_code,
+            joingame="True"
+        )
 
-    #     assert user_id_joiner
+        lcprint(data)
 
-    #     # lcprint(vars(joined_quiz), "the joined quiz:")
+        rv = client2.post(url_for('index'), data=data)
+
+    assert rv.status_code == 200
+
+    # user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
+    # quiz = app.store.get_quiz_by_user_id(user_id_creator)
+    # user_id_joiner = app.join_quiz("a joiner", quiz.code)
+
+    # assert user_id_joiner
+
+    # lcprint(vars(joined_quiz), "the joined quiz:")
 
     # def test_start_quiz():
     #     app = App()
