@@ -28,9 +28,9 @@ Session(app)
 store = Store()
 
 
-@app.route('/404', methods=["GET", "POST"])
-def error():
-    return render_template("404.html")
+@app.errorhandler(404)
+def error404(e):
+    return render_template("404.html"), 404
 
 
 @app.route('/', methods=["GET", "POST"])
