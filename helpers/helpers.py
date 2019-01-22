@@ -19,5 +19,5 @@ def game_required(f):
     return decorated_function
 
 
-def json_response(dictionary=None, success=False) -> dict:
-    return {"succes": success, "data": dictionary}
+def json_response(dictionary=None, status_code=200) -> dict:
+    return {"status_code": status_code, "data": dictionary}

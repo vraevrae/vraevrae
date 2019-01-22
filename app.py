@@ -1,6 +1,7 @@
 from tempfile import mkdtemp
 
 from flask import Flask, render_template, request, session, redirect, url_for
+from flask_restful import Resource, Api, abort
 from flask_session import Session
 
 import config
@@ -9,6 +10,7 @@ from models.datasource import Datasource
 from models.store import Store
 
 app = Flask(__name__)
+api = Api(app)
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:
