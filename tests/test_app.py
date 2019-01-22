@@ -61,11 +61,13 @@ def test_join_quiz():
             joingame="True"
         )
 
-        lcprint(data)
-
         rv = client2.post(url_for('index'), data=data)
 
-    assert rv.status_code == 200
+        assert rv.status_code == 404
+
+        # user_id = [
+        #     user.user_id for user in store.users.values() if user.name == "klaasje"]
+        # quiz = store.get_quiz_by_user_id(user_id)
 
     # user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
     # quiz = app.store.get_quiz_by_user_id(user_id_creator)
