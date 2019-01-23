@@ -49,11 +49,12 @@ def index():
             if username == "":
                 return render_template("index.html", error="Username should not be empty!"), 400
 
-            # create a new game
+            # create a new quiz
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
 
+            # create a user
             user_id = store.create_user(
                 quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
@@ -119,15 +120,7 @@ def lobby():
 def scoreboard():
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
-
-    if not quiz.is_started and not quiz.is_finished:
-        return redirect(url_for("index"))
-    elif quiz.is_started and not quiz.is_finished:
-        return redirect(url_for("game"))
-    elif quiz.is_finished:
-        return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
-    else:
-        return redirect(url_for(index))
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
 
 @app.route('/game', methods=["GET", "POST"])
