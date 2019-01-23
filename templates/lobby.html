@@ -1,9 +1,9 @@
 {% extends "layout.html" %} 
 {% block title %}
- Lobby 
- {% endblock %} 
- {% block main%}
- 
+    Lobby
+{% endblock %}
+{% block main %}
+<div id="game_id" data-game_id="{{- game_id -}}"></div>
 <div class="col-lg-4 col-lg-offset-1">
     <div class="header">
         <h3 class="prj-name">
@@ -21,15 +21,20 @@
 </div>
 
 {% if owner %}
-<div class="col-lg-4 col-lg-offset-1">
-    <h3><span id="gamecodetext">Game code:</span> {{ gamecode }}</h3>
-    <form action="{{ url_for("game") }}" method="post">
-        <div class="form-group">
-            <input name="action" type="hidden" value="start" />
-            <button class="btn btn-success" id="start" type="submit">Start Game</button>
-        </div>
-    </form>
-</div>
-{% endif %} 
+    <div class="col-lg-4 col-lg-offset-1">
+        <h3>
+            <span id="gamecodetext">Game code:</span> {{ gamecode }}
+        </h3>
+        <form action="{{ url_for('game') }}" method="post">
+            <div class="form-group">
+                <input name="action" type="hidden" value="start"/>
+                <button class="btn btn-success" id="start" type="submit">Start Game</button>
+            </div>
+        </form>
+    </div>
 
+{% endif %}
+    {% if not owner %}
+        <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
+    {% endif %}
 {% endblock %}
