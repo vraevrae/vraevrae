@@ -13,8 +13,7 @@ Scoreboard
     </div>
     <ul class="list-group">
         {% for user in users %}
-            <li class="list-group-item"><strong>{{user.name}}:</strong></li> 
-            <li class="list-group-item"></li>{{ user.score }}</li>
+            <li class="list-group-item"><strong>{{user.name}}:{{ user.score }}</strong></li> 
         {% endfor %}
     </ul>
 </div>
