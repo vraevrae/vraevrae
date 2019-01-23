@@ -2,6 +2,7 @@ from models.answer import Answer
 from models.question import Question
 from models.quiz import Quiz
 from models.user import User
+from models.useranswer import UserAnswer
 
 
 class Store:
@@ -10,6 +11,7 @@ class Store:
         self.questions = {}
         self.answers = {}
         self.users = {}
+        self.user_answers = {}
 
     def create_quiz(self, source):
         """creates a new quiz and adds it to the store"""
@@ -60,17 +62,36 @@ class Store:
 
         return question_id
 
+    def create_user_answer(self, user_id, answer_id):
+        """Create user answer class which saves every answer the user has given"""
+
+        try:
+            answers = [answer for answer in self.user_answers if answer.question_id ==
+                       self.answers[answer_id].question_id and answer.answer_id == answer_id]
+        except AttributeError:
+            answers = []
+
+        if len(answers) == 0:
+            new_user_answer = UserAnswer(user_id, self.get_quiz_by_user_id(user_id).quiz_id,
+                                         answer_id)
+
+            self.user_answers[new_user_answer.user_answer_id] = new_user_answer
+
+            return new_user_answer
+        else:
+            return False
+
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
 
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
-        data = [quiz for quiz in self.quizes.values() if quiz.code is code]
+        data = [quiz for quiz in self.quizes.values() if quiz.code is int(code)]
         if len(data) != 0:
-            data[0]
+            return data[0]
 
-        return None
+        return False
 
     def get_quiz_by_user_id(self, user_id):
         """reads a specific question from the store by questionId"""

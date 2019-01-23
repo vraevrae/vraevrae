@@ -3,6 +3,30 @@
 Scoreboard
 {% endblock %} 
 {% block main%}
+
+<div class="col-lg-4 col-lg-offset-1">
+    <div class="header">
+        <h3 class="prj-name">
+            <span class="fa fa-users fa-2x"></span><br>
+            Scoreboard
+        </h3>
+    </div>
+    <ul class="list-group">
+        {% for user in users %}
+            <li class="list-group-item"><strong>{{user.name}}:</strong></li> 
+            <li class="list-group-item"></li>{{ user.score }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="col-lg-4 col-lg-offset-1">
+    <form action="{{ url_for('index') }}" method="GET">
+        <div class="form-group">
+            <input name="action" type="hidden" value="start" />
+            <button class="btn btn-success" id="start" type="submit">Return to home page</button>
+        </div>
+    </form>
+</div>
+<!---
 <form class="form-horizontal">
     <fieldset class="form-group"></fieldset>
     <fieldset class="form-group">
@@ -15,9 +39,10 @@ Scoreboard
                 {% endfor %}
             </div>
             <div class="col-lg-4  col-lg-offset-1">
-                <a href="{{ url_for("index") }}" id="start" class="btn btn-success
+                <a href="{{ url_for('index') }}" id="start" class="btn btn-success
                     btn-lg"><h1><strong>Return to home page</strong></h1></a>
             </div>
     </fieldset>
 </form>
+-->
 {% endblock %}

@@ -1,43 +1,48 @@
-
-from tempfile import mkdtemp
-from flask import Flask, render_template, request, session, redirect, url_for
-from flask_session import Session
-import flask
+from flask import url_for
 import pytest
-import http
-
-from helpers.fake import FakeSource
-from helpers.cprint import cprint, lcprint
-from random import randint
-from time import sleep
-
 from app import app, store
-from models.store import Store
+from helpers.cprint import lcprint
 
 
 def test_app_exists():
     assert app
 
 
-def test_index():
+@pytest.fixture
+def client1():
     with app.test_request_context():
-        client = app.test_client()
-        assert client.get(url_for('index')).status_code == 200
+        return app.test_client()
 
 
-def test_new_quiz():
+@pytest.fixture
+def client2():
+    with app.test_request_context():
+        return app.test_client()
+
+
+@pytest.fixture
+def client3():
+    with app.test_request_context():
+        return app.test_client()
+
+
+def test_index(client1):
+    with app.test_request_context():
+        assert client1.get(url_for('index')).status_code == 200
+
+
+def test_new_quiz(client1):
     """creation of a new default quiz"""
 
     with app.test_request_context():
-        client = app.test_client()
 
-        rv = client.post(url_for('index'), data=dict(
+        rv = client1.post(url_for('index'), data=dict(
             username="pietje",
             newgame="true"
         ))
 
-        user_id = [
-            user.user_id for user in store.users.values() if user.name == "pietje"][0]
+        with client1.session_transaction() as sess:
+            user_id = sess['user_id']
 
         quiz = store.get_quiz_by_user_id(user_id)
         question = store.get_question_by_id(quiz.questions[0])
@@ -46,46 +51,59 @@ def test_new_quiz():
     assert quiz
     assert question
     assert answer
+    assert user_id in quiz.users
     assert rv.status_code == 302
 
 
-def test_join_quiz():
+def test_join_existing_quiz(client2):
     """a user can join a quiz by code"""
     with app.test_request_context():
         quiz_code = list(store.quizes.values())[0].code
-        client2 = app.test_client()
-
         data = dict(
             username="klaasje",
             gamecode=quiz_code,
             joingame="True"
         )
-
-        lcprint(data)
-
         rv = client2.post(url_for('index'), data=data)
 
-    assert rv.status_code == 200
+        with client2.session_transaction() as sess:
+            user_id = sess['user_id']
 
-    # user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
-    # quiz = app.store.get_quiz_by_user_id(user_id_creator)
-    # user_id_joiner = app.join_quiz("a joiner", quiz.code)
+        quiz = store.get_quiz_by_user_id(user_id)
 
-    # assert user_id_joiner
+    assert rv.status_code == 302
+    assert user_id in quiz.users
 
-    # lcprint(vars(joined_quiz), "the joined quiz:")
 
-    # def test_start_quiz():
-    #     app = App()
+def test_join_non_existing_quiz(client3):
+    """a user can join a quiz by code"""
+    with app.test_request_context():
+        quiz_code = 39478598347593475
+        data = dict(
+            username="dirkje",
+            gamecode=quiz_code,
+            joingame="True"
+        )
+        rv = client3.post(url_for('index'), data=data)
 
-    #     user_id = app.new_quiz("Creator", FakeSource)
-    #     quiz_id = app.start_quiz(user_id)
-    #     quiz = app.store.get_quiz_by_id(quiz_id)
+    assert rv.status_code == 404
 
-    #     assert quiz.is_started is True
-    #     assert quiz.start_time
 
-    #     # lcprint(vars(quiz), "the started quest:")
+# def test_start_quiz():
+#     with app.test_request_context():
+#         lcprint(vars(store))
+    # quiz_id = store.start_quiz(user_id)
+    # quiz = store.store.get_quiz_by_id(quiz_id)
+
+    # rv = client.post(url_for('lobby'), data=dict(
+    #     username="pietje",
+    #     newgame="true"
+    # ))
+
+    # assert quiz.is_started is True
+    # assert quiz.start_time
+
+    # lcprint(vars(quiz), "the started quest:")
 
     # def test_answer_question_correctly():
     #     app = App()
