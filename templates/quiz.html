@@ -1,27 +1,27 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 {% block title %}
-    Game
-{% endblock %} 
+Game
+{% endblock %}
 {% block main%}
-    <script type="text/javascript" src="/static/quiz.js"></script>
-    <div class=test>
-        <div class="well well-lg">
-            <h1 class="color-black">{{ question.text | replace("&amp;", "&") }}</h1>
-        </div>
-        <form action="{{ url_for('game') }}" method="post">
-            <input type="hidden" name="action" value="answer">
-            {% for answer in answers %}
-                <button id="Button" class="btn btn-primary btn-lg btn-block" type="submit"
-                        name="answer_id" value={{ answer.answer_id }}>
-                    {{ answer.text }}
-                </button>
-            {% endfor %}
-        </form>
-        <p></p>
-        <div class="progress progress-striped active">
-            <div id="quiz-progress" class="progress-bar" style="width:100%;">
-            </div>
+<script type="text/javascript" src="/static/quiz.js"></script>
+<div class=test>
+    <div class="well well-lg">
+        <h1 class="color-black">{{ question.text | safe }}</h1>
+    </div>
+    <p></p>
+    <div class="progress progress-striped active">
+        <div id="quiz-progress" class="progress-bar" style="width:100%;">
         </div>
     </div>
+    <p></p>
+    <form id="update" action="{{ url_for('game') }}" method="post">
+        <input type="hidden" id="hidden_answer" name="action" value="answer">
+        {% for answer in answers %}
+        <button class="btn btn-primary btn-lg btn-block answerbtn" type="submit" name="answer_id" value={{ answer.answer_id }}>
+            {{ answer.text | safe }}
+        </button>
+        {% endfor %}
+    </form>
+</div>
 
 {% endblock %}

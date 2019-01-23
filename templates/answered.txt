@@ -1,0 +1,6 @@
+    <div class="header">
+        <h3 class="prj-name">
+            <span class="fa fa-users fa-2x"></span><br>
+            Wating for the next question
+        </h3>
+    </div>

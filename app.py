@@ -164,7 +164,7 @@ def game():
                 question = store.get_question_by_id(answer.question_id)
                 user.score += question.score
 
-            return redirect(url_for("game"))
+            return '', 204
 
         elif action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
