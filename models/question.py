@@ -1,4 +1,5 @@
 from uuid import uuid4
+from config import DEFAULT_SCORE
 
 
 class Question:
@@ -10,7 +11,7 @@ class Question:
         self.difficulty = kwargs["difficulty"]
         self.category = kwargs["category"]
         self.answers = []
-        self.score = 10
+        self.score = DEFAULT_SCORE
 
     def add_answer_by_id(self, answer_id):
         """"adds an answer to the quiz"""

@@ -166,11 +166,6 @@ def game():
 
             return redirect(url_for("game"))
 
-        elif action == "start" and user.is_owner:
-            store.get_quiz_by_id(user.quiz).start()
-
-            return redirect(url_for("game"))
-
 
 @app.route("/api/<action>/started/<game_id>", methods=["GET"])
 def api(action, game_id):
