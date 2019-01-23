@@ -3,7 +3,7 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, g
 from flask_session import Session
 
-from helpers.helpers import user_required, game_mode, json_response
+from helpers.helpers import user_required, game_mode_required, json_response
 from models.datasource import Datasource
 from models.store import store
 
@@ -77,7 +77,7 @@ def index():
 
 @app.route('/lobby', methods=["GET", "POST"])
 @user_required
-@game_mode
+@game_mode_required
 def lobby():
     """route that shows the lobby and receives start game actions"""
     user = store.get_user_by_id(session["user_id"])
@@ -102,7 +102,7 @@ def lobby():
 
 @app.route('/game', methods=["GET", "POST"])
 @user_required
-@game_mode
+@game_mode_required
 def game():
     """route that renders questions and receives answers"""
     # go the the next question (if needed)
@@ -138,7 +138,7 @@ def game():
 
 @app.route('/scoreboard')
 @user_required
-@game_mode
+@game_mode_required
 def scoreboard():
     """route that shows the scoreboard"""
     # get data for scoreboard
