@@ -116,3 +116,6 @@ class Store:
 
     def get_users_by_id(self, user_ids):
         return [self.get_user_by_id(user_id) for user_id in user_ids]
+
+
+store = Store()

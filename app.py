@@ -1,11 +1,11 @@
 from tempfile import mkdtemp
 
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, g
 from flask_session import Session
 
 from helpers.helpers import user_required, game_mode, json_response
 from models.datasource import Datasource
-from models.store import Store
+from models.store import store
 
 app = Flask(__name__)
 
@@ -23,8 +23,6 @@ app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
-
-store = Store()
 
 
 @app.errorhandler(404)
@@ -78,7 +76,7 @@ def index():
 
 @app.route('/lobby', methods=["GET", "POST"])
 @user_required
-@game_mode("lobby", store)
+@game_mode
 def lobby():
     user = store.get_user_by_id(session["user_id"])
 
@@ -100,7 +98,7 @@ def lobby():
 
 @app.route('/game', methods=["GET", "POST"])
 @user_required
-@game_mode("game", store)
+@game_mode
 def game():
     if request.method == "GET":
         user = store.get_user_by_id(session["user_id"])
@@ -136,8 +134,9 @@ def game():
 
 @app.route('/scoreboard', methods=["GET"])
 @user_required
-@game_mode("scoreboard", store)
+@game_mode
 def scoreboard():
+    # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
