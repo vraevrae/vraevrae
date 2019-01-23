@@ -44,11 +44,12 @@ def index():
 
     elif request.method == "POST":
         username = request.form.get("username", False)
-        if request.form.get("newgame", False):
-            # give feedback to user
-            if username == "":
-                return render_template("index.html", error="Username should not be empty!"), 400
 
+        # give feedback on username
+        if username == "":
+            return render_template("index.html", error="Username should not be empty!"), 400
+
+        if request.form.get("newgame", False):
             # create a new quiz
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
@@ -65,9 +66,7 @@ def index():
             gamecode = request.form["gamecode"]
 
             # give feedback to user
-            if username == "":
-                return render_template("index.html", error="Username should not be empty!"), 400
-            elif gamecode == "":
+            if gamecode == "":
                 return render_template("index.html", error="Game code should not be empty!"), 400
 
             # join the game
@@ -77,13 +76,6 @@ def index():
                     quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("game"))
-
-            # return errors
-            else:
-                return render_template("index.html", error="Game code does not exit!"), 404
-
-        else:
-            return render_template("index.html", error="Action is invalid!"), 404
 
 
 @app.route('/lobby', methods=["GET", "POST"])
