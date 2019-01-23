@@ -79,7 +79,7 @@ def test_join_non_existing_quiz():
     assert rv.status_code == 404
 
 
-def test_start_quiz_when_not_owner():
+def test_start_quiz_when_not_owner_yields_error():
     with app.test_request_context():
         client = app.test_client()
 

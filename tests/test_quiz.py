@@ -1,41 +1,36 @@
-# def test_next_question():
-#     app = App()
+from models.quiz import Quiz
+from helpers.fake import FakeSource
+from time import sleep
+from helpers.cprint import lcprint
+from config import MAX_TIME_IN_SECONDS
 
-#     user_id = app.new_quiz("Creator", FakeSource)
 
-#     old_quiz = app.store.get_quiz_by_user_id(user_id)
-#     old_quiz.start()
-#     old_quiz_current_question = old_quiz.current_question
-#     sleep(1.1)
-#     old_quiz.next_question()
+def test_next_question():
+    Quiz.max_time_in_seconds = 0.1
+    quiz = Quiz(FakeSource, 1234)
+    quiz.start()
+    start_question = quiz.current_question
 
-#     new_quiz = app.store.get_quiz_by_user_id(user_id)
+    sleep(0.1)
+    quiz.next_question()
+    second_question = quiz.current_question
 
-#     assert old_quiz_current_question is new_quiz.current_question - 1
+    assert start_question is second_question - 1
 
-# def test_next_question_causes_finish():
-#     app = App()
 
-#     user_id = app.new_quiz("Creator", FakeSource)
+def test_finish_quiz():
+    quiz = Quiz(FakeSource, 1234)
+    quiz.finish()
+    assert quiz.is_finished is True
 
-#     quiz = app.store.get_quiz_by_user_id(user_id)
-#     quiz.start()
-#     for _ in range(10):
-#         sleep(1.1)
-#         quiz.next_question()
 
-#     new_quiz = app.store.get_quiz_by_user_id(user_id)
+def test_next_question_causes_finish():
+    Quiz.max_time_in_seconds = 0.1
+    quiz = Quiz(FakeSource, 1234)
+    quiz.start()
 
-#     assert new_quiz.is_finished
+    for _ in range(10):
+        sleep(0.1)
+        quiz.next_question()
 
-# def test_finish_quiz():
-#     app = App()
-
-#     user_id = app.new_quiz("Creator", FakeSource)
-
-#     quiz = app.store.get_quiz_by_user_id(user_id)
-
-#     quiz.finish()
-
-#     assert quiz.is_finished is True
-#     # lcprint(vars(quiz), "the ended quest:")
+    assert quiz.is_finished
