@@ -190,7 +190,7 @@ def test_quiz_finishes_with_scoreboard():
         with client.session_transaction() as session:
             session['user_id'] = user_id
 
-        # TODO FIX THIS BUG
+        # TODO FIX THIS BUG: Game only increments by 1 for each request (even though it should do more depending on time)
         sleep(0.1)
         rv = client.get(url_for('game'))  # Sets the game to question 2
         sleep(0.1)
