@@ -1,4 +1,5 @@
 from flask import url_for
+import pytest
 from app import app, store
 from helpers.cprint import lcprint
 
@@ -7,24 +8,34 @@ def test_app_exists():
     assert app
 
 
-def test_index():
+@pytest.fixture
+def client1():
     with app.test_request_context():
-        client = app.test_client()
-        assert client.get(url_for('index')).status_code == 200
+        return app.test_client()
 
 
-def test_new_quiz():
+@pytest.fixture
+def client2():
+    with app.test_request_context():
+        return app.test_client()
+
+
+def test_index(client1):
+    with app.test_request_context():
+        assert client1.get(url_for('index')).status_code == 200
+
+
+def test_new_quiz(client1):
     """creation of a new default quiz"""
 
     with app.test_request_context():
-        client = app.test_client()
 
-        rv = client.post(url_for('index'), data=dict(
+        rv = client1.post(url_for('index'), data=dict(
             username="pietje",
             newgame="true"
         ))
 
-        with client.session_transaction() as sess:
+        with client1.session_transaction() as sess:
             user_id = sess['user_id']
 
         quiz = store.get_quiz_by_user_id(user_id)
@@ -38,21 +49,20 @@ def test_new_quiz():
     assert rv.status_code == 302
 
 
-def test_join_existing_quiz():
+def test_join_existing_quiz(client2):
     """a user can join a quiz by code"""
     with app.test_request_context():
         quiz_code = list(store.quizes.values())[0].code
-        client2 = app.test_client()
         data = dict(
             username="klaasje",
             gamecode=quiz_code,
             joingame="True"
         )
-
         rv = client2.post(url_for('index'), data=data)
 
-        user_id = [
-            user.user_id for user in store.users.values() if user.name == "klaasje"][0]
+        with client2.session_transaction() as sess:
+            user_id = sess['user_id']
+
         quiz = store.get_quiz_by_user_id(user_id)
 
     assert rv.status_code == 302
@@ -61,16 +71,17 @@ def test_join_existing_quiz():
 
 # def test_start_quiz():
 #     with app.test_request_context():
-#         quiz_id = store.start_quiz(user_id)
-#         quiz = store.store.get_quiz_by_id(quiz_id)
+#         lcprint(vars(store))
+    # quiz_id = store.start_quiz(user_id)
+    # quiz = store.store.get_quiz_by_id(quiz_id)
 
-#         rv = client.post(url_for('lobby'), data=dict(
-#             username="pietje",
-#             newgame="true"
-#         ))
+    # rv = client.post(url_for('lobby'), data=dict(
+    #     username="pietje",
+    #     newgame="true"
+    # ))
 
-#         assert quiz.is_started is True
-#         assert quiz.start_time
+    # assert quiz.is_started is True
+    # assert quiz.start_time
 
     # lcprint(vars(quiz), "the started quest:")
 
