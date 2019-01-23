@@ -1,6 +1,6 @@
 from tempfile import mkdtemp
 
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 
 from helpers import helpers
@@ -105,6 +105,8 @@ def lobby():
 
             return redirect(url_for("game"))
 
+    return redirect(url_for("index")), 400
+
 
 @app.route('/scoreboard', methods=["GET"])
 def scoreboard():
@@ -130,7 +132,7 @@ def game():
 
         if not quiz.is_started:
             return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
-                                   owner=user.is_owner, gamecode=quiz.code)
+                                   owner=user.is_owner, gamecode=quiz.code, game_id=quiz.quiz_id)
 
         if quiz.is_started and not quiz.is_finished:
             quiz.next_question()
@@ -164,7 +166,25 @@ def game():
 
             return '', 204
 
-        elif action == "start" and user.is_owner:
-            store.get_quiz_by_id(user.quiz).start()
 
-            return redirect(url_for("game"))
+@app.route("/api/<action>/started/<game_id>", methods=["GET"])
+def api(action, game_id):
+    if action == "game" and game_id:
+        try:
+            started = store.quizes[game_id].is_started
+            finished = store.quizes[game_id].is_finished
+
+            if not started and not finished:
+                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": False,
+                                                      "has_finished": False})), 200
+            elif started and not finished:
+                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": True,
+                                                      "has_finished": False})), 200
+            elif started and finished:
+                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": True,
+                                                      "has_finished": True})), 200
+
+        except KeyError:
+            return jsonify(helpers.json_response({"http_code": 400, "error_message": "game does "
+                                                                                     "not "
+                                                                                     "exist"})), 400

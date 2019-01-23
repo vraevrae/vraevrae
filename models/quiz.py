@@ -1,7 +1,3 @@
-# TODO Check unused imports! (RJ!)
-# from models.question import Question
-# from models.user import User
-# import time
 import datetime
 from uuid import uuid4
 
@@ -10,6 +6,8 @@ import config
 
 class Quiz:
     """the central class of the application"""
+
+    max_time_in_seconds = config.MAX_TIME_IN_SECONDS
 
     # Object attributes, different for each quiz
     def __init__(self, source, code):
@@ -47,7 +45,7 @@ class Quiz:
         return self.quiz_id
 
     def question_should_update_time(self):
-        next_update = config.MAX_TIME_IN_SECONDS * (self.current_question + 1)
+        next_update = self.max_time_in_seconds * (self.current_question + 1)
         update_time = self.start_time + datetime.timedelta(seconds=next_update)
         current_time = datetime.datetime.utcnow()
         return current_time > update_time
