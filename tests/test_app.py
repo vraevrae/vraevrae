@@ -79,7 +79,28 @@ def test_join_non_existing_quiz():
     assert rv.status_code == 404
 
 
-def test_start_quiz():
+def test_start_quiz_when_not_owner():
+    with app.test_request_context():
+        client = app.test_client()
+
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "klaasje"][0]
+
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        rv = client.post(url_for('lobby'), data=dict(
+            action="start"
+        ))
+
+        quiz = store.get_quiz_by_user_id(user_id)
+
+    assert quiz.is_started is False
+    assert not quiz.start_time
+    assert rv.status_code == 400
+
+
+def test_start_quiz_when_owner():
     with app.test_request_context():
         client = app.test_client()
 
@@ -99,14 +120,6 @@ def test_start_quiz():
     assert quiz.start_time
     assert rv.status_code == 302
 
-    #     quiz_id = store.start_quiz(user_id)
-    #     quiz = store.store.get_quiz_by_id(quiz_id)
-
-    # assert quiz.is_started is True
-    # assert quiz.start_time
-
-    # lcprint(vars(quiz), "the started quest:")
-
     # def test_answer_question_correctly():
     #     app = App()
 
@@ -120,8 +133,8 @@ def test_start_quiz():
 
     #     assert answer_is_answered
 
-    #     # lcprint(vars(view.data["answers"][3]),
-    #     #         "the question view with a sepecific answer selected:")
+    # lcprint(vars(view.data["answers"][3]),
+    #         "the question view with a sepecific answer selected:")
 
     # def test_answer_question_wrongly():
     #     app = App()
