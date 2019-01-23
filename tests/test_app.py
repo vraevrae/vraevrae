@@ -203,3 +203,4 @@ def test_quiz_finishes_with_scoreboard():
 
         assert rv.status_code == 302
         assert user.score == 10
+        assert quiz.is_finished == True
