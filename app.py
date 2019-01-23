@@ -146,28 +146,25 @@ def game():
             return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
     elif request.method == "POST":
+        try:
+            action = request.form["action"]
+            user_id = session["user_id"]
+            answer_id = request.form["answer_id"]
 
-        action = request.form["action"]
-        user_id = session["user_id"]
-        answer_id = request.form["answer_id"]
+            if action and user_id and answer_id and action == "answer":
+                user = store.get_user_by_id(user_id)
+                store.create_user_answer(
+                    session["user_id"], request.form["answer_id"])
 
-        if action and user_id and answer_id and action == "answer":
+                answer = store.get_answer_by_id(answer_id)
+                if answer.is_correct:
+                    question = store.get_question_by_id(answer.question_id)
+                    user.score += question.score
 
-            user = store.get_user_by_id(user_id)
-            store.create_user_answer(
-                session["user_id"], request.form["answer_id"])
+                return '', 202
 
-            answer = store.get_answer_by_id(answer_id)
-            if answer.is_correct:
-                question = store.get_question_by_id(answer.question_id)
-                user.score += question.score
-
-            return '', 202
-
-        elif action == "start" and user.is_owner:
-            user = store.get_user_by_id(user_id)
-            store.get_quiz_by_id(user.quiz).start()
-            return redirect(url_for("game"))
+        except:
+            return redirect(url_for("index"))
 
 
 @app.route("/api/<action>/started/<game_id>", methods=["GET"])
