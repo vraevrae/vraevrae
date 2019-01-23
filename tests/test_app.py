@@ -23,7 +23,7 @@ def test_new_quiz():
         client = app.test_client()
         data = dict(
             username="pietje",
-            newgame="true"
+            action="newgame"
         )
         rv = client.post(url_for('index'), data=data)
 
@@ -51,7 +51,7 @@ def test_join_existing_quiz():
         data = dict(
             username="klaasje",
             gamecode=quiz_code,
-            joingame="True"
+            action="joingame"
         )
 
         rv = client.post(url_for('index'), data=data)
@@ -73,7 +73,7 @@ def test_join_non_existing_quiz():
         data = dict(
             username="dirkje",
             gamecode=quiz_code,
-            joingame="True"
+            action="joingame"
         )
         rv = client.post(url_for('index'), data=data)
 

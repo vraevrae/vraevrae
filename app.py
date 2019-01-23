@@ -58,7 +58,7 @@ def index():
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
             else:
-                return redirect(url_for("index"))
+                return redirect(url_for("index")), 404
 
         # create a new quiz
         else:
@@ -94,6 +94,8 @@ def lobby():
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
             return redirect(url_for("game"))
+        else:
+            return "starting quiz only allowed by owner", 400
 
 
 @app.route('/game', methods=["GET", "POST"])

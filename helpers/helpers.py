@@ -33,10 +33,8 @@ def game_mode(f):
 
         if not quiz.is_started:
             if str(request.url_rule) == "/lobby":
-                print("in lobby")
                 return f(*args, **kwargs)
             else:
-                print("redirect to lobby")
                 return redirect(url_for("lobby"))
 
         if quiz.is_started and not quiz.is_finished:
