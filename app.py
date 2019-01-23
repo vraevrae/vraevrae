@@ -146,29 +146,25 @@ def game():
             return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
     elif request.method == "POST":
-        try:
-            action = request.form["action"]
-            user = store.get_user_by_id(session["user_id"])
-        except KeyError:
-            return helpers.json_response()
 
-        if action == "answer":
-            try:
-                answer = store.create_user_answer(
-                    session["user_id"], request.form["answer_id"])
-            except KeyError:
-                # TODO KeyError handling! (answer_id)
-                pass
+        action = request.form["action"]
+        user_id = session["user_id"]
+        answer_id = request.form["answer_id"]
 
-            if not answer:
-                question = store.get_question_by_id(answer.question_id)
-                user.score += question.score
+        if action and user_id and answer_id and action == "answer":
+            user = store.get_user_by_id(user_id)
+            store.create_user_answer(
+                session["user_id"], request.form["answer_id"])
 
-            return '', 204
+            answer = store.get_answer_by_id(answer_id)
+            question = store.get_question_by_id(answer.question_id)
+            user.score += question.score
+
+            return '', 202
 
         elif action == "start" and user.is_owner:
+            user = store.get_user_by_id(user_id)
             store.get_quiz_by_id(user.quiz).start()
-
             return redirect(url_for("game"))
 
 

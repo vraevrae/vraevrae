@@ -137,17 +137,15 @@ def test_answer_question_correctly():
         answers = store.get_answers_by_id(question.answers)
         correct_answer = [answer for answer in answers if answer.is_correct][0]
 
-        assert correct_answer
-
         rv = client.post(url_for('game'), data=dict(
             action="answer",
             answer_id=correct_answer.answer_id
         ))
 
-        assert rv.status_code == 302
-
         user = store.get_user_by_id(user_id)
-        # assert user.score == DEFAULT_SCORE
+
+        assert rv.status_code == 202
+        assert user.score == DEFAULT_SCORE
 
     # assert app.answer_question(
     #     user_id, view.data["answers"][3].answer_id)
