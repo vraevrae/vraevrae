@@ -8,7 +8,7 @@ $(document).ready(function() {
       .attr('aria-valuenow', current_progress)
 
     if (current_progress === 0) {
-      /*location.reload();*/
+      location.reload();
       clearInterval(interval)
     }
   }, 1000)
