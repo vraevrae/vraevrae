@@ -33,7 +33,8 @@ body {
 }
 
 .list-group-item{
-    color: black
+    color: black;
+    overflow: hidden;
 }
 
 .prj-name
@@ -52,4 +53,14 @@ body {
 
 .test{
  margin: 0.5% 10% 
+}
+
+.naam {
+    float: left;
+    font-weight: bold
+}
+
+.score {
+   float: right;
+   font-weight: bolder
 }
