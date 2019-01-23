@@ -105,6 +105,8 @@ def lobby():
 
             return redirect(url_for("game"))
 
+    return redirect(url_for("index")), 400
+
 
 @app.route('/scoreboard', methods=["GET"])
 def scoreboard():
