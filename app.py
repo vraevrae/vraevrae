@@ -49,7 +49,8 @@ def index():
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
 
-            user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
+            user_id = store.create_user(
+                quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
 
             return redirect(url_for("game"))
@@ -71,7 +72,7 @@ def index():
                 session["user_id"] = user_id
                 return redirect(url_for("game"))
 
-            # return error
+            # return errors
             else:
                 return render_template("index.html", error="Game code does not exit!"), 404
 
@@ -79,7 +80,7 @@ def index():
             return render_template("index.html", error="Action is invalid!"), 404
 
 
-@app.route('/lobby/', methods=["GET", "POST"])
+@app.route('/lobby', methods=["GET", "POST"])
 def lobby():
     if request.method == "GET":
         user = store.get_user_by_id(session["user_id"])
@@ -105,7 +106,7 @@ def lobby():
             return redirect(url_for("game"))
 
 
-@app.route('/scoreboard/', methods=["GET"])
+@app.route('/scoreboard', methods=["GET"])
 def scoreboard():
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
@@ -151,7 +152,8 @@ def game():
 
         if action == "answer":
             try:
-                answer = store.create_user_answer(session["user_id"], request.form["answer_id"])
+                answer = store.create_user_answer(
+                    session["user_id"], request.form["answer_id"])
             except KeyError:
                 # TODO KeyError handling! (answer_id)
                 pass
