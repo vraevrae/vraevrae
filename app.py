@@ -32,6 +32,11 @@ def error404(e):
     return render_template("404.html"), 404
 
 
+@app.errorhandler(KeyError)
+def keyErrorPage(e):
+    return render_template("error.html", data=e), 500
+
+
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -81,6 +86,7 @@ def index():
 
 
 @app.route('/lobby', methods=["GET", "POST"])
+@helpers.user_required
 def lobby():
     if request.method == "GET":
         user = store.get_user_by_id(session["user_id"])
@@ -109,6 +115,7 @@ def lobby():
 
 
 @app.route('/scoreboard', methods=["GET"])
+@helpers.user_required
 def scoreboard():
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
@@ -124,7 +131,7 @@ def scoreboard():
 
 
 @app.route('/game', methods=["GET", "POST"])
-@helpers.game_required
+@helpers.user_required
 def game():
     if request.method == "GET":
         user = store.get_user_by_id(session["user_id"])
@@ -147,8 +154,8 @@ def game():
 
     elif request.method == "POST":
         try:
-            action = request.form["action"]
             user_id = session["user_id"]
+            action = request.form["action"]
             answer_id = request.form["answer_id"]
 
             if action and user_id and answer_id and action == "answer":
