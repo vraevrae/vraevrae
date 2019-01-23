@@ -13,17 +13,17 @@
     </div>
     <div>
     <ul class="list-group">
-        {% for user in users %}
-        <li class="list-group-item">{{user.name}}</li>
+        {% for player in players %}
+            <li class="list-group-item">{{player.name}}</li>
         {% endfor %}
     </ul>
     </div>
 </div>
 
-{% if owner %}
+{% if user.is_owner %}
     <div class="col-lg-4 col-lg-offset-1">
         <h3>
-            <span id="gamecodetext">Game code:</span> {{ gamecode }}
+            <span id="gamecodetext">Game code:</span> {{ quiz.gamecode }}
         </h3>
         <form action="{{ url_for('lobby') }}" method="post">
             <div class="form-group">

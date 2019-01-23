@@ -5,8 +5,8 @@ Config file for Vrae Vrae
 APP_NAME = "Vrae Vrae"
 DEFAULT_DATASOURCE = "opentdb"
 
-MAX_TIME_IN_SECONDS: int = 10
-MAX_QUESTIONS: int = 10
+MAX_TIME_IN_SECONDS: int = 1
+MAX_QUESTIONS: int = 2
 DEFAULT_SCORE: int = 10
 
 # DO NOT EDIT UNDER THIS LINE
