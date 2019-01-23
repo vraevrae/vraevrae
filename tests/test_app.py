@@ -1,47 +1,32 @@
-from flask import url_for
+from flask import url_for, session
 import pytest
 from app import app, store
 from helpers.cprint import lcprint
 
 
 def test_app_exists():
+    app.testing = True
     assert app
 
 
-@pytest.fixture
-def client1():
+def test_index():
     with app.test_request_context():
-        return app.test_client()
+        client = app.test_client()
+        assert client.get(url_for('index')).status_code == 200
 
 
-@pytest.fixture
-def client2():
-    with app.test_request_context():
-        return app.test_client()
-
-
-@pytest.fixture
-def client3():
-    with app.test_request_context():
-        return app.test_client()
-
-
-def test_index(client1):
-    with app.test_request_context():
-        assert client1.get(url_for('index')).status_code == 200
-
-
-def test_new_quiz(client1):
+def test_new_quiz():
     """creation of a new default quiz"""
 
     with app.test_request_context():
-
-        rv = client1.post(url_for('index'), data=dict(
+        client = app.test_client()
+        data = dict(
             username="pietje",
             newgame="true"
-        ))
+        )
+        rv = client.post(url_for('index'), data=data)
 
-        with client1.session_transaction() as sess:
+        with client.session_transaction() as sess:
             user_id = sess['user_id']
 
         quiz = store.get_quiz_by_user_id(user_id)
@@ -55,18 +40,22 @@ def test_new_quiz(client1):
     assert rv.status_code == 302
 
 
-def test_join_existing_quiz(client2):
+def test_join_existing_quiz():
     """a user can join a quiz by code"""
     with app.test_request_context():
+        client = app.test_client()
+
         quiz_code = list(store.quizes.values())[0].code
+
         data = dict(
             username="klaasje",
             gamecode=quiz_code,
             joingame="True"
         )
-        rv = client2.post(url_for('index'), data=data)
 
-        with client2.session_transaction() as sess:
+        rv = client.post(url_for('index'), data=data)
+
+        with client.session_transaction() as sess:
             user_id = sess['user_id']
 
         quiz = store.get_quiz_by_user_id(user_id)
@@ -75,30 +64,43 @@ def test_join_existing_quiz(client2):
     assert user_id in quiz.users
 
 
-def test_join_non_existing_quiz(client3):
+def test_join_non_existing_quiz():
     """a user can join a quiz by code"""
     with app.test_request_context():
+        client = app.test_client()
         quiz_code = 39478598347593475
         data = dict(
             username="dirkje",
             gamecode=quiz_code,
             joingame="True"
         )
-        rv = client3.post(url_for('index'), data=data)
+        rv = client.post(url_for('index'), data=data)
 
     assert rv.status_code == 404
 
 
-# def test_start_quiz():
-#     with app.test_request_context():
-#         lcprint(vars(store))
-    # quiz_id = store.start_quiz(user_id)
-    # quiz = store.store.get_quiz_by_id(quiz_id)
+def test_start_quiz():
+    with app.test_request_context():
+        client = app.test_client()
 
-    # rv = client.post(url_for('lobby'), data=dict(
-    #     username="pietje",
-    #     newgame="true"
-    # ))
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
+
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        rv = client.post(url_for('lobby'), data=dict(
+            action="start"
+        ))
+
+        quiz = store.get_quiz_by_user_id(user_id)
+
+    assert quiz.is_started is True
+    assert quiz.start_time
+    assert rv.status_code == 302
+
+    #     quiz_id = store.start_quiz(user_id)
+    #     quiz = store.store.get_quiz_by_id(quiz_id)
 
     # assert quiz.is_started is True
     # assert quiz.start_time
