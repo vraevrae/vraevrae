@@ -1,18 +1,6 @@
-
-from tempfile import mkdtemp
-from flask import Flask, render_template, request, session, redirect, url_for
-from flask_session import Session
-import flask
-import pytest
-import http
-
-from helpers.fake import FakeSource
-from helpers.cprint import cprint, lcprint
-from random import randint
-from time import sleep
+from flask import url_for
 
 from app import app, store
-from models.store import Store
 
 
 def test_app_exists():
@@ -63,7 +51,7 @@ def test_join_quiz():
 
         rv = client2.post(url_for('index'), data=data)
 
-        assert rv.status_code == 404
+        assert rv.status_code == 302
 
         # user_id = [
         #     user.user_id for user in store.users.values() if user.name == "klaasje"]
