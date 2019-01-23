@@ -147,21 +147,29 @@ def test_answer_question_correctly():
         assert rv.status_code == 202
         assert user.score == DEFAULT_SCORE
 
-    # assert app.answer_question(
-    #     user_id, view.data["answers"][3].answer_id)
 
-# def test_answer_question_wrongly():
-#     app = App()
+def test_answer_question_wrongly():
+    with app.test_request_context():
+        client = app.test_client()
 
-#     user_id = app.new_quiz("Creator", FakeSource)
-#     app.start_quiz(user_id)
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "klaasje"][0]
 
-#     view = app.get_view(user_id)
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
 
-#     answer_is_answered = app.answer_question(
-#         user_id, view.data["answers"][2].answer_id)
+        quiz = store.get_quiz_by_user_id(user_id)
+        question = store.get_question_by_id(quiz.get_current_question_id())
+        answers = store.get_answers_by_id(question.answers)
+        correct_answer = [
+            answer for answer in answers if not answer.is_correct][0]
 
-#     assert not answer_is_answered
+        rv = client.post(url_for('game'), data=dict(
+            action="answer",
+            answer_id=correct_answer.answer_id
+        ))
 
-#     # lcprint(vars(view.data["answers"][2]),
-#     #         "the question view with a sepecific answer selected:")
+        user = store.get_user_by_id(user_id)
+
+        assert rv.status_code == 202
+        assert user.score == 0

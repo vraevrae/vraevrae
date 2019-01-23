@@ -152,13 +152,15 @@ def game():
         answer_id = request.form["answer_id"]
 
         if action and user_id and answer_id and action == "answer":
+
             user = store.get_user_by_id(user_id)
             store.create_user_answer(
                 session["user_id"], request.form["answer_id"])
 
             answer = store.get_answer_by_id(answer_id)
-            question = store.get_question_by_id(answer.question_id)
-            user.score += question.score
+            if answer.is_correct:
+                question = store.get_question_by_id(answer.question_id)
+                user.score += question.score
 
             return '', 202
 
