@@ -32,9 +32,10 @@
             </div>
         </form>
     </div>
-
 {% endif %}
-    {% if not owner %}
-        <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
-    {% endif %}
+
+{% if not owner %}
+    <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
+{% endif %}
+
 {% endblock %}
