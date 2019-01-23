@@ -2,7 +2,9 @@ from flask import url_for, session
 import pytest
 from app import app, store
 from helpers.cprint import lcprint
-from config import DEFAULT_SCORE
+from config import DEFAULT_SCORE, MAX_TIME_IN_SECONDS
+from time import sleep
+from models.quiz import Quiz
 
 
 def test_app_exists():
@@ -20,6 +22,9 @@ def test_new_quiz():
     """creation of a new default quiz"""
 
     with app.test_request_context():
+        Quiz.max_questions = 2
+        Quiz.max_time_in_seconds = 0.1
+
         client = app.test_client()
         data = dict(
             username="pietje",
@@ -173,3 +178,28 @@ def test_answer_question_wrongly():
 
         assert rv.status_code == 202
         assert user.score == 0
+
+
+def test_quiz_finishes_with_scoreboard():
+    with app.test_request_context():
+
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
+
+        client = app.test_client()
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        # TODO FIX THIS BUG
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Sets the game to question 2
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Sets the game to finished
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Finally redirects
+
+        user = store.get_user_by_id(user_id)
+        quiz = store.get_quiz_by_user_id(user_id)
+
+        assert rv.status_code == 302
+        assert user.score == 10

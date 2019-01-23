@@ -37,6 +37,7 @@ def keyErrorPage(e):
 
 @app.route('/', methods=["GET", "POST"])
 def index():
+    """route that shows the entry page"""
     if request.method == "GET":
         return render_template("index.html")
 
@@ -78,6 +79,7 @@ def index():
 @user_required
 @game_mode
 def lobby():
+    """route that shows the lobby and receives start game actions"""
     user = store.get_user_by_id(session["user_id"])
 
     # render the lobby view
@@ -102,13 +104,13 @@ def lobby():
 @user_required
 @game_mode
 def game():
+    """route that renders questions and receives answers"""
+    # go the the next question (if needed)
+    user = store.get_user_by_id(session["user_id"])
+    quiz = store.get_quiz_by_id(user.quiz)
+    quiz.next_question()
+
     if request.method == "GET":
-        user = store.get_user_by_id(session["user_id"])
-        quiz = store.get_quiz_by_id(user.quiz)
-
-        # go the the next question (if needed)
-        quiz.next_question()
-
         # retrieve the question and answers
         question_id = quiz.get_current_question_id()
         question = store.get_question_by_id(question_id)
@@ -134,10 +136,11 @@ def game():
             return '', 202
 
 
-@app.route('/scoreboard', methods=["GET"])
+@app.route('/scoreboard')
 @user_required
 @game_mode
 def scoreboard():
+    """route that shows the scoreboard"""
     # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)

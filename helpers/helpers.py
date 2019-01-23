@@ -47,7 +47,6 @@ def game_mode(f):
             if str(request.url_rule) == "/scoreboard":
                 return f(*args, **kwargs)
             else:
-                print("redirecting to scoreboard", quiz.is_finished)
                 return redirect(url_for("scoreboard"))
 
         return redirect(url_for("index"))
