@@ -14,7 +14,6 @@ $(document).ready(function() {
   }, 1000)
 
   $('.answerbtn').click(function(e) {
-    console.log('answerbtn run')
 
     data = {
       action: 'answer',
@@ -26,7 +25,10 @@ $(document).ready(function() {
       url: '/game',
       data: data, // serializes the form's elements.
       success: function() {
-        document.getElementById('update').innerHTML = 'HALLO'
+        document.getElementById('update').innerHTML = "Wait for the next question..."
+        // var d1 = document.getElementById('update');
+        // d1.insertAdjacentHTML('afterend', '<div id="updated">WAIT FOR QUESTION</div>');
+        /// d1.parentNode.removeChild(d1);
       }
     })
 
