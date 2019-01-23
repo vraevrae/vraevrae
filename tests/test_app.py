@@ -1,6 +1,7 @@
 from flask import url_for
 
 from app import app, store
+from helpers.cprint import lcprint
 
 
 def test_app_exists():
@@ -37,7 +38,7 @@ def test_new_quiz():
     assert rv.status_code == 302
 
 
-def test_join_quiz():
+def test_join_existing_quiz():
     """a user can join a quiz by code"""
     with app.test_request_context():
         quiz_code = list(store.quizes.values())[0].code
@@ -51,31 +52,25 @@ def test_join_quiz():
 
         rv = client2.post(url_for('index'), data=data)
 
+        user_id = [
+            user.user_id for user in store.users.values() if user.name == "klaasje"][0]
+        quiz = store.get_quiz_by_user_id(user_id)
+
         assert rv.status_code == 302
+        assert user_id in quiz.users
 
-        # user_id = [
-        #     user.user_id for user in store.users.values() if user.name == "klaasje"]
-        # quiz = store.get_quiz_by_user_id(user_id)
 
-    # user_id_creator = app.new_quiz("some creator of the quiz", FakeSource)
-    # quiz = app.store.get_quiz_by_user_id(user_id_creator)
-    # user_id_joiner = app.join_quiz("a joiner", quiz.code)
+def test_start_quiz():
+    app = App()
 
-    # assert user_id_joiner
+    user_id = app.new_quiz("Creator", FakeSource)
+    quiz_id = app.start_quiz(user_id)
+    quiz = app.store.get_quiz_by_id(quiz_id)
 
-    # lcprint(vars(joined_quiz), "the joined quiz:")
+    assert quiz.is_started is True
+    assert quiz.start_time
 
-    # def test_start_quiz():
-    #     app = App()
-
-    #     user_id = app.new_quiz("Creator", FakeSource)
-    #     quiz_id = app.start_quiz(user_id)
-    #     quiz = app.store.get_quiz_by_id(quiz_id)
-
-    #     assert quiz.is_started is True
-    #     assert quiz.start_time
-
-    #     # lcprint(vars(quiz), "the started quest:")
+    # lcprint(vars(quiz), "the started quest:")
 
     # def test_answer_question_correctly():
     #     app = App()
