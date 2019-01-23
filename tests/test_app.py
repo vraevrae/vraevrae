@@ -20,6 +20,12 @@ def client2():
         return app.test_client()
 
 
+@pytest.fixture
+def client3():
+    with app.test_request_context():
+        return app.test_client()
+
+
 def test_index(client1):
     with app.test_request_context():
         assert client1.get(url_for('index')).status_code == 200
@@ -67,6 +73,20 @@ def test_join_existing_quiz(client2):
 
     assert rv.status_code == 302
     assert user_id in quiz.users
+
+
+def test_join_non_existing_quiz(client3):
+    """a user can join a quiz by code"""
+    with app.test_request_context():
+        quiz_code = 39478598347593475
+        data = dict(
+            username="dirkje",
+            gamecode=quiz_code,
+            joingame="True"
+        )
+        rv = client3.post(url_for('index'), data=data)
+
+    assert rv.status_code == 404
 
 
 # def test_start_quiz():
