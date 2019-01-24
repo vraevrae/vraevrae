@@ -25,10 +25,9 @@ $(document).ready(function() {
       url: '/game',
       data: data, // serializes the form's elements.
       success: function() {
-        document.getElementById('update').innerHTML = "Wait for the next question..."
-        // var d1 = document.getElementById('update');
-        // d1.insertAdjacentHTML('afterend', '<div id="updated">WAIT FOR QUESTION</div>');
-        /// d1.parentNode.removeChild(d1);
+        var d1 = document.getElementById('update');
+        d1.insertAdjacentHTML('afterend', '<div id="updated" class="center"><h3 class="prj-name">Wait for the next question...</h3></div>');
+        d1.parentNode.removeChild(d1);
       }
     })
 

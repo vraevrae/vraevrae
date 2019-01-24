@@ -13,6 +13,14 @@ body {
     background-position: 90% 90%;
 }
 
+.color-black {
+    color: black;
+}
+
+.center{
+    text-align: center;
+}
+
 .nav-color {
     background: #5CB85C;
     border-color: #4CAE4C;
