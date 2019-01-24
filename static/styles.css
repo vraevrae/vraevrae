@@ -13,14 +13,6 @@ body {
     background-position: 90% 90%;
 }
 
-.main {
-    max-width: 30rem;
-}
-
-.color-black {
-    color: black;
-}
-
 .nav-color {
     background: #5CB85C;
     border-color: #4CAE4C;
@@ -37,30 +29,7 @@ body {
     overflow: hidden;
 }
 
-.prj-name
-{
-  font-weight:bold;
-  color:#FFFFFF;
-  font-size: 24px;
-  top: 50;
-  left: 50;
-  width: 150px;
-}
-
-.prj-name{
-  height: 100px;
-}
-
-.test{
- margin: 0.5% 10% 
-}
-
-.naam {
-    float: left;
-    font-weight: bold
-}
-
 .score {
    float: right;
-   font-weight: bolder
+    font-weight: bolder;
 }
