@@ -1,29 +1,10 @@
-function game_started(game_id) {
-    window.setInterval(function () {
-        fetch('/api/game/started/' + game_id.toString())
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
+var app = require('express')();
+var http = require('http').Server(app);
 
-                        location.href("/");
+app.get('/', function(req, res){
+  res.send('<h1>Hello world</h1>');
+});
 
-                        return;
-                    }
-
-                    // Examine the text in the response
-                    response.json().then(function (data) {
-                        console.log(data);
-
-                        data.data.has_started && location.reload(false)
-                    });
-                }
-            )
-            .catch(function (err) {
-                console.log('Fetch Error :-S', err);
-            });
-    }, 1200);
-}
-
-document.onload = game_started(game_id.dataset.game_id);
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});

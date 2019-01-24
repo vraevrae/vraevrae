@@ -2,12 +2,18 @@ from tempfile import mkdtemp
 
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
+from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
 from helpers import helpers
 from models.datasource import Datasource
 from models.store import Store
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
+socketio = SocketIO(app)
+
+if __name__ == '__main__':
+    socketio.run(app)
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:
@@ -150,7 +156,7 @@ def game():
             action = request.form["action"]
             user = store.get_user_by_id(session["user_id"])
         except KeyError:
-            return helpers.json_response()
+            return helpers.json_response({"success":False})
 
         if action == "answer":
             try:
@@ -193,3 +199,37 @@ def api(action, game_id):
             return jsonify(helpers.json_response({"http_code": 400, "error_message": "game does "
                                                                                      "not "
                                                                                      "exist"})), 400
+
+
+@socketio.on('connect', namespace='/chat')
+def test_connect():
+    emit('my response', {'data': 'Connected'})
+
+
+@socketio.on('disconnect', namespace='/chat')
+def test_disconnect():
+    print('Client disconnected')
+
+
+@socketio.on('join')
+def on_join(data):
+    room = data['game_id']
+    join_room(room)
+    send(room + ' is joined.', room=room)
+
+
+@socketio.on('leave')
+def on_leave(data):
+    room = data['game_id']
+    leave_room(room)
+    send(room + ' has left.', room=room)
+
+
+@socketio.on('start_game')
+def start_game(user_id, quiz_id):
+    user = store.get_user_by_id(user_id)
+
+    if user.is_owner and user.quiz.quiz_id is quiz_id:
+        store.get_quiz_by_id(quiz_id).start()
+
+        emit("", room=quiz_id)
