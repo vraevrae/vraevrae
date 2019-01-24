@@ -21,6 +21,11 @@ body {
     text-align: center;
 }
 
+.answerbtn{
+    width: 70%;
+    margin: 0 auto;
+}
+
 .nav-color {
     background: #5CB85C;
     border-color: #4CAE4C;
