@@ -6,10 +6,11 @@ from models.store import store
 
 
 def user_required(f):
-    """Decorate routes to require an active game with gamecode."""
+    """only render the route if there is a user session"""
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # if not user redirect
         if session.get("user_id") is None:
             return redirect(url_for("index"))
         return f(*args, **kwargs)
