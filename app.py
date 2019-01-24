@@ -149,6 +149,7 @@ def scoreboard():
 
 @app.route("/api/<action>/started/<game_id>", methods=["GET"])
 def api(action, game_id):
+    """polls for gamestatus so client can refresh route if in invalid state"""
     if action == "game" and game_id:
         try:
             started = store.quizes[game_id].is_started
