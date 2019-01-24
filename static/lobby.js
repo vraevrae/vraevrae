@@ -26,4 +26,4 @@ function game_started(game_id) {
     }, 1200);
 }
 
-document.onload = game_started(document.getElementById("game_id").dataset.game_id);
+document.onload = game_started(game_id.dataset.game_id);

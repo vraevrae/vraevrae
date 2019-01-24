@@ -3,7 +3,7 @@
     Lobby
 {% endblock %}
 {% block main %}
-    <div id="game_id" data-game_id="{{- quiz.quiz_id -}}"></div>
+<div id="game_id" data-game_id="{{- game_id -}}"></div>
 <div class="col-lg-4 col-lg-offset-1">
     <div class="header">
         <h3 class="prj-name">
@@ -19,20 +19,20 @@
     </ul>
     </div>
 </div>
+
+{% if user.is_owner %}
     <div class="col-lg-4 col-lg-offset-1">
         <h3>
-            <span id="gamecodetext">Game code:</span> {{ quiz.code }}
+            <span id="gamecodetext">Game code:</span> {{ quiz.gamecode }}
         </h3>
-        {% if user.is_owner %}
         <form action="{{ url_for('lobby') }}" method="post">
             <div class="form-group">
                 <input name="action" type="hidden" value="start"/>
                 <button class="btn btn-success" id="start" type="submit">Start Game</button>
             </div>
         </form>
-        {% endif %}
     </div>
-
+{% endif %}
 
 {% if not owner %}
     <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
