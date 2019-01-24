@@ -25,15 +25,19 @@ def game_mode_required(f):
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
+        # game mode = preparation
         if not quiz.is_started and str(request.url_rule) != "/lobby":
             return redirect(url_for("lobby"))
 
+        # game mode = active
         if quiz.is_started and not quiz.is_finished and str(request.url_rule) != "/game":
             return redirect(url_for("game"))
 
+        # game mode = finished
         if quiz.is_finished and str(request.url_rule) != "/scoreboard":
             return redirect(url_for("scoreboard"))
 
+        # if on correct route, return the route function
         return f(*args, **kwargs)
     return decorated_function
 
