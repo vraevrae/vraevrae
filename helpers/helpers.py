@@ -1,15 +1,12 @@
 from functools import wraps
-from helpers.cprint import lcprint
+
 from flask import session, redirect, url_for, request
 
 from models.store import store
 
 
 def user_required(f):
-    """
-    Decorate routes to require an active game with gamecode.
-    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
-    """
+    """Decorate routes to require an active game with gamecode."""
 
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -24,6 +21,7 @@ def game_mode_required(f):
     """checks if game state is appropriate for the route"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # get quiz data
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
 
@@ -40,5 +38,6 @@ def game_mode_required(f):
     return decorated_function
 
 
-def json_response(dictionary=None, ) -> dict:
+def json_response(dictionary=None) -> dict:
+    # create response template for json
     return {"data": dictionary}
