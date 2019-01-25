@@ -1,6 +1,6 @@
 from tempfile import mkdtemp
 
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify, g
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 
 from helpers.helpers import user_required, game_mode_required, json_response
@@ -147,25 +147,17 @@ def scoreboard():
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
 
-@app.route("/api/<action>/started/<game_id>", methods=["GET"])
+@app.route("/api/<action>/<game_id>", methods=["GET"])
+@user_required
 def api(action, game_id):
     """polls for gamestatus so client can refresh route if in invalid state"""
-    if action == "game" and game_id:
-        try:
-            started = store.quizes[game_id].is_started
-            finished = store.quizes[game_id].is_finished
+    if action == "lobby" and game_id:
+        started = store.quizes[game_id].is_started
+        finished = store.quizes[game_id].is_finished
 
-            if not started and not finished:
-                return jsonify(json_response({"game_id:": game_id, "has_started": False,
-                                              "has_finished": False})), 200
-            elif started and not finished:
-                return jsonify(json_response({"game_id:": game_id, "has_started": True,
-                                              "has_finished": False})), 200
-            elif started and finished:
-                return jsonify(json_response({"game_id:": game_id, "has_started": True,
-                                              "has_finished": True})), 200
+        user = store.get_user_by_id(session["user_id"])
+        quiz = store.get_quiz_by_id(user.quiz)
+        users = store.get_users_by_id(quiz.users)
 
-        except KeyError:
-            return jsonify(json_response({"http_code": 400, "error_message": "game does "
-                                          "not "
-                                          "exist"})), 400
+        return jsonify(json_response({"game_id:": game_id, "has_started": started,
+                                      "has_finished": finished, "users": users})), 200
