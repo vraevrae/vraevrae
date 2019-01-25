@@ -37,7 +37,7 @@ class Datasource:
         """Function that returns all questions (formatted)"""
         return self.source.get_formatted_data()
 
-    def get_question(self) -> dict:
+    def get_question(self, difficulty=None) -> dict:
         """
         Function that returns a question
         (that should not have been send in the current session)
