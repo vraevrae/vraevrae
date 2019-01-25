@@ -65,7 +65,9 @@ def index():
         else:
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
-                store.create_question_from_source(quiz_id)
+                question_id = store.create_question_from_source(quiz_id)
+                print(vars(store.get_question_by_id(question_id)))
+
 
             # create a user
             user_id = store.create_user(
