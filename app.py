@@ -1,10 +1,10 @@
 from tempfile import mkdtemp
 
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from helpers.helpers import user_required, game_mode_required, json_response
+from helpers.helpers import user_required, game_mode_required
 from models.datasource import Datasource
 from models.store import store
 
@@ -37,7 +37,7 @@ def error404(e):
 
 
 @app.errorhandler(KeyError)
-def keyErrorPage(e):
+def key_error_page(e):
     return render_template("error.html", data=e), 500
 
 
@@ -101,6 +101,8 @@ def lobby():
         # allow the starting of th quiz if owner
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
+            socketio.emit("start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
+
             return redirect(url_for("game"))
         else:
             return "starting quiz only allowed by owner", 400
@@ -153,19 +155,6 @@ def scoreboard():
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
 
 
-@app.route("/api/<action>/<game_id>", methods=["GET"])
-@user_required
-def api(action, game_id):
-    if action == "game" and game_id:
-        if action == "lobby" and game_id:
-            user = store.get_user_by_id(session["user_id"])
-            quiz = store.get_quiz_by_id(user.quiz)
-            users = store.get_users_by_id(quiz.users)
-
-            return jsonify(json_response({"game_id:": game_id, "has_started": quiz.is_started,
-                                          "has_finished": quiz.is_finished, "users": users})), 200
-
-
 @socketio.on('connect')
 def connect():
     emit('my response')
@@ -185,7 +174,7 @@ def disconnect():
 @socketio.on('join_game')
 def on_join(data):
     print(data)
-    room = data['game_id']
+    room = data['quiz_id']
 
     if room is not None:
         join_room(room)
@@ -194,16 +183,6 @@ def on_join(data):
 
 @socketio.on('leave_game')
 def on_leave(data):
-    room = data['game_id']
+    room = data['quiz_id']
     leave_room(room)
     send(room + ' is left.', room=room)
-
-
-@socketio.on('start_game')
-def start_game(user_id, quiz_id):
-    user = store.get_user_by_id(user_id)
-
-    if user.is_owner and user.quiz.quiz_id is quiz_id:
-        store.get_quiz_by_id(quiz_id).start()
-
-        emit("game_started", room=quiz_id)

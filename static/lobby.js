@@ -4,12 +4,17 @@ $(function () {
         socket.emit('is_connected', {data: 'I\'m connected!'});
         console.log("connected");
 
-        let game_id;
-        game_id = document.getElementById("game_id").dataset.game_id.toString();
+        let quiz_id;
+        quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
 
-        console.log(game_id);
+        console.log(quiz_id);
 
-        socket.emit('join_game', {"game_id": game_id})
+        socket.emit('join_game', {"quiz_id": quiz_id})
+    });
+
+    socket.on('start_game', function () {
+        console.log("start game");
+        location.reload(false)
     });
 
     socket.on('message', function (message) {
