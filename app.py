@@ -152,12 +152,9 @@ def scoreboard():
 def api(action, game_id):
     """polls for gamestatus so client can refresh route if in invalid state"""
     if action == "lobby" and game_id:
-        started = store.quizes[game_id].is_started
-        finished = store.quizes[game_id].is_finished
-
         user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
         users = store.get_users_by_id(quiz.users)
 
-        return jsonify(json_response({"game_id:": game_id, "has_started": started,
-                                      "has_finished": finished, "users": users})), 200
+        return jsonify(json_response({"game_id:": game_id, "has_started": quiz.is_started,
+                                      "has_finished": quiz.is_finished, "users": users})), 200
