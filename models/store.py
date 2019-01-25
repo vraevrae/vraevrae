@@ -115,4 +115,8 @@ class Store:
         return self.users[user_id]
 
     def get_users_by_id(self, user_ids):
+        """reads a list of users from the store by userId"""
         return [self.get_user_by_id(user_id) for user_id in user_ids]
+
+
+store = Store()

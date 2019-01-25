@@ -2,6 +2,9 @@ from flask import url_for, session
 import pytest
 from app import app, store
 from helpers.cprint import lcprint
+from config import DEFAULT_SCORE, MAX_TIME_IN_SECONDS
+from time import sleep
+from models.quiz import Quiz
 
 
 def test_app_exists():
@@ -19,10 +22,13 @@ def test_new_quiz():
     """creation of a new default quiz"""
 
     with app.test_request_context():
+        Quiz.max_questions = 2
+        Quiz.max_time_in_seconds = 0.1
+
         client = app.test_client()
         data = dict(
             username="pietje",
-            newgame="true"
+            action="newgame"
         )
         rv = client.post(url_for('index'), data=data)
 
@@ -50,7 +56,7 @@ def test_join_existing_quiz():
         data = dict(
             username="klaasje",
             gamecode=quiz_code,
-            joingame="True"
+            action="joingame"
         )
 
         rv = client.post(url_for('index'), data=data)
@@ -72,7 +78,7 @@ def test_join_non_existing_quiz():
         data = dict(
             username="dirkje",
             gamecode=quiz_code,
-            joingame="True"
+            action="joingame"
         )
         rv = client.post(url_for('index'), data=data)
 
@@ -121,31 +127,80 @@ def test_start_quiz_when_owner():
     assert rv.status_code == 302
 
 
-# def test_answer_question_correctly():
-#     app = App()
+def test_answer_question_correctly():
+    with app.test_request_context():
+        client = app.test_client()
 
-#     user_id = app.new_quiz("Creator", FakeSource)
-#     app.start_quiz(user_id)
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
 
-#     view = app.get_view(user_id)
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
 
-#     answer_is_answered = app.answer_question(
-#         user_id, view.data["answers"][3].answer_id)
+        quiz = store.get_quiz_by_user_id(user_id)
+        question = store.get_question_by_id(quiz.get_current_question_id())
+        answers = store.get_answers_by_id(question.answers)
+        correct_answer = [answer for answer in answers if answer.is_correct][0]
 
-#     assert answer_is_answered
+        rv = client.post(url_for('game'), data=dict(
+            action="answer",
+            answer_id=correct_answer.answer_id
+        ))
 
-# def test_answer_question_wrongly():
-#     app = App()
+        user = store.get_user_by_id(user_id)
 
-#     user_id = app.new_quiz("Creator", FakeSource)
-#     app.start_quiz(user_id)
+        assert rv.status_code == 202
+        assert user.score == DEFAULT_SCORE
 
-#     view = app.get_view(user_id)
 
-#     answer_is_answered = app.answer_question(
-#         user_id, view.data["answers"][2].answer_id)
+def test_answer_question_wrongly():
+    with app.test_request_context():
+        client = app.test_client()
 
-#     assert not answer_is_answered
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "klaasje"][0]
 
-#     # lcprint(vars(view.data["answers"][2]),
-#     #         "the question view with a sepecific answer selected:")
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        quiz = store.get_quiz_by_user_id(user_id)
+        question = store.get_question_by_id(quiz.get_current_question_id())
+        answers = store.get_answers_by_id(question.answers)
+        correct_answer = [
+            answer for answer in answers if not answer.is_correct][0]
+
+        rv = client.post(url_for('game'), data=dict(
+            action="answer",
+            answer_id=correct_answer.answer_id
+        ))
+
+        user = store.get_user_by_id(user_id)
+
+        assert rv.status_code == 202
+        assert user.score == 0
+
+
+def test_quiz_finishes_with_scoreboard():
+    with app.test_request_context():
+
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
+
+        client = app.test_client()
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        # TODO FIX THIS BUG: Game only increments by 1 for each request (even though it should do more depending on time)
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Sets the game to question 2
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Sets the game to finished
+        sleep(0.1)
+        rv = client.get(url_for('game'))  # Finally redirects
+
+        user = store.get_user_by_id(user_id)
+        quiz = store.get_quiz_by_user_id(user_id)
+
+        assert rv.status_code == 302
+        assert user.score == 10
+        assert quiz.is_finished == True

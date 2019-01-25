@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'>
+<svg version="1.1" viewBox="0 0 70 125" xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <path id="d" d="m39.33 51.66l31.33 1-55 73.67 16-52.67-31.66-1 53.33-72.66-14 51.66z"/>
+    </defs>
+    <use fill="#ffffff" xlink:href="#d"/>
+    <use fill-opacity="0" stroke="#ffffff" xlink:href="#d"/>
+</svg>

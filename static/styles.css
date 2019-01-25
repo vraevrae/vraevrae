@@ -13,12 +13,17 @@ body {
     background-position: 90% 90%;
 }
 
-.main {
-    max-width: 30rem;
-}
-
 .color-black {
     color: black;
+}
+
+.center{
+    text-align: center;
+}
+
+.answerbtn{
+    width: 70%;
+    margin: 0 auto;
 }
 
 .nav-color {
@@ -33,23 +38,11 @@ body {
 }
 
 .list-group-item{
-    color: black
+    color: black;
+    overflow: hidden;
 }
 
-.prj-name
-{
-  font-weight:bold;
-  color:#FFFFFF;
-  font-size: 24px;
-  top: 50;
-  left: 50;
-  width: 150px;
-}
-
-.prj-name{
-  height: 100px;
-}
-
-.test{
- margin: 0.5% 10% 
+.score {
+   float: right;
+    font-weight: bolder;
 }

@@ -4,9 +4,9 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from helpers import helpers
+from helpers.helpers import user_required, game_mode_required, json_response
 from models.datasource import Datasource
-from models.store import Store
+from models.store import store
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -30,175 +30,140 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-store = Store()
-
 
 @app.errorhandler(404)
 def error404(e):
     return render_template("404.html"), 404
 
 
+@app.errorhandler(KeyError)
+def keyErrorPage(e):
+    return render_template("error.html", data=e), 500
+
+
 @app.route('/', methods=["GET", "POST"])
 def index():
+    """route that shows the entry page"""
     if request.method == "GET":
         return render_template("index.html")
 
     elif request.method == "POST":
         username = request.form.get("username", False)
-        if request.form.get("newgame", False):
-            # give feedback to user
-            if username == "":
-                return render_template("index.html", error="Username should not be empty!"), 400
+        gamecode = request.form.get("gamecode", False)
+        action = request.form.get("action", False)
 
-            # create a new game
-            quiz_id = store.create_quiz(Datasource)
-            for _ in range(10):
-                store.create_question_from_source(quiz_id)
+        # give feedback to user
+        if username == "":
+            return render_template("index.html", error="Username should not be empty!"), 400
 
-            user_id = store.create_user(
-                quiz_id=quiz_id, name=username, is_owner=True)
-            session["user_id"] = user_id
-
-            return redirect(url_for("game"))
-
-        elif request.form.get("joingame", False):
-            gamecode = request.form["gamecode"]
-
-            # give feedback to user
-            if username == "":
-                return render_template("index.html", error="Username should not be empty!"), 400
-            elif gamecode == "":
-                return render_template("index.html", error="Game code should not be empty!"), 400
-
-            # join the game
+        # join the game
+        if action == "joingame" and gamecode:
             if store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
                 user_id = store.create_user(
                     quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
-                return redirect(url_for("game"))
-
-            # return errors
+                return redirect(url_for("lobby"))
             else:
-                return render_template("index.html", error="Game code does not exit!"), 404
+                return redirect(url_for("index")), 404
 
+        # create a new quiz
         else:
-            return render_template("index.html", error="Action is invalid!"), 404
+            quiz_id = store.create_quiz(Datasource)
+            for _ in range(10):
+                store.create_question_from_source(quiz_id)
+
+            # create a user
+            user_id = store.create_user(
+                quiz_id=quiz_id, name=username, is_owner=True)
+            session["user_id"] = user_id
+
+            return redirect(url_for("lobby"))
 
 
 @app.route('/lobby', methods=["GET", "POST"])
+@user_required
+@game_mode_required
 def lobby():
+    """route that shows the lobby and receives start game actions"""
+    user = store.get_user_by_id(session["user_id"])
+
+    # render the lobby view
     if request.method == "GET":
-        user = store.get_user_by_id(session["user_id"])
         quiz = store.get_quiz_by_id(user.quiz)
+        users = store.get_users_by_id(quiz.users)
+        return render_template("lobby.html", players=users, user=user, quiz=quiz)
 
-        if not quiz.is_started:
-            return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
-                                   owner=user.is_owner, gamecode=quiz.code)
-        elif quiz.is_started and not quiz.is_finished:
-            return redirect(url_for("game"))
-        elif quiz.is_finished:
-            return redirect(url_for("scoreboard"))
-        else:
-            return redirect(url_for(index))
-
+    # submit the game start signal
     elif request.method == "POST":
         action = request.form["action"]
-        user = store.get_user_by_id(session["user_id"])
 
+        # allow the starting of th quiz if owner
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
-
             return redirect(url_for("game"))
-
-    return redirect(url_for("index")), 400
-
-
-@app.route('/scoreboard', methods=["GET"])
-def scoreboard():
-    user = store.get_user_by_id(session["user_id"])
-    quiz = store.get_quiz_by_id(user.quiz)
-
-    if not quiz.is_started and not quiz.is_finished:
-        return redirect(url_for("index"))
-    elif quiz.is_started and not quiz.is_finished:
-        return redirect(url_for("game"))
-    elif quiz.is_finished:
-        return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
-    else:
-        return redirect(url_for(index))
+        else:
+            return "starting quiz only allowed by owner", 400
 
 
 @app.route('/game', methods=["GET", "POST"])
-@helpers.game_required
+@user_required
+@game_mode_required
 def game():
+    """route that renders questions and receives answers"""
+    # go the the next question (if needed)
+    user = store.get_user_by_id(session["user_id"])
+    quiz = store.get_quiz_by_id(user.quiz)
+    quiz.next_question()
+
     if request.method == "GET":
-        user = store.get_user_by_id(session["user_id"])
-        quiz = store.get_quiz_by_id(user.quiz)
+        # retrieve the question and answers
+        question_id = quiz.get_current_question_id()
+        question = store.get_question_by_id(question_id)
+        answers = store.get_answers_by_id(question.answers)
 
-        if not quiz.is_started:
-            return render_template("lobby.html", users=store.get_users_by_id(quiz.users),
-                                   owner=user.is_owner, gamecode=quiz.code, game_id=quiz.quiz_id)
-
-        if quiz.is_started and not quiz.is_finished:
-            quiz.next_question()
-            question_id = quiz.get_current_question_id()
-            question = store.get_question_by_id(question_id)
-            answers = store.get_answers_by_id(question.answers)
-
-            return render_template("quiz.html", question=question, answers=answers)
-
-        if quiz.is_finished:
-            return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
+        return render_template("quiz.html", question=question, answers=answers)
 
     elif request.method == "POST":
-        try:
-            action = request.form["action"]
-            user = store.get_user_by_id(session["user_id"])
-        except KeyError:
-            return helpers.json_response({"success":False})
+        user_id = session["user_id"]
+        answer_id = request.form["answer_id"]
 
-        if action == "answer":
-            try:
-                answer = store.create_user_answer(
-                    session["user_id"], request.form["answer_id"])
-            except KeyError:
-                # TODO KeyError handling! (answer_id)
-                pass
+        if user_id and answer_id:
+            # create history item
+            store.create_user_answer(user_id, answer_id)
 
-            if not answer:
+            # check for correctness (and increment score if needed)
+            answer = store.get_answer_by_id(answer_id)
+            if answer.is_correct:
                 question = store.get_question_by_id(answer.question_id)
+                user = store.get_user_by_id(user_id)
                 user.score += question.score
 
-            return redirect(url_for("game"))
-
-        elif action == "start" and user.is_owner:
-            store.get_quiz_by_id(user.quiz).start()
-
-            return redirect(url_for("game"))
+            return '', 202
 
 
-@app.route("/api/<action>/started/<game_id>", methods=["GET"])
+@app.route('/scoreboard')
+@user_required
+@game_mode_required
+def scoreboard():
+    """route that shows the scoreboard"""
+    # get data for scoreboard
+    user = store.get_user_by_id(session["user_id"])
+    quiz = store.get_quiz_by_id(user.quiz)
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
+
+
+@app.route("/api/<action>/<game_id>", methods=["GET"])
+@user_required
 def api(action, game_id):
     if action == "game" and game_id:
-        try:
-            started = store.quizes[game_id].is_started
-            finished = store.quizes[game_id].is_finished
+        if action == "lobby" and game_id:
+            user = store.get_user_by_id(session["user_id"])
+            quiz = store.get_quiz_by_id(user.quiz)
+            users = store.get_users_by_id(quiz.users)
 
-            if not started and not finished:
-                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": False,
-                                                      "has_finished": False})), 200
-            elif started and not finished:
-                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": True,
-                                                      "has_finished": False})), 200
-            elif started and finished:
-                return jsonify(helpers.json_response({"game_id:": game_id, "has_started": True,
-                                                      "has_finished": True})), 200
-
-        except KeyError:
-            return jsonify(helpers.json_response({"http_code": 400, "error_message": "game does "
-                                                                                     "not "
-                                                                                     "exist"})), 400
+            return jsonify(json_response({"game_id:": game_id, "has_started": quiz.is_started,
+                                          "has_finished": quiz.is_finished, "users": users})), 200
 
 
 @socketio.on('connect', namespace='/chat')

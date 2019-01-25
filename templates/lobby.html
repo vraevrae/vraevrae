@@ -1,36 +1,41 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 {% block title %}
     Lobby
 {% endblock %}
 {% block main %}
-    <div id="game_id" data-game_id="{{- game_id -}}"></div>
+    <div id="game_id" data-game_id="{{- quiz.quiz_id -}}"></div>
 <div class="col-lg-4 col-lg-offset-1">
     <div class="header">
         <h3 class="prj-name">
             <span class="fa fa-users fa-2x"></span><br>
             Users
-        </h3>
+            </h3>
     </div>
+    <div>
     <ul class="list-group">
-        {% for user in users %}
-            <li class="list-group-item">{{ user.name }}</li>
+        {% for player in players %}
+            <li class="list-group-item">{{player.name}}</li>
         {% endfor %}
     </ul>
+    </div>
 </div>
-
-{% if owner %}
     <div class="col-lg-4 col-lg-offset-1">
         <h3>
-            <span id="gamecodetext">Game code:</span> {{ gamecode }}
+            <span id="gamecodetext">Game code:</span> {{ quiz.code }}
         </h3>
-        <form action="{{ url_for('game') }}" method="post">
+        {% if user.is_owner %}
+        <form action="{{ url_for('lobby') }}" method="post">
             <div class="form-group">
                 <input name="action" type="hidden" value="start"/>
                 <button class="btn btn-success" id="start" type="submit">Start Game</button>
             </div>
         </form>
+        {% endif %}
     </div>
 
+
+{% if not owner %}
+    <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
 {% endif %}
     <script type="text/javascript"
             src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>

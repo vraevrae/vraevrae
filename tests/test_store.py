@@ -40,15 +40,6 @@ def test_create_question_from_fake_source():
     assert question
 
 
-def test_create_question_from_real_source():
-    """questions can be added form a source"""
-    store = Store()
-    quiz_id = store.create_quiz(Datasource)
-    question_id = store.create_question_from_source(quiz_id)
-    question = store.questions[question_id]
-    assert question
-
-
 def test_get_question():
     """questions can be retrieved from the app"""
     store = Store()
