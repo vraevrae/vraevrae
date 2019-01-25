@@ -1,29 +1,23 @@
-function game_started(game_id) {
-    window.setInterval(function () {
-        fetch('/api/game/started/' + game_id.toString())
-            .then(
-                function (response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
+$(function () {
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function () {
+        socket.emit('is_connected', {data: 'I\'m connected!'});
+        console.log("connected");
 
-                        location.href("/");
+        let quiz_id;
+        quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
 
-                        return;
-                    }
+        console.log(quiz_id);
 
-                    // Examine the text in the response
-                    response.json().then(function (data) {
-                        console.log(data);
+        socket.emit('join_game', {"quiz_id": quiz_id})
+    });
 
-                        data.data.has_started && location.reload(false)
-                    });
-                }
-            )
-            .catch(function (err) {
-                console.log('Fetch Error :-S', err);
-            });
-    }, 1200);
-}
+    socket.on('start_game', function () {
+        console.log("start game");
+        location.reload(false)
+    });
 
-document.onload = game_started(document.getElementById("game_id").dataset.game_id);
+    socket.on('message', function (message) {
+        console.log(message)
+    })
+});

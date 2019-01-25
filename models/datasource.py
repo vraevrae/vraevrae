@@ -9,7 +9,7 @@ class Datasource:
     source = None
     cache_data = []
 
-    def __init__(self, source=config.DEFAULT_DATASOURCE):
+    def __init__(self, source=config.DEFAULT_DATASOURCE, difficulty=None):
         # if source is not possible (not coded) raise an error
         if source not in config.POSSIBLE_DATASOURCES:
             raise NameError("[Datasource] source does not exist! Source: " + source.__str__())
@@ -29,15 +29,15 @@ class Datasource:
         """Return all possible datasources (as noted in config)"""
         return config.POSSIBLE_DATASOURCES
 
-    def update_cache_data(self) -> None:
+    def update_cache_data(self, difficulty=None) -> None:
         """Save questions to cache_data"""
-        self.cache_data = self.get_all_questions()
+        self.cache_data = self.get_all_questions(difficulty)
 
-    def get_all_questions(self) -> list:
+    def get_all_questions(self, difficulty=None) -> list:
         """Function that returns all questions (formatted)"""
-        return self.source.get_formatted_data()
+        return self.source.get_formatted_data(difficulty)
 
-    def get_question(self) -> dict:
+    def get_question(self, difficulty=None) -> dict:
         """
         Function that returns a question
         (that should not have been send in the current session)
@@ -47,6 +47,6 @@ class Datasource:
         self.cache_data.remove(question)
 
         if len(self.cache_data) <= 20:
-            self.update_cache_data()
+            self.update_cache_data(difficulty)
 
         return question

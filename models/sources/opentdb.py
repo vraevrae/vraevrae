@@ -12,7 +12,7 @@ class OpenTDB:
         self.amount_of_questions = amount_of_questions
 
     @staticmethod
-    def _download_data(amount_of_questions=1) -> dict:
+    def _download_data(amount_of_questions=1, difficulty=None) -> dict:
         """
         Internal function to get apidata from Open Trivia DB
         :returns JSON data
@@ -20,10 +20,16 @@ class OpenTDB:
 
         # try to get a correct request from Open Trivia DB
         try:
-            # do request to Open Trivia DB API and format to JSON
-            r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) +
-                             "&type=multiple")
-            json = r.json()
+
+            if difficulty != None:
+                # do request to Open Trivia DB API and format to JSON
+                r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&difficulty=" + str(difficulty) +
+                                "&type=multiple")
+                json = r.json()
+            else:
+                r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) +
+                                "&type=multiple")
+                json = r.json()
 
             # check if request was correct
             if json["response_code"] == 0:
@@ -66,7 +72,7 @@ class OpenTDB:
                 "difficulty": data["difficulty"],
                 "type": data["type"]}
 
-    def get_formatted_data(self) -> list:
+    def get_formatted_data(self, difficulty) -> list:
         """function to return all formatted questions"""
         return [self._format_opentdb_data(question) for question in self._download_data(
-            self.amount_of_questions)]
+            self.amount_of_questions, difficulty)]

@@ -6,3 +6,4 @@ passlib
 SQLAlchemy
 requests
 pytest-flask
+flask-socketio
