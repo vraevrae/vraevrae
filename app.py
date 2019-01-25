@@ -166,24 +166,33 @@ def api(action, game_id):
                                           "has_finished": quiz.is_finished, "users": users})), 200
 
 
-@socketio.on('connect', namespace='/chat')
-def test_connect():
-    emit('my response', {'data': 'Connected'})
+@socketio.on('connect')
+def connect():
+    emit('my response')
+    print('my response')
 
 
-@socketio.on('disconnect', namespace='/chat')
-def test_disconnect():
+@socketio.on("is_connected")
+def is_connected(data):
+    print(data)
+
+
+@socketio.on('disconnect')
+def disconnect():
     print('Client disconnected')
 
 
-@socketio.on('join')
+@socketio.on('join_game')
 def on_join(data):
+    print(data)
     room = data['game_id']
-    join_room(room)
-    send(room + ' is joined.', room=room)
+
+    if room is not None:
+        join_room(room)
+        send(room + ' is joined.', room=room)
 
 
-@socketio.on('leave')
+@socketio.on('leave_game')
 def on_leave(data):
     room = data['game_id']
     leave_room(room)

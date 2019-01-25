@@ -1,15 +1,18 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+$(function () {
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function () {
+        socket.emit('is_connected', {data: 'I\'m connected!'});
+        console.log("connected");
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-});
+        let game_id;
+        game_id = document.getElementById("game_id").dataset.game_id.toString();
 
-io.on('connection', function (socket) {
-    console.log('a user connected');
-});
+        console.log(game_id);
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+        socket.emit('join_game', {"game_id": game_id})
+    });
+
+    socket.on('message', function (message) {
+        console.log(message)
+    })
 });
