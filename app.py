@@ -62,10 +62,19 @@ def index():
                 return redirect(url_for("index")), 404
 
         # create a new quiz
+
         else:
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
-                question_id = store.create_question_from_source(quiz_id)
+                if action == "easy":
+                    question_id = store.create_question_from_source(quiz_id, difficulty="easy")
+                if action == "medium":
+                    question_id = store.create_question_from_source(quiz_id, difficulty="medium")
+                if action == "hard":
+                    question_id = store.create_question_from_source(quiz_id, difficulty="hard")
+                else:
+                    question_id = store.create_question_from_source(quiz_id)
+                
                 print(vars(store.get_question_by_id(question_id)))
 
 

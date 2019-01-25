@@ -47,10 +47,10 @@ class Store:
         self.questions[new_question.question_id] = new_question
         return new_question.question_id
 
-    def create_question_from_source(self, quiz_id):
+    def create_question_from_source(self, quiz_id, difficulty=None):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        temp_question = self.get_quiz_by_id(quiz_id).source.get_question()
+        temp_question = self.get_quiz_by_id(quiz_id).source.get_question(difficulty)
 
         # add the question to the store
         question_id = self.create_question(quiz_id, temp_question)
