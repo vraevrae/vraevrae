@@ -33,9 +33,6 @@
         {% endif %}
     </div>
 
-
-{% if not owner %}
-    <script src="{{ url_for("static", filename="lobby.js") }}" async></script>
-{% endif %}
+    <script src="{{ url_for('static', filename='lobby.js') }}" async></script>
 
 {% endblock %}
