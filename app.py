@@ -222,7 +222,7 @@ def on_join(data):
 def on_leave(data):
     room = data['game_id']
     leave_room(room)
-    send(room + ' has left.', room=room)
+    send(room + ' is left.', room=room)
 
 
 @socketio.on('start_game')
@@ -232,4 +232,4 @@ def start_game(user_id, quiz_id):
     if user.is_owner and user.quiz.quiz_id is quiz_id:
         store.get_quiz_by_id(quiz_id).start()
 
-        emit("", room=quiz_id)
+        emit("game_started", room=quiz_id)
