@@ -72,7 +72,7 @@ class OpenTDB:
                 "difficulty": data["difficulty"],
                 "type": data["type"]}
 
-    def get_formatted_data(self) -> list:
+    def get_formatted_data(self, difficulty) -> list:
         """function to return all formatted questions"""
         return [self._format_opentdb_data(question) for question in self._download_data(
-            self.amount_of_questions)]
+            self.amount_of_questions, difficulty)]
