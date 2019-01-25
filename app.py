@@ -144,7 +144,8 @@ def scoreboard():
     # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users))
+    questions = [store.get_question_by_id(question_id) for question_id in quiz.questions]
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users), questions=questions)
 
 
 @app.route("/api/<action>/<game_id>", methods=["GET"])
@@ -158,3 +159,5 @@ def api(action, game_id):
 
         return jsonify(json_response({"game_id:": game_id, "has_started": quiz.is_started,
                                       "has_finished": quiz.is_finished, "users": users})), 200
+
+

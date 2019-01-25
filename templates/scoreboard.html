@@ -24,4 +24,19 @@ Scoreboard
             </div>
         </form>
     </div>
+
+   <div class="answercheck">
+        <ul>
+            {% for question in questions  %}
+            <li><a>
+            <label class="question" onclick="toggle_visibility()">{{question.text}}</label>
+            {% for answer in answers%}
+            {{answer}} 
+            {% endfor %}
+            {% endfor %}
+            </a></li>
+        </ul>
+    </div>
+    
+<script type="text/javascript" src="/static/scoreboard.js"></script>
 {% endblock %}
