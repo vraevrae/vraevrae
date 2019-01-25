@@ -10,16 +10,22 @@
     {% endif %}
 
     <div class="row form-horizontal">
-        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post" action="{{ url_for("index") }}">
+        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1 center" method="post" action="{{ url_for('index') }}">
             <h1>Create a game</h1>
             <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
             <p></p>
-            <button type="submit" name="action" class="btn btn-success" value="newgame">New Game
+            <button id="random" type="submit" name="action" class="btn btn-success" value="newgame">New Game
+            </button>
+            <button id="easy" type="submit" name="action" class="btn btn-success" value="newgame">New Easy Game
+            </button>
+            <button id="medium" type="submit" name="action" class="btn btn-success" value="newgame">New Medium Game
+            </button>
+            <button id="hard" type="submit" name="action" class="btn btn-success" value="newgame">New Hard Game
             </button>
             <p></p>
         </form>
-        <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for("index") }}">
+        <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for('index') }}">
             <h1>Join existing game</h1>
             <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
