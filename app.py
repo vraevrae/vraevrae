@@ -51,6 +51,7 @@ def index():
         username = request.form.get("username", False)
         gamecode = request.form.get("gamecode", False)
         action = request.form.get("action", False)
+        difficulty = request.form.get("difficulty", False)
 
         # give feedback to user
         if username == "":
@@ -68,21 +69,19 @@ def index():
                 return redirect(url_for("index")), 404
 
         # create a new quiz
-
-        else:
+        elif action == "creategame" and difficulty:
             quiz_id = store.create_quiz(Datasource)
             for _ in range(10):
-                if action == "easy":
+                if difficulty == "easy":
                     question_id = store.create_question_from_source(quiz_id, difficulty="easy")
-                if action == "medium":
+                elif difficulty == "medium":
                     question_id = store.create_question_from_source(quiz_id, difficulty="medium")
-                if action == "hard":
+                elif difficulty == "hard":
                     question_id = store.create_question_from_source(quiz_id, difficulty="hard")
-                else:
+                elif difficulty == "random":
                     question_id = store.create_question_from_source(quiz_id)
-                
-                print(vars(store.get_question_by_id(question_id)))
-
+                else:
+                    return "Invalid request", 400
 
             # create a user
             user_id = store.create_user(
@@ -90,7 +89,9 @@ def index():
             session["user_id"] = user_id
 
             return redirect(url_for("lobby"))
-
+        # invalid request
+        else:
+            return "Invalid request", 400
 
 @app.route('/lobby', methods=["GET", "POST"])
 @user_required
@@ -164,7 +165,8 @@ def scoreboard():
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
     questions = [store.get_question_by_id(question_id) for question_id in quiz.questions]
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users), questions=questions)
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
+                           questions=questions)
 
 
 @socketio.on('connect')
