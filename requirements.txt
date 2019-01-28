@@ -1,9 +1,6 @@
-pygments
-Flask
-Flask-Session
-flask-restful
-passlib
-SQLAlchemy
-requests
-pytest-flask
-flask-socketio
+requests==2.21.0
+Flask==1.0.2
+pytest==4.1.1
+Flask_SocketIO==3.1.2
+Pygments==2.3.1
+Flask_Session==0.3.1
