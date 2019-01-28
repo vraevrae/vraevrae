@@ -3,24 +3,26 @@
 Game
 {% endblock %}
 {% block main%}
-<script type="text/javascript" src="/static/quiz.js"></script>
+    <script type="text/javascript" src="{{ url_for("static", filename="quiz.js") }}"></script>
 <div class=test>
+    <div id="quiz_id" data-quiz_id="{{- quiz.quiz_id -}}"></div>
     <div class="well well-lg center">
-        <h1 class="color-black">{{ question.text | safe }}</h1>
+        <h1 class="color-black" id="quiz-question">{{ question.text | safe }}</h1>
     </div>
-    <p></p>
     <div class="progress progress-striped active">
         <div id="quiz-progress" class="progress-bar" style="width:100%;">
         </div>
     </div>
-    <p></p>
-    <form id="update" action="{{ url_for('game') }}" method="post">
+    <form action="{{ url_for('game') }}" method="post">
         <input type="hidden" id="hidden_answer" name="action" value="answer">
-        {% for answer in answers %}
-        <button class="btn btn-primary btn-lg btn-block answerbtn" type="submit" name="answer_id" value={{ answer.answer_id }}>
-            {{ answer.text | safe }}
-        </button>
-        {% endfor %}
+        <button id="answer-button-0" class="btn btn-primary btn-lg btn-block answerbtn"
+                type="submit" name="answer_id" value=""></button>
+        <button id="answer-button-1" class="btn btn-primary btn-lg btn-block answerbtn"
+                type="submit" name="answer_id" value=""></button>
+        <button id="answer-button-2" class="btn btn-primary btn-lg btn-block answerbtn"
+                type="submit" name="answer_id" value=""></button>
+        <button id="answer-button-3" class="btn btn-primary btn-lg btn-block answerbtn"
+                type="submit" name="answer_id" value=""></button>
     </form>
 </div>
 

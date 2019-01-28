@@ -1,5 +1,7 @@
 $(document).ready(function() {
     let current_progress = 100;
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    let quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
 
   let interval = setInterval(function() {
       current_progress -= 10;
@@ -13,24 +15,31 @@ $(document).ready(function() {
     }
   }, 1000);
 
-  $('.answerbtn').click(function(e) {
 
-    data = {
-      action: 'answer',
-      answer_id: e.currentTarget.value
-    };
+    socket.on('connect', function () {
+        socket.emit('is_connected', {data: 'I\'m connected!'});
+        console.log("connected");
 
-    $.ajax({
-      type: 'POST',
-      url: '/game',
-      data: data, // serializes the form's elements.
-      success: function() {
-          let d1 = document.getElementById('update');
-        d1.insertAdjacentHTML('afterend', '<div id="updated" class="center"><h3 class="prj-name">Wait for the next question...</h3></div>');
-        d1.parentNode.removeChild(d1);
-      }
+        console.log(quiz_id);
+
+        socket.emit('join_game', {"quiz_id": quiz_id})
     });
 
-    return false // avoid to execute the actual submit of the form.
+    socket.on('message', function (message) {
+        console.log(message)
+    });
+
+    socket.on('disconnect', function () {
+        socket.emit('leave_game', {"quiz_id": quiz_id});
+        console.log("Socket disconnected")
+    });
+
+    socket.on('get_current_question', function (data) {
+        document.getElementById("quiz-question").innerHTML = data["question"];
+
+        for (let i = 0; i < data["answers"].length(); i++) {
+            document.getElementById("answer-button-" + i.toString()).innerHTML = data["answers"][i]
+        }
   })
+
 });

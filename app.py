@@ -132,12 +132,7 @@ def game():
     quiz.next_question()
 
     if request.method == "GET":
-        # retrieve the question and answers
-        question_id = quiz.get_current_question_id()
-        question = store.get_question_by_id(question_id)
-        answers = store.get_answers_by_id(question.answers)
-
-        return render_template("quiz.html", question=question, answers=answers)
+        return render_template("quiz.html", quiz=quiz.quiz)
 
     elif request.method == "POST":
         user_id = session["user_id"]
@@ -202,3 +197,37 @@ def on_leave(data):
     if room is not None:
         leave_room(room)
         send(room + ' is left.', room=room)
+
+
+@socketio.on('get_current_question')
+def get_current_question(data):
+    room = data['quiz_id']
+    user_id = data["user_id"]
+
+    user = store.get_user_by_id(user_id)
+    quiz = store.get_quiz_by_id(user.quiz)
+
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
+    answers = store.get_answers_by_id(question.answers)
+
+    emit("current_question", data={"question": question, "answers": answers}, room=room)
+
+
+@socketio.on('set_answer')
+def set_answer(data):
+    user_id = data['user_id']
+    answer_id = data["answer_id"]
+
+    if user_id and answer_id:
+        # create history item
+        store.create_user_answer(user_id, answer_id)
+
+        # check for correctness (and increment score if needed)
+        answer = store.get_answer_by_id(answer_id)
+        if answer.is_correct:
+            question = store.get_question_by_id(answer.question_id)
+            user = store.get_user_by_id(user_id)
+            user.score += question.score
+
+    emit('answer_is_set', room=store.get_quiz_by_user_id(user_id))
