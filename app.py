@@ -77,7 +77,6 @@ def index():
             quiz_id = store.create_quiz(Datasource, difficulty)
             for _ in range(10):
                 question_id = store.create_question_from_source(quiz_id)
-                print(vars(store.get_question_by_id(question_id)))
 
             # create a user
             user_id = store.create_user(
@@ -110,7 +109,8 @@ def lobby():
         # allow the starting of th quiz if owner
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
-            socketio.emit("start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
+            socketio.emit(
+                "start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
 
             return redirect(url_for("game"))
         else:
@@ -162,7 +162,8 @@ def scoreboard():
     # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
-    questions = [store.get_question_by_id(question_id) for question_id in quiz.questions]
+    questions = [store.get_question_by_id(
+        question_id) for question_id in quiz.questions]
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
                            questions=questions)
 

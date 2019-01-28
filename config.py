@@ -1,5 +1,4 @@
 from operator import itemgetter
-
 """
 Config file for Vrae Vrae
 """

@@ -11,24 +11,20 @@ class OpenTDB:
     def __init__(self, difficulty, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
         self.amount_of_questions = amount_of_questions
         self.difficulty = difficulty
-        print("init: ", difficulty)
 
     def _download_data(self, amount_of_questions=1) -> dict:
         """
         Internal function to get apidata from Open Trivia DB
         :returns JSON data
         """
-        print(self.difficulty)
         # try to get a correct request from Open Trivia DB
         try:
             if self.difficulty:
                 # do request to Open Trivia DB API and format to JSON
                 query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&difficulty={str(self.difficulty)}&type=multiple"
-                print("with difficulty"+ query)
                 r = requests.get(query)
             else:
                 query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
-                print("without difficulty"+ query)
                 r = requests.get(query)
             json = r.json()
 
@@ -40,13 +36,15 @@ class OpenTDB:
                 # raise an exception if the request was not correct
                 raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
                                 " Request URL: "
-                                + "https://opentdb.com/api.php?amount=" + str(amount_of_questions)
+                                + "https://opentdb.com/api.php?amount=" +
+                                str(amount_of_questions)
                                 + "&type=multiple")
 
         # raise an exception if there is an error with the request
         except requests.exceptions.RequestException as e:
             print(e) if config.DEBUG is True else None
-            raise Exception("[Datasource] opentdb request has an error: " + e.__str__())
+            raise Exception(
+                "[Datasource] opentdb request has an error: " + e.__str__())
 
     @staticmethod
     def _format_opentdb_data(data) -> dict:
