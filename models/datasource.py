@@ -7,7 +7,6 @@ class Datasource:
 
     # create variable for saving apidata between functions
     source = None
-    difficulty = None
     cache_data = []
 
     def __init__(self, source=config.DEFAULT_DATASOURCE, difficulty=None):
@@ -22,9 +21,6 @@ class Datasource:
         if source == "opentdb":
             self.source = OpenTDB()
 
-        if difficulty is not None:
-            self.difficulty = difficulty
-
         # save questions to cache_data
         self.update_cache_data()
 
@@ -33,15 +29,15 @@ class Datasource:
         """Return all possible datasources (as noted in config)"""
         return config.POSSIBLE_DATASOURCES
 
-    def update_cache_data(self, difficulty=difficulty) -> None:
+    def update_cache_data(self, difficulty=None) -> None:
         """Save questions to cache_data"""
         self.cache_data = self.get_all_questions(difficulty)
 
-    def get_all_questions(self, difficulty=difficulty) -> list:
+    def get_all_questions(self, difficulty=None) -> list:
         """Function that returns all questions (formatted)"""
         return self.source.get_formatted_data(difficulty)
 
-    def get_question(self, difficulty=difficulty) -> dict:
+    def get_question(self, difficulty=None) -> dict:
         """
         Function that returns a question
         (that should not have been send in the current session)
