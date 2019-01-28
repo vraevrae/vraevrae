@@ -5,12 +5,17 @@ import requests
 import config
 
 
+class NoQuestionsAvailableException(Exception):
+    pass
+
+
 class OpenTDB:
     source = "opentdb"
 
-    def __init__(self, difficulty, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
+    def __init__(self, difficulty, category, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
         self.amount_of_questions = amount_of_questions
         self.difficulty = difficulty
+        self.category = category
         print("init: ", difficulty)
 
     def _download_data(self, amount_of_questions=1) -> dict:
@@ -20,28 +25,28 @@ class OpenTDB:
         """
         print(self.difficulty)
         # try to get a correct request from Open Trivia DB
+        query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
+        if self.difficulty:
+            query += f"&difficulty={str(self.difficulty)}"
+        if self.category:
+            query += f"&category={str(self.category)}"
+        
         try:
-            if self.difficulty:
-                # do request to Open Trivia DB API and format to JSON
-                query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&difficulty={str(self.difficulty)}&type=multiple"
-                print("with difficulty"+ query)
-                r = requests.get(query)
-            else:
-                query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
-                print("without difficulty"+ query)
-                r = requests.get(query)
+            r = requests.get(query)
             json = r.json()
 
             # check if request was correct
             if json["response_code"] == 0:
                 # return apidata
                 return json["results"]
+            if json["response_code"] == 1:
+                # rais an exception if not enough questions
+                category_name = [category["name"] for category in config.CATEGORIES if int(category["id"]) == int(self.category)]
+                raise NoQuestionsAvailableException(f"category {category_name[0]} with difficulty {str(self.difficulty)} does not have enough questions")
             else:
                 # raise an exception if the request was not correct
                 raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
-                                " Request URL: "
-                                + "https://opentdb.com/api.php?amount=" + str(amount_of_questions)
-                                + "&type=multiple")
+                                " Request URL: " + query)
 
         # raise an exception if there is an error with the request
         except requests.exceptions.RequestException as e:

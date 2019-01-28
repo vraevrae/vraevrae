@@ -9,7 +9,7 @@ class Datasource:
     source = None
     cache_data = []
 
-    def __init__(self, difficulty, source=config.DEFAULT_DATASOURCE):
+    def __init__(self, difficulty, category, source=config.DEFAULT_DATASOURCE):
         print("datasource init: ", difficulty)
         # if source is not possible (not coded) raise an error
         if source not in config.POSSIBLE_DATASOURCES:
@@ -20,7 +20,7 @@ class Datasource:
 
         # define source
         if source == "opentdb":
-            self.source = OpenTDB(difficulty)
+            self.source = OpenTDB(difficulty, category)
 
         # save questions to cache_data
         self.update_cache_data()

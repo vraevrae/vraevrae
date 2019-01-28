@@ -16,7 +16,7 @@ DEBUG = False
 VERSION = 1.0
 
 POSSIBLE_DATASOURCES = ["opentdb"]
-DATASOURCE_PROPERTIES = {"opentdb": {"maxRequest": 50}}
+DATASOURCE_PROPERTIES = {"opentdb": {"maxRequest": 10}}
 
 CATEGORIES = sorted([
     {"id": 9, "name": "General Knowledge"},

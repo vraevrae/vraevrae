@@ -9,6 +9,8 @@ from models.datasource import Datasource
 from models.store import store
 from config import CATEGORIES
 
+from models.sources.opentdb import NoQuestionsAvailableException
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
 socketio = SocketIO(app)
@@ -52,10 +54,14 @@ def index():
         username = request.form.get("username", False)
         gamecode = request.form.get("gamecode", False)
         action = request.form.get("action", False)
-        difficulty = request.form.get("difficulty", False)
+        difficulty = request.form.get("difficulty", None)
+        category = request.form.get("category", None)
 
         if difficulty == "random":
-            difficulty = False
+            difficulty = None
+
+        if category == "random":
+            category = None
 
         # give feedback to user
         if username == "":
@@ -74,7 +80,11 @@ def index():
 
         # create a new quiz
         elif action == "creategame":
-            quiz_id = store.create_quiz(Datasource, difficulty)
+            try:
+                quiz_id = store.create_quiz(Datasource, difficulty, category)
+            except(NoQuestionsAvailableException) as error:
+                return render_template("index.html", error= str(error), CATEGORIES=CATEGORIES), 400
+
             for _ in range(10):
                 question_id = store.create_question_from_source(quiz_id)
                 print(vars(store.get_question_by_id(question_id)))
