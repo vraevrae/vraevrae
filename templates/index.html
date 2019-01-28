@@ -19,7 +19,15 @@
                 <option value="easy">Easy</option>
                 <option value="medium">Medium</option>
                 <option value="hard">Hard</option>
-            </select><br>
+            </select>
+            <p></p>
+            Category:
+            <select name="category" class="color-black">
+                <option value="random" selected>Random</option>
+                {% for category in CATEGORIES %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
             <p></p>
             <button type="submit" name="action" class="btn btn-success mt-1"
                     value="creategame">Create

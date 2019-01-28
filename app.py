@@ -7,6 +7,7 @@ from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from helpers.helpers import user_required, game_mode_required
 from models.datasource import Datasource
 from models.store import store
+from config import CATEGORIES
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -45,7 +46,7 @@ def key_error_page(e):
 def index():
     """route that shows the entry page"""
     if request.method == "GET":
-        return render_template("index.html")
+        return render_template("index.html", CATEGORIES=CATEGORIES)
 
     elif request.method == "POST":
         username = request.form.get("username", False)
@@ -58,7 +59,7 @@ def index():
 
         # give feedback to user
         if username == "":
-            return render_template("index.html", error="Username should not be empty!"), 400
+            return render_template("index.html", error="Username should not be empty!", CATEGORIES=CATEGORIES), 400
 
         # join the game
         if action == "joingame" and gamecode:

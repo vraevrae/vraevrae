@@ -1,4 +1,4 @@
-import api_category
+from operator import itemgetter
 
 """
 Config file for Vrae Vrae
@@ -18,7 +18,7 @@ VERSION = 1.0
 POSSIBLE_DATASOURCES = ["opentdb"]
 DATASOURCE_PROPERTIES = {"opentdb": {"maxRequest": 50}}
 
-CATEGORY = [
+CATEGORIES = sorted([
     {"id": 9, "name": "General Knowledge"},
     {"id": 10, "name": "Entertainment: Books"},
     {"id": 11, "name": "Entertainment: Film"},
@@ -43,4 +43,4 @@ CATEGORY = [
     {"id": 30, "name": "Science: Gadgets"},
     {"id": 31, "name": "Entertainment: Japanese Anime & Manga"},
     {"id": 32, "name": "Entertainment: Cartoon & Animations"}
-]
+], key=itemgetter("name"))
