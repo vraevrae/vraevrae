@@ -10,7 +10,7 @@ from models.store import store
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
-socketio = SocketIO(app)
+socketio = SocketIO(app, session=False)
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -28,6 +28,7 @@ if app.config["DEBUG"]:
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['SESSION_COOKIE_HTTPONLY'] = False
 Session(app)
 
 
@@ -124,7 +125,8 @@ def game():
     quiz.next_question()
 
     if request.method == "GET":
-        return render_template("quiz.html", quiz_id=store.get_quiz_by_id(user.quiz).quiz_id)
+        return render_template("quiz.html", quiz_id=store.get_quiz_by_id(user.quiz).quiz_id,
+                               user_id=session["user_id"])
 
     elif request.method == "POST":
         user_id = session["user_id"]
@@ -193,6 +195,7 @@ def on_leave(data):
 
 @socketio.on('get_current_question')
 def get_current_question(data):
+    print(data)
     room = data['quiz_id']
     user_id = data["user_id"]
 
@@ -201,25 +204,27 @@ def get_current_question(data):
 
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
-    answers = store.get_answers_by_id(question.answers)
+    answer_object = store.get_answers_by_id(question.answers)
+    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in \
+               answer_object]
 
-    emit("current_question", data={"question": question, "answers": answers}, room=room)
+    emit("current_question", {"question": question.text, "answers": answers}, room=room)
 
 
-@socketio.on('set_answer')
+@socketio.on('send_answer')
 def set_answer(data):
-    user_id = data['user_id']
+    print(data)
+    user_id = data["user_id"]
     answer_id = data["answer_id"]
 
-    if user_id and answer_id:
-        # create history item
-        store.create_user_answer(user_id, answer_id)
+    # create history item
+    store.create_user_answer(user_id, answer_id)
 
-        # check for correctness (and increment score if needed)
-        answer = store.get_answer_by_id(answer_id)
-        if answer.is_correct:
-            question = store.get_question_by_id(answer.question_id)
-            user = store.get_user_by_id(user_id)
-            user.score += question.score
+    # check for correctness (and increment score if needed)
+    answer = store.get_answer_by_id(answer_id)
+    if answer.is_correct:
+        question = store.get_question_by_id(answer.question_id)
+        user = store.get_user_by_id(user_id)
+        user.score += question.score
 
-    emit('answer_is_set', room=store.get_quiz_by_user_id(user_id))
+    emit('received_answer', {"succes": True}, room=data["quiz_id"])

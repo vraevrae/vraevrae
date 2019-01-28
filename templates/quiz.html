@@ -7,7 +7,7 @@ Game
             src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script type="text/javascript" src="{{ url_for("static", filename="quiz.js") }}"></script>
 <div class=test>
-    <div id="quiz_id" data-quiz_id="{{- quiz_id -}}"></div>
+    <div id="data" data-quiz_id="{{- quiz_id -}}" data-user_id="{{- user_id -}}"></div>
     <div class="well well-lg center">
         <h1 class="color-black" id="quiz-question"></h1>
     </div>
@@ -15,7 +15,8 @@ Game
         <div id="quiz-progress" class="progress-bar" style="width:100%;">
         </div>
     </div>
-    <div>
+    <h1 id="sent_answer"></h1>
+    <form id="answer_form" action="" method="post" onsubmit="send_answer(); return false;">
         <button id="answer-button-0" class="btn btn-primary btn-lg btn-block answerbtn"
                 type="submit" name="answer_id" value=""></button>
         <button id="answer-button-1" class="btn btn-primary btn-lg btn-block answerbtn"
@@ -24,7 +25,7 @@ Game
                 type="submit" name="answer_id" value=""></button>
         <button id="answer-button-3" class="btn btn-primary btn-lg btn-block answerbtn"
                 type="submit" name="answer_id" value=""></button>
-    </div>
+    </form>
 </div>
 
 {% endblock %}

@@ -112,6 +112,7 @@ class Store:
 
     def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
+        print(self.users)
         return self.users[user_id]
 
     def get_users_by_id(self, user_ids):
