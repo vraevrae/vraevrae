@@ -53,6 +53,9 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", False)
 
+        if difficulty == "random":
+            difficulty = False
+
         # give feedback to user
         if username == "":
             return render_template("index.html", error="Username should not be empty!"), 400
