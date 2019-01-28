@@ -8,26 +8,28 @@ import config
 class OpenTDB:
     source = "opentdb"
 
-    def __init__(self, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
+    def __init__(self, difficulty, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
         self.amount_of_questions = amount_of_questions
+        self.difficulty = difficulty
+        print("init: ", difficulty)
 
-    @staticmethod
-    def _download_data(amount_of_questions=1, difficulty=None) -> dict:
+    def _download_data(self, amount_of_questions=1) -> dict:
         """
         Internal function to get apidata from Open Trivia DB
         :returns JSON data
         """
-
+        print(self.difficulty)
         # try to get a correct request from Open Trivia DB
         try:
-
-            if difficulty is not None:
+            if self.difficulty:
                 # do request to Open Trivia DB API and format to JSON
-                r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&difficulty=" + str(difficulty) +
-                                "&type=multiple")
+                query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&difficulty={str(self.difficulty)}&type=multiple"
+                print("with difficulty"+ query)
+                r = requests.get(query)
             else:
-                r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) +
-                                "&type=multiple")
+                query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
+                print("without difficulty"+ query)
+                r = requests.get(query)
             json = r.json()
 
             # check if request was correct
@@ -71,7 +73,7 @@ class OpenTDB:
                 "difficulty": data["difficulty"],
                 "type": data["type"]}
 
-    def get_formatted_data(self, difficulty) -> list:
+    def get_formatted_data(self) -> list:
         """function to return all formatted questions"""
         return [self._format_opentdb_data(question) for question in self._download_data(
-            self.amount_of_questions, difficulty)]
+            self.amount_of_questions)]

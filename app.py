@@ -69,21 +69,11 @@ def index():
                 return redirect(url_for("index")), 404
 
         # create a new quiz
-        elif action == "creategame" and difficulty:
-            quiz_id = store.create_quiz(Datasource)
+        elif action == "creategame":
+            quiz_id = store.create_quiz(Datasource, difficulty)
             for _ in range(10):
-                if difficulty == "easy":
-                    question_id = store.create_question_from_source(quiz_id, difficulty="easy")
-                elif difficulty == "medium":
-                    question_id = store.create_question_from_source(quiz_id, difficulty="medium")
-                elif difficulty == "hard":
-                    question_id = store.create_question_from_source(quiz_id, difficulty="hard")
-                elif difficulty == "random":
-                    question_id = store.create_question_from_source(quiz_id)
-                else:
-                    return "Invalid request", 400
+                question_id = store.create_question_from_source(quiz_id)
                 print(vars(store.get_question_by_id(question_id)))
-
 
             # create a user
             user_id = store.create_user(
@@ -138,8 +128,9 @@ def game():
         question_id = quiz.get_current_question_id()
         question = store.get_question_by_id(question_id)
         answers = store.get_answers_by_id(question.answers)
+        number = quiz.current_question + 1
 
-        return render_template("quiz.html", question=question, answers=answers)
+        return render_template("quiz.html", question=question, answers=answers, number=number)
 
     elif request.method == "POST":
         user_id = session["user_id"]
