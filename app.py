@@ -82,6 +82,8 @@ def index():
                     question_id = store.create_question_from_source(quiz_id)
                 else:
                     return "Invalid request", 400
+                print(vars(store.get_question_by_id(question_id)))
+
 
             # create a user
             user_id = store.create_user(
