@@ -28,7 +28,7 @@ def test_new_quiz():
         client = app.test_client()
         data = dict(
             username="pietje",
-            action="newgame"
+            action="creategame"
         )
         rv = client.post(url_for('index'), data=data)
 

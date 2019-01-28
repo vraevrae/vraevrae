@@ -21,7 +21,6 @@ class Quiz:
         self.is_finished = False
         self.current_question = 0
         self.source = Source(difficulty, category)
-        print("quiz init: ", difficulty)
 
     def add_question_by_id(self, question_id):
         """adds a question to the quiz"""

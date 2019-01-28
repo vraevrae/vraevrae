@@ -23,7 +23,6 @@ class OpenTDB:
         Internal function to get apidata from Open Trivia DB
         :returns JSON data
         """
-        print(self.difficulty)
         # try to get a correct request from Open Trivia DB
         query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
         if self.difficulty:
@@ -51,7 +50,8 @@ class OpenTDB:
         # raise an exception if there is an error with the request
         except requests.exceptions.RequestException as e:
             print(e) if config.DEBUG is True else None
-            raise Exception("[Datasource] opentdb request has an error: " + e.__str__())
+            raise Exception(
+                "[Datasource] opentdb request has an error: " + e.__str__())
 
     @staticmethod
     def _format_opentdb_data(data) -> dict:

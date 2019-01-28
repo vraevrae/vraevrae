@@ -13,7 +13,8 @@ class Datasource:
         print("datasource init: ", difficulty)
         # if source is not possible (not coded) raise an error
         if source not in config.POSSIBLE_DATASOURCES:
-            raise NameError("[Datasource] source does not exist! Source: " + source.__str__())
+            raise NameError(
+                "[Datasource] source does not exist! Source: " + source.__str__())
 
         # print all given apidata for debug purposes if DEBUG is True
         print("[Datasource] source:", source) if config.DEBUG else None

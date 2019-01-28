@@ -15,7 +15,6 @@ class Store:
 
     def create_quiz(self, source, difficulty=None, category=None):
         """creates a new quiz and adds it to the store"""
-        print("create_quiz: ", difficulty )
         # Get the lowest available code
         code = 1
         if len(self.questions) is not 0:
