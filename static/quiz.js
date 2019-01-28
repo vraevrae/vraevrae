@@ -3,18 +3,17 @@ $(document).ready(function() {
     const socket = io.connect('http://' + document.domain + ':' + location.port);
     let quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
 
-  let interval = setInterval(function() {
-      current_progress -= 10;
-    $('#quiz-progress')
-      .css('width', `${current_progress}%`)
+    let interval = setInterval(function () {
+        current_progress -= 10;
+        $('#quiz-progress')
+            .css('width', `${current_progress}%`)
         .attr('aria-valuenow', current_progress);
 
-    if (current_progress === 0) {
-      location.reload();
-      clearInterval(interval)
-    }
-  }, 1000);
-
+        if (current_progress === 0) {
+            location.reload();
+            clearInterval(interval)
+        }
+    }, 1000);
 
     socket.on('connect', function () {
         socket.emit('is_connected', {data: 'I\'m connected!'});
