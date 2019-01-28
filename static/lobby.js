@@ -1,11 +1,10 @@
 $(function () {
     const socket = io.connect('http://' + document.domain + ':' + location.port);
+    let quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
+
     socket.on('connect', function () {
         socket.emit('is_connected', {data: 'I\'m connected!'});
         console.log("connected");
-
-        let quiz_id;
-        quiz_id = document.getElementById("quiz_id").dataset.quiz_id;
 
         console.log(quiz_id);
 
@@ -19,5 +18,10 @@ $(function () {
 
     socket.on('message', function (message) {
         console.log(message)
-    })
+    });
+
+    socket.on('disconnect', function () {
+        socket.emit('leave_game', {"quiz_id": quiz_id});
+        console.log("Socket disconnected")
+    });
 });

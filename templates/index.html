@@ -8,35 +8,29 @@
             {{ error }}
         </div>
     {% endif %}
-
     <div class="row form-horizontal">
-        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1 center" method="post" action="{{ url_for('index') }}">
+        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post"
+              action="{{ url_for('index') }}">
             <h1>Create a game</h1>
-            <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
-            <p></p>
-            <button type="submit" name="action" class="btn btn-success" value="newgame">New Game
+            Difficulty:
+            <select name="difficulty">
+                <option value="random" selected>Random</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select><br>
+            <button type="submit" name="action" class="btn btn-success mt-1"
+                    value="creategame">Create
+                Game
             </button>
-            <button type="submit" name="action" class="btn btn-success" value="easy">New Easy Game
-            </button>
-            <button type="submit" name="action" class="btn btn-success" value="medium">New Medium Game
-            </button>
-            <button type="submit" name="action" class="btn btn-success" value="hard">New Hard Game
-            </button>
-            <p></p>
         </form>
         <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for('index') }}">
             <h1>Join existing game</h1>
-            <p></p>
             <input type="text" class="form-control" name="username" placeholder="Username">
-            <p></p>
             <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
-            <p></p>
             <button type="submit" name="action" class="btn btn-success" value="joingame">Join Game
             </button>
         </form>
-
-        
     </div>
-
 {% endblock %}

@@ -21,7 +21,7 @@ class OpenTDB:
         # try to get a correct request from Open Trivia DB
         try:
 
-            if difficulty != None:
+            if difficulty is not None:
                 # do request to Open Trivia DB API and format to JSON
                 r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&difficulty=" + str(difficulty) +
                                 "&type=multiple")

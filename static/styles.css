@@ -17,10 +17,6 @@ body {
     color: black;
 }
 
-.center{
-    text-align: center;
-}
-
 .answerbtn{
     width: 70%;
     margin: 0 auto;
@@ -43,6 +39,11 @@ body {
 }
 
 .score {
-   float: right;
+    float: right;
     font-weight: bolder;
+}
+
+.form-control {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
