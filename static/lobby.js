@@ -19,5 +19,9 @@ $(function () {
 
     socket.on('message', function (message) {
         console.log(message)
-    })
+    });
+
+    socket.on('disconnect', function () {
+        console.log("Socket disconnected")
+    });
 });

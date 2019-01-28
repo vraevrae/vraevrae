@@ -93,6 +93,7 @@ def index():
         else:
             return "Invalid request", 400
 
+
 @app.route('/lobby', methods=["GET", "POST"])
 @user_required
 @game_mode_required
