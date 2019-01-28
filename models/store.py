@@ -50,7 +50,8 @@ class Store:
     def create_question_from_source(self, quiz_id, difficulty=None):
         """Creates a question with answers from a given source"""
         # get question from quiz source
-        temp_question = self.get_quiz_by_id(quiz_id).source.get_question(difficulty)
+        quiz = self.get_quiz_by_id(quiz_id)
+        temp_question = quiz.source.get_question(difficulty)
 
         # add the question to the store
         question_id = self.create_question(quiz_id, temp_question)

@@ -25,11 +25,10 @@ class OpenTDB:
                 # do request to Open Trivia DB API and format to JSON
                 r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) + "&difficulty=" + str(difficulty) +
                                 "&type=multiple")
-                json = r.json()
             else:
                 r = requests.get("https://opentdb.com/api.php?amount=" + str(amount_of_questions) +
                                 "&type=multiple")
-                json = r.json()
+            json = r.json()
 
             # check if request was correct
             if json["response_code"] == 0:

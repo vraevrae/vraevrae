@@ -42,7 +42,6 @@ class Datasource:
         Function that returns a question
         (that should not have been send in the current session)
         """
-
         question = self.cache_data[0]
         self.cache_data.remove(question)
 
