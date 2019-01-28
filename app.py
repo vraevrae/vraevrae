@@ -199,5 +199,6 @@ def on_join(data):
 @socketio.on('leave_game')
 def on_leave(data):
     room = data['quiz_id']
-    leave_room(room)
-    send(room + ' is left.', room=room)
+    if room is not None:
+        leave_room(room)
+        send(room + ' is left.', room=room)
