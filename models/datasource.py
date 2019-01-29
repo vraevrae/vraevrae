@@ -10,7 +10,6 @@ class Datasource:
     cache_data = []
 
     def __init__(self, difficulty, category, source=config.DEFAULT_DATASOURCE):
-        print("datasource init: ", difficulty)
         # if source is not possible (not coded) raise an error
         if source not in config.POSSIBLE_DATASOURCES:
             raise NameError(

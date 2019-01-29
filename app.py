@@ -7,6 +7,7 @@ from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from helpers.helpers import user_required, game_mode_required
 from models.datasource import Datasource
 from models.store import store
+from models.useranswer import UserAnswer
 from config import CATEGORIES
 
 app = Flask(__name__)
@@ -133,17 +134,21 @@ def lobby():
 @game_mode_required
 def game():
     """route that renders questions and receives answers"""
+
+    # get information
     user_id = session["user_id"]
     user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
 
-    # go the the next question, if needed
+    # check if it is time to go to the next question, if needed
     quiz.next_question()
+
+    # get question
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
 
     if request.method == "GET":
         # retrieve the question and answers
-        question_id = quiz.get_current_question_id()
-        question = store.get_question_by_id(question_id)
         answers = store.get_answers_by_id(question.answers)
         number = quiz.current_question + 1
 
@@ -151,19 +156,23 @@ def game():
 
     elif request.method == "POST":
         answer_id = request.form["answer_id"]
+        answer = store.get_answer_by_id(answer_id)
 
         # check if enough data to answer the question
-        if user_id and answer_id:
+        if user_id and answer:
+            # get the users answers for this question (user is still scoped to quiz, so user == quiz)
+            user_answers = store.get_user_answers_by_user_and_question_id(
+                user_id, answer.question_id)
 
-            # create history item
-            store.create_user_answer(user_id, answer_id)
+            # if correct and no previous answer found and the question is still active
+            if answer.is_correct and not len(user_answers) and answer.question_id == question_id:
 
-            # check for correctness (and increment score if needed)
-            answer = store.get_answer_by_id(answer_id)
+                # create a new answer
+                new_user_answer = UserAnswer(
+                    answer.question_id, answer_id, user_id)
 
-            if answer.is_correct:
-                question = store.get_question_by_id(answer.question_id)
-                user = store.get_user_by_id(user_id)
+                # store new answer and increment the store
+                store.user_answers[new_user_answer.user_answer_id] = new_user_answer
                 user.score += question.score
 
             return '', 202

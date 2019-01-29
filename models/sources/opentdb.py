@@ -12,7 +12,6 @@ class OpenTDB:
         self.amount_of_questions = amount_of_questions
         self.difficulty = difficulty
         self.category = category
-        print("init: ", difficulty)
 
     def _download_data(self, amount_of_questions=1) -> dict:
         """

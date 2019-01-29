@@ -65,25 +65,6 @@ class Store:
 
         return question_id
 
-    def create_user_answer(self, user_id, answer_id):
-        """Create user answer class which saves every answer the user has given"""
-
-        try:
-            answers = [answer for answer in self.user_answers if answer.question_id ==
-                       self.answers[answer_id].question_id and answer.answer_id == answer_id]
-        except AttributeError:
-            answers = []
-
-        if len(answers) == 0:
-            new_user_answer = UserAnswer(user_id, self.get_quiz_by_user_id(user_id).quiz_id,
-                                         answer_id)
-
-            self.user_answers[new_user_answer.user_answer_id] = new_user_answer
-
-            return new_user_answer
-        else:
-            return False
-
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]
@@ -111,8 +92,12 @@ class Store:
         return self.answers[answer_id]
 
     def get_answers_by_id(self, answer_ids):
-        """reads a specific answer from the store by answerIds"""
+        """reads a list of answers from the store by answerIds"""
         return [self.get_answer_by_id(answer_id) for answer_id in answer_ids]
+
+    def get_user_answers_by_user_and_question_id(self, user_id, question_id):
+        """reads a specific user_answer from the store by user_answerIds"""
+        return [user_answer for user_answer in self.user_answers.values() if user_answer.user_id == user_id and user_answer.question_id == question_id]
 
     def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
