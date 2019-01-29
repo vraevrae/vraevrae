@@ -10,13 +10,15 @@ class OpenTDB(Source):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def get_amount_of_question(self):
-        # print("get total count")
+    def get_api_session(self):
+        query = f"https://opentdb.com/api_token.php?command=request"
+        json = requests.get(query).json()
+        self.token = json["token"]
+
+    def get_amount_of_questions(self):
         query = f"https://opentdb.com/api_count.php?category=9"
-        r = requests.get(query)
-        json = r.json()
-        # print(json)
-        return 10
+        json = requests.get(query).json()
+        self.amount_of_questions = json["category_question_count"]
 
     def download_questions(self) -> dict:
         """
@@ -24,11 +26,14 @@ class OpenTDB(Source):
         :returns JSON data
         """
         # try to get a correct request from Open Trivia DB
-        query = f"https://opentdb.com/api.php?amount={str(self.amount_of_questions)}&type=multiple"
+        count = self.amount_of_questions["total_question_count"]
+        query = f"https://opentdb.com/api.php?amount={str(count)}&type=multiple"
         if self.difficulty:
             query += f"&difficulty={str(self.difficulty)}"
         if self.category:
             query += f"&category={str(self.category)}"
+        if self.token:
+            query += f"&token={str(self.token)}"
 
         try:
             print("send query: ", query)

@@ -5,7 +5,7 @@ import config
 Heavily edited: 
 
 1. Uniqueness was not guaranteed: the same request was being send away and yielded a random response
-    - This indeterminism requires that all questions need to be maintained and checked
+    - Two ways to deal with the indeterminism of OpenTDB: Keep all questions arround or start a session
     - The buffer was overwritten on each request, instead of being a fifo queue
 2. There were quite a bit of premature optimisations. 
     - Try ... except statement hide a lot of errors making traces quite a bit harder.
@@ -27,8 +27,13 @@ class Source:
         self.category = category
         self.amount_of_questions = amount_of_questions
 
-        # save questions to cache_data
-        self.amount_of_questions = self.get_amount_of_question()
+        # get session id
+        self.get_api_session()
+
+        # get category counts
+        self.get_amount_of_questions()
+
+        # save first questions to cache_data
         self.add_questions_to_cache()
 
     def get_question(self) -> dict:
@@ -58,11 +63,11 @@ class Source:
         return [self.format_question(raw_question) for raw_question in raw_questions]
 
     def get_amount_of_question(self):
-        raise NotImplementedError("Parent class should not be instantiated")
+        raise NotImplementedError()
 
     def download_questions(self) -> dict:
-        raise NotImplementedError("Parent class should not be instantiated")
+        raise NotImplementedError()
 
     @staticmethod
     def format_question(unformatted_question) -> dict:
-        raise NotImplementedError("Parent class should not be instantiated")
+        raise NotImplementedError()
