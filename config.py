@@ -14,9 +14,6 @@ DEFAULT_SCORE: int = 10
 DEBUG = False
 VERSION = 1.0
 
-POSSIBLE_DATASOURCES = ["opentdb"]
-DATASOURCE_PROPERTIES = {"opentdb": {"maxRequest": 10}}
-
 CATEGORIES = sorted([
     {"id": 9, "name": "General Knowledge"},
     {"id": 10, "name": "Entertainment: Books"},
