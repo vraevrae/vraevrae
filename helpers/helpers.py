@@ -1,6 +1,7 @@
 from functools import wraps
 
 from flask import session, redirect, url_for, request
+from flask_socketio import emit
 
 from models.store import store
 
@@ -46,3 +47,17 @@ def game_mode_required(f):
 def json_response(dictionary=None) -> dict:
     # create response template for json
     return {"data": dictionary}
+
+
+def send_new_question(quiz_id):
+    quiz = store.get_quiz_by_id(quiz_id)
+
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
+    answer_object = store.get_answers_by_id(question.answers)
+    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
+               answer_object]
+
+    print({"question": question.text, "answers": answers})
+
+    emit("current_question", {"question": question.text, "answers": answers}, room=quiz_id)

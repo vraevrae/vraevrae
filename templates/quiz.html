@@ -9,23 +9,26 @@ Game
 <div class=test>
     <div id="data" data-quiz_id="{{- quiz_id -}}" data-user_id="{{- user_id -}}"></div>
     <div class="well well-lg center">
-        <h1 class="color-black" id="quiz-question"></h1>
+        <h1 class="color-black text-center"
+            id="quiz-question">{{ number }}/10: {{ question.text | safe }}</h1>
     </div>
-    <div class="progress progress-striped active">
-        <div id="quiz-progress" class="progress-bar" style="width:100%;">
-        </div>
-    </div>
-    <h1 id="sent_answer"></h1>
-    <form id="answer_form" action="" method="post" onsubmit="send_answer(); return false;">
+    <progress id="progress_bar" value="100" max="100" style="width: 100%;" onchange="check_timer
+    ()"></progress>
+    <h1 id="sent_answer" class="text-center"></h1>
+    <div id="answer_form">
         <button id="answer-button-0" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" value=""></button>
+                type="submit" name="answer_id"
+                value="{{ answer0["answer_id"] | safe }}">{{ answer0["answer_text"] | safe }}</button>
         <button id="answer-button-1" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" value=""></button>
+                type="submit" name="answer_id"
+                value="{{ answer1["answer_id"] | safe }}">{{ answer1["answer_text"] | safe }}</button>
         <button id="answer-button-2" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" value=""></button>
+                type="submit" name="answer_id"
+                value="{{ answer2["answer_id"] | safe }}">{{ answer2["answer_text"] | safe }}</button>
         <button id="answer-button-3" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" value=""></button>
-    </form>
+                type="submit" name="answer_id"
+                value="{{ answer3["answer_id"] | safe }}">{{ answer3["answer_text"] | safe }}</button>
+    </div>
 </div>
 
 {% endblock %}

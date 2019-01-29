@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from helpers.helpers import user_required, game_mode_required
+from helpers.helpers import user_required, game_mode_required, send_new_question
 from models.datasource import Datasource
 from models.store import store
 
@@ -107,7 +107,9 @@ def lobby():
         # allow the starting of th quiz if owner
         if action == "start" and user.is_owner:
             store.get_quiz_by_id(user.quiz).start()
-            socketio.emit("start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
+            quiz_id = store.get_quiz_by_id(user.quiz).quiz_id
+
+            socketio.emit("start_game", room=quiz_id)
 
             return redirect(url_for("game"))
         else:
@@ -124,10 +126,21 @@ def game():
     quiz = store.get_quiz_by_id(user.quiz)
     quiz.next_question()
 
-    if request.method == "GET":
-        return render_template("quiz.html", quiz_id=store.get_quiz_by_id(user.quiz).quiz_id,
-                               user_id=session["user_id"])
+    # get question
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
 
+    if request.method == "GET":
+        # retrieve the question and answers
+        answers = store.get_answers_by_id(question.answers)
+
+        # get current question (indexed to 1 instead of 0)
+        readable_current_question = quiz.current_question + 1
+
+        return render_template("quiz.html", quiz_id=store.get_quiz_by_id(user.quiz).quiz_id,
+                               user_id=session["user_id"], question=question, answer0=answers[0],
+                               answer1=answers[1], answer2=answers[2], answer3=answers[3],
+                               number=readable_current_question)
     elif request.method == "POST":
         user_id = session["user_id"]
         answer_id = request.form["answer_id"]
@@ -161,13 +174,8 @@ def scoreboard():
 
 @socketio.on('connect')
 def connect():
-    emit('my response')
-    print('my response')
-
-
-@socketio.on("is_connected")
-def is_connected(data):
-    print(data)
+    emit('CLIENT CONNECTED')
+    print('ClIENT CONNECTED')
 
 
 @socketio.on('disconnect')
@@ -177,7 +185,7 @@ def disconnect():
 
 @socketio.on('join_game')
 def on_join(data):
-    print(data)
+    print("JOIN GAME", data)
     room = data['quiz_id']
 
     if room is not None:
@@ -187,6 +195,7 @@ def on_join(data):
 
 @socketio.on('leave_game')
 def on_leave(data):
+    print("LEAVE GAME")
     room = data['quiz_id']
     if room is not None:
         leave_room(room)
@@ -195,25 +204,14 @@ def on_leave(data):
 
 @socketio.on('get_current_question')
 def get_current_question(data):
-    print(data)
-    room = data['quiz_id']
-    user_id = data["user_id"]
+    print("GET CURRENT QUESTION", data)
 
-    user = store.get_user_by_id(user_id)
-    quiz = store.get_quiz_by_id(user.quiz)
-
-    question_id = quiz.get_current_question_id()
-    question = store.get_question_by_id(question_id)
-    answer_object = store.get_answers_by_id(question.answers)
-    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in \
-               answer_object]
-
-    emit("current_question", {"question": question.text, "answers": answers}, room=room)
+    send_new_question(data["quiz_id"])
 
 
 @socketio.on('send_answer')
 def set_answer(data):
-    print(data)
+    print("SEND ANSWER", data)
     user_id = data["user_id"]
     answer_id = data["answer_id"]
 

@@ -1,63 +1,107 @@
-const socket = io.connect('http://' + document.domain + ':' + location.port);
+// function to replace document.getElementById() (so code is better readable)
+function element(id) {
+    return document.getElementById(id)
+}
 
-$(document).ready(function() {
-  let quiz_id = document.getElementById("data").dataset.quiz_id;
-  let user_id = document.getElementById("data").dataset.user_id;
+// function to replace document.getElementById().dataset (so code is better readable)
+function get_data(name) {
+    return element("data").dataset(name)
+}
 
-  let current_progress = 100;
+// function to update timer every second
+function update_timer() {
+    // get current progress
+    let current_progress = element("progress_bar").position;
 
-  let interval = setInterval(function () {
-    current_progress -= 10;
-    $('#quiz-progress')
-        .css('width', `${current_progress}%`)
-        .attr('aria-valuenow', current_progress);
+    // set new progress
+    element("progress_bar").value = current_progress - 10;
+}
 
-    // if (current_progress === 0) {
-    //     location.reload();
-    //     clearInterval(interval)
-    // }
-  }, 1000);
+// function to get current question from server
+function get_current_question(quiz_id, user_id) {
+    console.log("GET NEW QUESTION (quiz_id, user_id)", quiz_id, user_id);
+    socket.emit('get_current_question', {"quiz_id": quiz_id, "user_id": user_id});
+}
 
-  socket.on('connect', function () {
-    socket.emit('is_connected', {data: 'I\'m connected!'});
-    console.log("connected");
+// if document is fully loaded
+if (document.readyState === 'complete') {
+    // create socket connection with server
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
 
-    console.log(quiz_id);
+    // create interval, so the progressbar can be updated every second
+    let progress_timer = setInterval(update_timer, 1000);
 
-    socket.emit('join_game', {"quiz_id": quiz_id});
-    socket.emit('get_current_question', {"quiz_id": quiz_id, "user_id": user_id})
-  });
+    // turn form to begin state
+    updateForm(false);
 
-  socket.on('message', function (message) {
-    console.log(message)
-  });
+    // get data from the html file
+    let quiz_id = get_data("quiz_id");
+    let user_id = get_data("user_id");
 
-  socket.on('disconnect', function () {
-    socket.emit('leave_game', {"quiz_id": quiz_id});
-    console.log("Socket disconnected")
-  });
-
-  socket.on('current_question', function (data) {
-    console.log(data);
-    document.getElementById("quiz-question").innerHTML = data["question"];
-
-    for (i in data["answers"]) {
-      document.getElementById("answer-button-" + i.toString()).innerHTML = data["answers"][i]["answer_text"];
-      document.getElementById("answer-button-" + i.toString()).onclick = function () {
-        socket.emit("send_answer", {
-          "user_id": user_id,
-          "quiz_id": quiz_id,
-          "answer_id": data["answers"][i]["answer_id"]
-        })
-      };
+    // function to update the answer buttons
+    function updateForm(wait = false) {
+        console.log("UPDATE FORM");
+        // if the user has to wait
+        if (wait) {
+            // update elements, so buttons can't be clicked anymore
+            element("answer_form").style.display = "none";
+            element("sent_answer").innerHTML = "Wait for the next question...";
+        } else {
+            // update elements, so buttons can be clicked
+            element("answer_form").style.display = "block";
+            element("sent_answer").innerHTML = "";
+        }
     }
-  });
 
-  socket.on('received_answer', function (data) {
-    console.log(data);
-    document.getElementById("answer_form").style.display = "none";
-    document.getElementById("sent_answer").innerHTML = "Wait for the next question...";
-  })
+    // function to fill in the template
+    function fill_template(quiz_id, user_id, question, answers) {
+        console.log("FILL TEMPLATE");
+        // reset the timer
+        progress_timer = setInterval(update_timer, 1000);
 
+        element("quiz-question").innerHTML = question;
 
-});
+        // fil in the answerbuttons
+        for (let i = 0; i < answers.length; i++) {
+            element("answer-button-" + i.toString()).innerHTML = answers[i]["answer_text"];
+            element("answer-button-" + i.toString()).onclick = function () {
+                // if the button is clicked, send answer via socket to the server
+                socket.emit("send_answer", {
+                    "user_id": user_id,
+                    "quiz_id": quiz_id,
+                    "answer_id": answers[i]["answer_id"]
+                })
+            };
+        }
+    }
+
+    /*
+     * SOCKET FUNCTIONS FROM NOW ON
+     */
+
+    // if socket connected succesfully
+    socket.on('connect', function () {
+        console.log("Socket connected");
+        console.log("quiz_id ->", quiz_id);
+
+        // join game with current quiz_id
+        socket.emit('join_game', {"quiz_id": quiz_id});
+        get_new_question(quiz_id, user_id);
+    });
+
+    // if socket receives a message from the server
+    socket.on('message', function (message) {
+        console.log("SOCKET MESSAGE: ", message)
+    });
+
+    // if socket receives new question from the server
+    socket.on('current_question', function (data) {
+        console.log("CURRENT QUESTION: ", data);
+
+        // check if question is not already the current question
+        if (data["question"] !== element("quiz-question").innerHTML) {
+            // fill in template with data gotten from the server
+            fill_template(quiz_id, user_id, data["question"], data["answers"])
+        }
+    })
+}
