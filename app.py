@@ -150,6 +150,7 @@ def game():
     if request.method == "GET":
         # retrieve the question and answers
         answers = store.get_answers_by_id(question.answers)
+
         # get current question (indexed to 1 instead of 0)
         readable_current_question = quiz.current_question + 1
 
@@ -178,6 +179,8 @@ def game():
                 user.score += question.score
 
             return '', 202
+
+        return 'Could not process post request', 400
 
 
 @app.route('/scoreboard')
