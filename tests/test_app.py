@@ -28,7 +28,7 @@ def test_new_quiz():
         client = app.test_client()
         data = dict(
             username="pietje",
-            action="newgame"
+            action="creategame"
         )
         rv = client.post(url_for('index'), data=data)
 
@@ -128,6 +128,32 @@ def test_start_quiz_when_owner():
 
 
 def test_answer_question_correctly():
+    with app.test_request_context():
+        client = app.test_client()
+
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
+
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        quiz = store.get_quiz_by_user_id(user_id)
+        question = store.get_question_by_id(quiz.get_current_question_id())
+        answers = store.get_answers_by_id(question.answers)
+        correct_answer = [answer for answer in answers if answer.is_correct][0]
+
+        rv = client.post(url_for('game'), data=dict(
+            action="answer",
+            answer_id=correct_answer.answer_id
+        ))
+
+        user = store.get_user_by_id(user_id)
+
+        assert rv.status_code == 202
+        assert user.score == DEFAULT_SCORE
+
+
+def test_answer_question_correctly_twice():
     with app.test_request_context():
         client = app.test_client()
 

@@ -11,7 +11,7 @@ class Quiz:
     max_questions = config.MAX_QUESTIONS
 
     # Object attributes, different for each quiz
-    def __init__(self, source, code, difficulty=None):
+    def __init__(self, Source, code, difficulty, category):
         self.quiz_id = str(uuid4())
         self.code = code
         self.questions = []
@@ -20,8 +20,7 @@ class Quiz:
         self.start_time = None
         self.is_finished = False
         self.current_question = 0
-        self.source = source()
-        self.difficulty = difficulty
+        self.source = Source(difficulty, category)
 
     def add_question_by_id(self, question_id):
         """adds a question to the quiz"""

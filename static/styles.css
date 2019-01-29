@@ -1,3 +1,7 @@
+
+/* TODO*/
+/* GA WEG YUNUS, JE HEBT HIER NIKS TE ZOEKEN*/
+
 html {
     width: 100vw;
     height: 100vh;
@@ -15,6 +19,10 @@ body {
 
 .color-black {
     color: black;
+}
+
+.center{
+    text-align: center;
 }
 
 .answerbtn{
