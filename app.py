@@ -83,7 +83,7 @@ def index():
             try:
                 quiz_id = store.create_quiz(Datasource, difficulty, category)
             except(NoQuestionsAvailableException) as error:
-                return render_template("index.html", error= str(error), CATEGORIES=CATEGORIES), 400
+                return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
             for _ in range(10):
                 question_id = store.create_question_from_source(quiz_id)
