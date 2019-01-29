@@ -83,6 +83,7 @@ class OpenTDB(Source):
             # sucess
             if json["response_code"] == 0:
                 # reduce the remaining questions
+                # TODO test this
                 self.amount_of_questions -= self.amount_of_questions if self.amount_of_questions < 50 else 50
 
                 # format and return data
