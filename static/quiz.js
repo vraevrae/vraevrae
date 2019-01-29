@@ -1,35 +1,51 @@
-// function to replace document.getElementById() (so code is better readable)
-function element(id) {
-    return document.getElementById(id)
-}
-
-// function to replace document.getElementById().dataset (so code is better readable)
-function get_data(name) {
-    return element("data").dataset(name)
-}
-
-// function to update timer every second
-function update_timer() {
-    // get current progress
-    let current_progress = element("progress_bar").position;
-
-    // set new progress
-    element("progress_bar").value = current_progress - 10;
-}
-
-// function to get current question from server
-function get_current_question(quiz_id, user_id) {
-    console.log("GET NEW QUESTION (quiz_id, user_id)", quiz_id, user_id);
-    socket.emit('get_current_question', {"quiz_id": quiz_id, "user_id": user_id});
-}
+// create socket connection with server
+const socket = io.connect('http://' + document.domain + ':' + location.port);
 
 // if document is fully loaded
 if (document.readyState === 'complete') {
-    // create socket connection with server
-    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    // function to replace document.getElementById() (so code is better readable)
+    function element(id) {
+        return document.getElementById(id)
+    }
+
+    // function to replace document.getElementById().dataset (so code is better readable)
+    function get_data(name) {
+        return element("data").dataset[name]
+    }
+
+    // function to update timer every second
+    function update_timer() {
+        // get current progress
+        let current_progress = element("progress_bar").value;
+
+        // update current_progress
+        current_progress -= 10;
+
+        // set new progress
+        element("progress_bar").value = current_progress;
+
+        if (current_progress === 0) {
+            console.log("PROGRESS === 0, NEW QUESTION");
+            get_current_question();
+        }
+    }
+
+    // function to send answer to the server
+    function send_answer(answer_id, user_id = get_data("user_id", quiz_id = get_data("quiz_id"))) {
+        console.log("SEND ANSWER");
+
+        // if the button is clicked, send answer via socket to the server
+        socket.emit("send_answer", {"user_id": user_id, "answer_id": answer_id, "quiz_id": quiz_id})
+    }
+
+    // function to get current question from server
+    function get_current_question(quiz_id = get_data("quiz_id"), user_id = get_data("user_id")) {
+        console.log("GET NEW QUESTION (quiz_id, user_id)", quiz_id, user_id);
+        socket.emit('get_current_question', {"quiz_id": quiz_id, "user_id": user_id});
+    }
 
     // create interval, so the progressbar can be updated every second
-    let progress_timer = setInterval(update_timer, 1000);
+    let progress_timer = setInterval(update_timer(), 1000);
 
     // turn form to begin state
     updateForm(false);
@@ -63,15 +79,8 @@ if (document.readyState === 'complete') {
 
         // fil in the answerbuttons
         for (let i = 0; i < answers.length; i++) {
-            element("answer-button-" + i.toString()).innerHTML = answers[i]["answer_text"];
-            element("answer-button-" + i.toString()).onclick = function () {
-                // if the button is clicked, send answer via socket to the server
-                socket.emit("send_answer", {
-                    "user_id": user_id,
-                    "quiz_id": quiz_id,
-                    "answer_id": answers[i]["answer_id"]
-                })
-            };
+            element("answer-button-" + i.toString()).innerHTML = answers[i]["text"];
+            element("answer-button-" + i.toString()).setAttribute("onclick", send_answer(answers[i]["answer_id"]));
         }
     }
 
@@ -86,7 +95,7 @@ if (document.readyState === 'complete') {
 
         // join game with current quiz_id
         socket.emit('join_game', {"quiz_id": quiz_id});
-        get_new_question(quiz_id, user_id);
+        //get_current_question(quiz_id, user_id); //COMMENTED BECAUSE TEMPLATE ALREADY DOES THIS
     });
 
     // if socket receives a message from the server
@@ -102,6 +111,13 @@ if (document.readyState === 'complete') {
         if (data["question"] !== element("quiz-question").innerHTML) {
             // fill in template with data gotten from the server
             fill_template(quiz_id, user_id, data["question"], data["answers"])
+        } else {
+            console.log("ASFGDHJFKGDSA")
         }
-    })
+    });
+
+    // if server received answer
+    socket.on("received_answer", function (data) {
+        console.log("RECEIVED ANSWER", data["success"])
+    });
 }

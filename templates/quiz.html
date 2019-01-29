@@ -16,17 +16,21 @@ Game
     <h1 id="sent_answer" class="text-center"></h1>
     <div id="answer_form">
         <button id="answer-button-0" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id"
-                value="{{ answer0["answer_id"] | safe }}">{{ answer0["answer_text"] | safe }}</button>
+                type="submit" name="answer_id" onclick="send_answer('{{ answer0["answer_id"] |
+                safe }}')"
+                value="{{ answer0["answer_id"] | safe }}">{{ answer0["text"] | safe }}</button>
         <button id="answer-button-1" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id"
-                value="{{ answer1["answer_id"] | safe }}">{{ answer1["answer_text"] | safe }}</button>
+                type="submit" name="answer_id" onclick="send_answer('{{ answer1["answer_id"] |
+                safe }}')"
+                value="{{ answer1["answer_id"] | safe }}">{{ answer1["text"] | safe }}</button>
         <button id="answer-button-2" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id"
-                value="{{ answer2["answer_id"] | safe }}">{{ answer2["answer_text"] | safe }}</button>
+                type="submit" name="answer_id" onclick="send_answer('{{ answer2["answer_id"] |
+                safe }}')"
+                value="{{ answer2["answer_id"] | safe }}">{{ answer2["text"] | safe }}</button>
         <button id="answer-button-3" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id"
-                value="{{ answer3["answer_id"] | safe }}">{{ answer3["answer_text"] | safe }}</button>
+                type="submit" name="answer_id" onclick="send_answer('{{ answer3["answer_id"] |
+                safe }}')"
+                value="{{ answer3["answer_id"] | safe }}">{{ answer3["text"] | safe }}</button>
     </div>
 </div>
 

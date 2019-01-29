@@ -62,8 +62,7 @@ def index():
         if action == "joingame" and gamecode:
             if store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
-                user_id = store.create_user(
-                    quiz_id=quiz.quiz_id, name=username, is_owner=False)
+                user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
             else:
@@ -77,8 +76,7 @@ def index():
                 question_id = store.create_question_from_source(quiz_id)
 
             # create a user
-            user_id = store.create_user(
-                quiz_id=quiz_id, name=username, is_owner=True)
+            user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
 
             return redirect(url_for("lobby"))
@@ -220,9 +218,10 @@ def set_answer(data):
 
     # check for correctness (and increment score if needed)
     answer = store.get_answer_by_id(answer_id)
+
     if answer.is_correct:
         question = store.get_question_by_id(answer.question_id)
         user = store.get_user_by_id(user_id)
         user.score += question.score
 
-    emit('received_answer', {"succes": True}, room=data["quiz_id"])
+    emit("received_answer", {"success": True}, room=data["quiz_id"])
