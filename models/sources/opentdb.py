@@ -14,7 +14,7 @@ class OpenTDB(Source):
     """
 
     def __init__(self, *args, **kwargs):
-        # call the parent class init to get caching and external interface
+        # call the parent class init to get caching and interface to the rest of the models
         super().__init__(*args, **kwargs)
 
         # get session id
@@ -86,7 +86,7 @@ class OpenTDB(Source):
                 # TODO test this
                 self.amount_of_questions -= self.amount_of_questions if self.amount_of_questions < 50 else 50
 
-                # format and return data
+                # format and return questions if of proper type (all types to to be downloaded because of limited API-count helper)
                 return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
 
             # unknown error
@@ -99,17 +99,17 @@ class OpenTDB(Source):
             raise Exception(f"[Datasource] request has failed: {str(e)}")
 
     @staticmethod
-    def format_question(unformatted_question) -> dict:
+    def format_question(raw_question) -> dict:
         """function to format and shuffle the retrieved questions"""
         # format answers
         answers = [
-            {"text": unformatted_question["incorrect_answers"][0],
+            {"text": raw_question["incorrect_answers"][0],
                 "is_correct": False},
-            {"text": unformatted_question["incorrect_answers"][1],
+            {"text": raw_question["incorrect_answers"][1],
                 "is_correct": False},
-            {"text": unformatted_question["incorrect_answers"][2],
+            {"text": raw_question["incorrect_answers"][2],
                 "is_correct": False},
-            {"text": unformatted_question["correct_answer"],
+            {"text": raw_question["correct_answer"],
                 "is_correct": True},
         ]
 
@@ -117,8 +117,8 @@ class OpenTDB(Source):
         shuffle(answers)
 
         # return correctly formatted question
-        return {"text": unformatted_question["question"],
+        return {"text": raw_question["question"],
                 "answers": answers,
-                "category": unformatted_question["category"],
-                "difficulty": unformatted_question["difficulty"],
-                "type": unformatted_question["type"]}
+                "category": raw_question["category"],
+                "difficulty": raw_question["difficulty"],
+                "type": raw_question["type"]}

@@ -24,7 +24,7 @@ class Source:
     """Class for getting, formatting and buffering data from an external API"""
 
     def __init__(self, difficulty=None, category=None):
-        # create variable for saving apidata between functions
+        # create cache and store configuration
         self.cached_questions = []
         self.difficulty = difficulty
         self.category = category
