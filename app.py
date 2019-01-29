@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, join_room, leave_room, send, emit
 import time
 
 from helpers.helpers import user_required, game_mode_required
-from models.source import Source
+from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
 from config import CATEGORIES
@@ -82,7 +82,7 @@ def index():
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
             # try:
-            quiz_id = store.create_quiz(Source, difficulty, category)
+            quiz_id = store.create_quiz(OpenTDB, difficulty, category)
             # except(Exception) as error:
             # return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
