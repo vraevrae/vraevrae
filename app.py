@@ -79,13 +79,15 @@ def index():
 
         # create a new quiz
         elif action == "creategame":
+            # try to make a game (connects to API by instantiating a Datasource)
             try:
                 quiz_id = store.create_quiz(Datasource, difficulty, category)
             except(Exception) as error:
                 return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
+            # create the questions from the Quiz and the Datasource buffer
             for _ in range(10):
-                question_id = store.create_question_from_source(quiz_id)
+                store.create_question_from_source(quiz_id)
 
             # create a user
             user_id = store.create_user(
