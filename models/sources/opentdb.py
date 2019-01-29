@@ -5,10 +5,6 @@ import requests
 import config
 
 
-class NoQuestionsAvailableException(Exception):
-    pass
-
-
 class OpenTDB:
     source = "opentdb"
 
@@ -29,7 +25,7 @@ class OpenTDB:
             query += f"&difficulty={str(self.difficulty)}"
         if self.category:
             query += f"&category={str(self.category)}"
-        
+
         try:
             r = requests.get(query)
             json = r.json()
@@ -40,8 +36,10 @@ class OpenTDB:
                 return json["results"]
             if json["response_code"] == 1:
                 # rais an exception if not enough questions
-                category_name = [category["name"] for category in config.CATEGORIES if int(category["id"]) == int(self.category)]
-                raise NoQuestionsAvailableException(f"category {category_name[0]} with difficulty {str(self.difficulty)} does not have enough questions")
+                category_name = [category["name"] for category in config.CATEGORIES if int(
+                    category["id"]) == int(self.category)]
+                raise Exception(
+                    f"category {category_name[0]} with difficulty {str(self.difficulty)} does not have enough questions")
             else:
                 # raise an exception if the request was not correct
                 raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
