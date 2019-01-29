@@ -11,6 +11,7 @@ from helpers.cprint import lcprint
 
 class OpenTDB(Source):
     def __init__(self, *args, **kwargs):
+        # call the parent class init to get caching and and external interface
         super().__init__(*args, **kwargs)
 
         # get session id
@@ -23,11 +24,13 @@ class OpenTDB(Source):
         self.add_questions_to_cache()
 
     def get_api_session_token(self) -> None:
+        """set API session token to guarantee uniqueness"""
         query = f"https://opentdb.com/api_token.php?command=request"
         json = requests.get(query).json()
         self.token = json["token"]
 
     def get_amount_of_questions(self) -> None:
+        """get the amount of questions for the current source configuration to avoid overfetching, and more importantly: errors"""
         if self.category:
             query = f"https://opentdb.com/api_count.php?category={self.category}"
             json = requests.get(query).json()
@@ -95,7 +98,7 @@ class OpenTDB(Source):
 
     @staticmethod
     def format_question(unformatted_question) -> dict:
-        """function to format data for use"""
+        """function to format and shuffle the retrieved questions"""
         # format answers
         answers = [
             {"text": unformatted_question["incorrect_answers"][0],
