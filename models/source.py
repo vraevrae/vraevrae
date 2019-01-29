@@ -19,7 +19,7 @@ Heavily edited:
 
 
 class Source:
-    """Class for getting and reformatting apidata from an external API"""
+    """Class for getting, formatting and buffering data from an external API"""
 
     def __init__(self, difficulty=None, category=None):
         # create variable for saving apidata between functions
@@ -28,10 +28,7 @@ class Source:
         self.category = category
 
     def get_question(self) -> dict:
-        """
-        Function that returns a question
-        (that should not have been send in the current session)
-        """
+        """Function that returns a question"""
         question = self.cached_questions[0]
         self.cached_questions.remove(question)
 
@@ -46,4 +43,5 @@ class Source:
         self.cached_questions.extend(questions)
 
     def download_questions(self) -> dict:
-        raise NotImplementedError()
+        raise NotImplementedError(
+            "Child class should implement specifics of authentication, downloading and formatting")
