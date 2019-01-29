@@ -14,7 +14,7 @@ class OpenTDB(Source):
         super().__init__(*args, **kwargs)
 
         # get session id
-        self.get_api_session()
+        self.get_api_session_token()
 
         # get category counts
         self.get_amount_of_questions()
@@ -22,7 +22,7 @@ class OpenTDB(Source):
         # save first questions to cache_data
         self.add_questions_to_cache()
 
-    def get_api_session(self):
+    def get_api_session_token(self):
         query = f"https://opentdb.com/api_token.php?command=request"
         json = requests.get(query).json()
         self.token = json["token"]
@@ -63,23 +63,24 @@ class OpenTDB(Source):
             r = requests.get(query)
             json = r.json()
 
-            # sucess: return data
+            # sucess
             if json["response_code"] == 0:
+                # format and return data
                 return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
 
-            # not enough questions: raise exception
+            # not enough questions
             elif json["response_code"] == 1:
                 category_name = [category["name"] for category in config.CATEGORIES if int(
                     category["id"]) == int(self.category)][0]
                 raise Exception(
                     f"[Datasource] category {category_name} with difficulty {str(self.difficulty)} does not have enough questions")
 
-            # unknown error: raise exception
+            # unknown error
             else:
                 raise Exception(
                     f"[Datasource] opentdb unknown error. Request URL: {query}")
 
-        # raise an exception if there is an error with the request
+        # error with the request
         except requests.exceptions.RequestException as e:
             raise Exception(f"[Datasource] request has failed: {str(e)}")
 

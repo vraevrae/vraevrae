@@ -81,13 +81,10 @@ def index():
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            t0 = time.time()
-            t2 = time.time()
             # try:
             quiz_id = store.create_quiz(Source, difficulty, category)
             # except(Exception) as error:
             # return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
-            t3 = time.time()
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
             for _ in range(10):
@@ -97,10 +94,6 @@ def index():
             user_id = store.create_user(
                 quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
-
-            t1 = time.time()
-            print("TIMER CREATE: ", t3-t2)
-            print("TIMER: QUESTIONS ", t1-t0)
 
             return redirect(url_for("lobby"))
         # invalid request
