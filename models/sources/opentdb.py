@@ -2,80 +2,78 @@ from random import shuffle
 
 import requests
 
+from models.source import Source
 import config
 
 
-class OpenTDB:
-    source = "opentdb"
+class OpenTDB(Source):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    def __init__(self, difficulty, category, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
-        self.amount_of_questions = amount_of_questions
-        self.difficulty = difficulty
-        self.category = category
+    def get_amount_of_question(self):
+        # print("get total count")
+        query = f"https://opentdb.com/api_count.php?category=9"
+        r = requests.get(query)
+        json = r.json()
+        # print(json)
+        return 10
 
-    def _download_data(self, amount_of_questions=1) -> dict:
+    def download_questions(self) -> dict:
         """
         Internal function to get apidata from Open Trivia DB
         :returns JSON data
         """
         # try to get a correct request from Open Trivia DB
-        query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
+        query = f"https://opentdb.com/api.php?amount={str(self.amount_of_questions)}&type=multiple"
         if self.difficulty:
             query += f"&difficulty={str(self.difficulty)}"
         if self.category:
             query += f"&category={str(self.category)}"
 
         try:
+            print("send query: ", query)
             r = requests.get(query)
             json = r.json()
 
-            # check if request was correct
+            # sucess: return data
             if json["response_code"] == 0:
-                # return apidata
                 return json["results"]
-            if json["response_code"] == 1:
-                # rais an exception if not enough questions
+            # not enough questions: raise exception
+            elif json["response_code"] == 1:
                 category_name = [category["name"] for category in config.CATEGORIES if int(
-                    category["id"]) == int(self.category)]
+                    category["id"]) == int(self.category)][0]
                 raise Exception(
-                    f"category {category_name[0]} with difficulty {str(self.difficulty)} does not have enough questions")
+                    f"[Datasource] category {category_name} with difficulty {str(self.difficulty)} does not have enough questions")
+            # unknown error: raise exception
             else:
-                # raise an exception if the request was not correct
-                raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
-                                " Request URL: " + query)
+                raise Exception(
+                    f"[Datasource] opentdb unknown error. Request URL: {query}")
 
         # raise an exception if there is an error with the request
         except requests.exceptions.RequestException as e:
-            print(e) if config.DEBUG is True else None
-            raise Exception(
-                "[Datasource] opentdb request has an error: " + e.__str__())
+            raise Exception(f"[Datasource] request has failed: {str(e)}")
 
     @staticmethod
-    def _format_opentdb_data(data) -> dict:
+    def format_question(unformatted_question) -> dict:
         """function to format data for use"""
 
         # shuffle answers to make sure the correct answer is not at the same place in the list
         answers = [
-            {"text": data["incorrect_answers"][0],
+            {"text": unformatted_question["incorrect_answers"][0],
              "is_correct": False},
-            {"text": data["incorrect_answers"][1],
+            {"text": unformatted_question["incorrect_answers"][1],
              "is_correct": False},
-            {"text": data["incorrect_answers"][2],
+            {"text": unformatted_question["incorrect_answers"][2],
              "is_correct": False},
-            {"text": data["correct_answer"],
+            {"text": unformatted_question["correct_answer"],
              "is_correct": True},
         ]
 
         shuffle(answers)
 
         # return dictonary
-        return {"text": data["question"],
+        return {"text": unformatted_question["question"],
                 "answers": answers,
-                "category": data["category"],
-                "difficulty": data["difficulty"],
-                "type": data["type"]}
-
-    def get_formatted_data(self) -> list:
-        """function to return all formatted questions"""
-        return [self._format_opentdb_data(question) for question in self._download_data(
-            self.amount_of_questions)]
+                "category": unformatted_question["category"],
+                "difficulty": unformatted_question["difficulty"],
+                "type": unformatted_question["type"]}

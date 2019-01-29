@@ -3,9 +3,10 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+import time
 
 from helpers.helpers import user_required, game_mode_required
-from models.datasource import Datasource
+from models.source import Source
 from models.store import store
 from models.useranswer import UserAnswer
 from config import CATEGORIES
@@ -80,12 +81,15 @@ def index():
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            try:
-                quiz_id = store.create_quiz(Datasource, difficulty, category)
-            except(Exception) as error:
-                return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
+            t0 = time.time()
+            t2 = time.time()
+            # try:
+            quiz_id = store.create_quiz(Source, difficulty, category)
+            # except(Exception) as error:
+            # return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
+            t3 = time.time()
 
-            # create the questions from the Quiz and the Datasource buffer
+            # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
             for _ in range(10):
                 store.create_question_from_source(quiz_id)
 
@@ -93,6 +97,10 @@ def index():
             user_id = store.create_user(
                 quiz_id=quiz_id, name=username, is_owner=True)
             session["user_id"] = user_id
+
+            t1 = time.time()
+            print("TIMER CREATE: ", t3-t2)
+            print("TIMER: QUESTIONS ", t1-t0)
 
             return redirect(url_for("lobby"))
         # invalid request

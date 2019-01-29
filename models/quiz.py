@@ -1,5 +1,6 @@
 import datetime
 from uuid import uuid4
+from models.sources.opentdb import OpenTDB
 
 import config
 
@@ -20,7 +21,7 @@ class Quiz:
         self.start_time = None
         self.is_finished = False
         self.current_question = 0
-        self.source = Source(difficulty, category)
+        self.source = OpenTDB(difficulty=difficulty, category=category)
 
     def add_question_by_id(self, question_id):
         """adds a question to the quiz"""
