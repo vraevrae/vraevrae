@@ -27,15 +27,6 @@ class Source:
         self.category = category
         self.amount_of_questions = amount_of_questions
 
-        # get session id
-        self.get_api_session()
-
-        # get category counts
-        self.get_amount_of_questions()
-
-        # save first questions to cache_data
-        self.add_questions_to_cache()
-
     def get_question(self) -> dict:
         """
         Function that returns a question
@@ -49,18 +40,16 @@ class Source:
 
         return question
 
-    def get_question_from_cache(self):
-        pass
-
     def add_questions_to_cache(self) -> None:
         """Save questions to cache_data"""
-        questions = self.get_questions_from_api()
+        # print("[SOURCE] Adding questions to buffer")
+        questions = self.download_questions()
         self.cached_questions.extend(questions)
 
     def get_questions_from_api(self) -> list:
         """function to return all formatted questions"""
-        raw_questions = self.download_questions()
-        return [self.format_question(raw_question) for raw_question in raw_questions]
+
+        return
 
     def get_amount_of_question(self):
         raise NotImplementedError()
