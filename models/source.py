@@ -1,6 +1,3 @@
-import config
-
-
 """
 Heavily edited: 
 

@@ -10,7 +10,15 @@ from helpers.cprint import lcprint
 
 
 class OpenTDB(Source):
-    def __init__(self, *args, **kwargs):
+    """
+    Open Trivia Database
+
+    A trivia database with a free API licenced under Creative Commons Attribution-ShareAlike 4.0 International License.
+
+    https://opentdb.com by PixelTail Games LCC
+    """
+
+   def __init__(self, *args, **kwargs):
         # call the parent class init to get caching and external interface
         super().__init__(*args, **kwargs)
 
@@ -31,10 +39,13 @@ class OpenTDB(Source):
 
     def get_amount_of_questions(self) -> None:
         """get the amount of questions for the current source configuration to avoid overfetching, and more importantly: errors"""
+        # get counts of category
         if self.category:
             query = f"https://opentdb.com/api_count.php?category={self.category}"
             json = requests.get(query).json()
             counts = json["category_question_count"]
+
+            # get the counts per difficulty
             if self.difficulty == "easy":
                 self.amount_of_questions = counts["total_easy_question_count"]
             elif self.difficulty == "medium":
@@ -43,6 +54,8 @@ class OpenTDB(Source):
                 self.amount_of_questions = counts["total_hard_question_count"]
             else:
                 self.amount_of_questions = counts["total_question_count"]
+
+        # get global counts if no category
         else:
             query = "https://opentdb.com/api_count_global.php"
             json = requests.get(query).json()
@@ -67,7 +80,7 @@ class OpenTDB(Source):
         if self.token:
             query += f"&token={str(self.token)}"
 
-        # try to get questions from Open Trivia DB
+        # try to get questions from API
         try:
             r = requests.get(query)
             json = r.json()
