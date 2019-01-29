@@ -8,7 +8,7 @@ Heavily edited:
     - Two ways to deal with the indeterminism of OpenTDB: Keep all questions arround or start a session
       I opted to write it with a session, less code and requests needed.
 2. The buffer was overwritten on each request, instead of being a fifo queue
-3. There were quite a bit of premature optimisations. 
+3. There was quite a bit of premature optimisations. 
     - Try ... except statement hide a lot of errors making traces quite a bit harder.
     - The arrow type statements aren't enforced, and were actually incorrect
 4. Inheritance or composition is much nicer in this case than two seperate classes
@@ -37,6 +37,7 @@ class Source:
         question = self.cached_questions[0]
         self.cached_questions.remove(question)
 
+        # TODO rewrite to take amount of questions under consideration
         if len(self.cached_questions) <= 5:
             self.add_questions_to_cache()
 

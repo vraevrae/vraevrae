@@ -11,7 +11,7 @@ from helpers.cprint import lcprint
 
 class OpenTDB(Source):
     def __init__(self, *args, **kwargs):
-        # call the parent class init to get caching and and external interface
+        # call the parent class init to get caching and external interface
         super().__init__(*args, **kwargs)
 
         # get session id
