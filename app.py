@@ -178,7 +178,7 @@ def game():
                 store.set_user_answer(new_user_answer)
                 user.score += question.score
 
-            return 'Accepted answer', 202
+            return f'Accepted answer {answer_id}', 202
 
         return 'Could not process post request', 400
 
