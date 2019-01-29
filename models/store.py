@@ -6,6 +6,8 @@ from models.useranswer import UserAnswer
 
 
 class Store:
+    """Class in charge with the storing and retrieval of data"""
+
     def __init__(self):
         self.quizes = {}
         self.questions = {}
@@ -124,4 +126,5 @@ class Store:
         return [self.get_user_by_id(user_id) for user_id in user_ids]
 
 
+# Instantiate the store in the module (to make it sharable)
 store = Store()

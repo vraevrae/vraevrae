@@ -160,6 +160,7 @@ def game():
 
             # check for correctness (and increment score if needed)
             answer = store.get_answer_by_id(answer_id)
+
             if answer.is_correct:
                 question = store.get_question_by_id(answer.question_id)
                 user = store.get_user_by_id(user_id)
