@@ -103,6 +103,10 @@ class Store:
         """reads a specific question from the store by questionId"""
         return self.questions[question_id]
 
+    def get_questions_by_id(self, question_ids):
+        """reads a specific question from the store by questionId"""
+        return [self.get_question_by_id(question_id) for question_id in question_ids]
+
     def get_answer_by_id(self, answer_id):
         """reads a specific question from the store by questionId"""
         return self.answers[answer_id]

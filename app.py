@@ -105,10 +105,10 @@ def index():
 def lobby():
     """route that shows the lobby and receives start game actions"""
     user = store.get_user_by_id(session["user_id"])
+    quiz = store.get_quiz_by_id(user.quiz)
 
     # render the lobby view
     if request.method == "GET":
-        quiz = store.get_quiz_by_id(user.quiz)
         users = store.get_users_by_id(quiz.users)
         return render_template("lobby.html", players=users, user=user, quiz=quiz)
 
@@ -116,12 +116,15 @@ def lobby():
     elif request.method == "POST":
         action = request.form["action"]
 
-        # allow the starting of th quiz if owner
+        # allow the starting of the quiz if owner
         if action == "start" and user.is_owner:
+            # start te quiz
             store.get_quiz_by_id(user.quiz).start()
-            socketio.emit(
-                "start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
 
+            # emit to all clients that the game starts (forces a refresh)
+            socketio.emit("start_game", room=quiz.quiz_id)
+
+            # redirect the current client
             return redirect(url_for("game"))
         else:
             return "starting quiz only allowed by owner", 400
@@ -132,9 +135,11 @@ def lobby():
 @game_mode_required
 def game():
     """route that renders questions and receives answers"""
-    # go the the next question (if needed)
-    user = store.get_user_by_id(session["user_id"])
+    user_id = session["user_id"]
+    user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
+
+    # go the the next question, if needed
     quiz.next_question()
 
     if request.method == "GET":
@@ -147,10 +152,11 @@ def game():
         return render_template("quiz.html", question=question, answers=answers, number=number)
 
     elif request.method == "POST":
-        user_id = session["user_id"]
         answer_id = request.form["answer_id"]
 
+        # check if enough data to answer the question
         if user_id and answer_id:
+
             # create history item
             store.create_user_answer(user_id, answer_id)
 
@@ -172,8 +178,7 @@ def scoreboard():
     # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
-    questions = [store.get_question_by_id(
-        question_id) for question_id in quiz.questions]
+    questions = store.get_questions_by_id(quiz.questions)
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
                            questions=questions)
 
