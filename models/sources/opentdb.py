@@ -48,6 +48,10 @@ class OpenTDB(Source):
     def download_questions(self) -> dict:
         """ Internal function to get apidata from Open Trivia DB"""
 
+        # check if API still has questions
+        if self.amount_of_questions < 1:
+            raise Exception("API has run out of questions")
+
         # construct the query
         query = f"https://opentdb.com/api.php"
         query += f"?amount={str(self.amount_of_questions)}"
@@ -65,6 +69,9 @@ class OpenTDB(Source):
 
             # sucess
             if json["response_code"] == 0:
+                # reduce the remaining questions
+                self.amount_of_questions -= self.amount_of_questions if self.amount_of_questions < 50 else 50
+
                 # format and return data
                 return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
 

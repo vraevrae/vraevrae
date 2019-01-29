@@ -28,7 +28,7 @@ class Source:
         self.category = category
 
     def get_question(self) -> dict:
-        """Function that returns a question"""
+        """Function that returns a question and initatiates a new request, if needed"""
         question = self.cached_questions[0]
         self.cached_questions.remove(question)
 
