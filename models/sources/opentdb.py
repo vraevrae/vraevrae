@@ -1,12 +1,7 @@
 from random import shuffle
-from urllib.parse import urlencode
-
 import requests
 
 from models.source import Source
-import config
-
-from helpers.cprint import lcprint
 
 
 class OpenTDB(Source):
@@ -18,7 +13,7 @@ class OpenTDB(Source):
     https://opentdb.com by PixelTail Games LCC
     """
 
-   def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         # call the parent class init to get caching and external interface
         super().__init__(*args, **kwargs)
 
@@ -92,13 +87,6 @@ class OpenTDB(Source):
 
                 # format and return data
                 return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
-
-            # not enough questions
-            elif json["response_code"] == 1:
-                category_name = [category["name"] for category in config.CATEGORIES if int(
-                    category["id"]) == int(self.category)][0]
-                raise Exception(
-                    f"[Datasource] category {category_name} with difficulty {str(self.difficulty)} does not have enough questions")
 
             # unknown error
             else:
