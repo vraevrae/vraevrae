@@ -91,13 +91,10 @@ class Store:
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
         data = [quiz for quiz in self.quizes.values() if quiz.code is int(code)]
-        if len(data) != 0:
-            return data[0]
-
-        return False
+        return data[0] if len(data) != 0 else None
 
     def get_quiz_by_user_id(self, user_id):
-        """reads a specific question from the store by questionId"""
+        """reads a specific quiz from the store by quizId"""
         user = self.get_user_by_id(user_id)
         return self.get_quiz_by_id(user.quiz)
 
@@ -106,15 +103,15 @@ class Store:
         return self.questions[question_id]
 
     def get_questions_by_id(self, question_ids):
-        """reads a specific question from the store by questionId"""
+        """reads a list of question from the store by questionIds"""
         return [self.get_question_by_id(question_id) for question_id in question_ids]
 
     def get_answer_by_id(self, answer_id):
-        """reads a specific question from the store by questionId"""
+        """reads a specific answer from the store by answerIds"""
         return self.answers[answer_id]
 
     def get_answers_by_id(self, answer_ids):
-        """reads a specific question from the store by questionId"""
+        """reads a specific answer from the store by answerIds"""
         return [self.get_answer_by_id(answer_id) for answer_id in answer_ids]
 
     def get_user_by_id(self, user_id):
