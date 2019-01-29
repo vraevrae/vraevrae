@@ -65,6 +65,10 @@ class Store:
 
         return question_id
 
+    def set_user_answer(self, user_answer):
+        self.user_answers[user_answer.user_answer_id] = user_answer
+        return user_answer.user_answer_id
+
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
         return self.quizes[quiz_id]

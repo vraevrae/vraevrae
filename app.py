@@ -160,6 +160,7 @@ def game():
 
         # check if enough data to answer the question
         if user_id and answer:
+
             # get the users answers for this question (user is still scoped to quiz, so user == quiz)
             user_answers = store.get_user_answers_by_user_and_question_id(
                 user_id, answer.question_id)
@@ -172,7 +173,7 @@ def game():
                     answer.question_id, answer_id, user_id)
 
                 # store new answer and increment the store
-                store.user_answers[new_user_answer.user_answer_id] = new_user_answer
+                store.set_user_answer(new_user_answer)
                 user.score += question.score
 
             return '', 202
