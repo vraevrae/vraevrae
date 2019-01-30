@@ -3,6 +3,7 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from jinja2 import Markup
 
 from config import CATEGORIES, MAX_QUESTIONS
 from helpers.helpers import user_required, game_mode_required
@@ -13,6 +14,14 @@ from models.useranswer import UserAnswer
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
 socketio = SocketIO(app)
+
+app.jinja_env.globals['include_raw'] = lambda filename: Markup(
+    app.jinja_loader.get_source(app.jinja_env, filename)[0])
+
+
+def render():
+    return env.get_template('page.html').render()
+
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -85,7 +94,8 @@ def index():
             # if game is not started, join game
             elif store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
-                user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
+                user_id = store.create_user(
+                    quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
             # if game does not exists return a 404
@@ -263,7 +273,8 @@ def on_join(data):
     print(data)
     room = data['quiz_id']
     username = store.get_user_by_id(data["user_id"]).name
-    users = [user.name for user in store.get_users_by_id(store.get_quiz_by_id(room).users)]
+    users = [user.name for user in store.get_users_by_id(
+        store.get_quiz_by_id(room).users)]
 
     print(users)
 
