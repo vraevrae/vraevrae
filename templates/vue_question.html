@@ -1,7 +1,7 @@
 <div id="vue_question">
   <!-- Question screen -->
   <div class="well well-lg center" v-cloak>
-    <h1 class="color-black">{{ question.text }}</h1>
+    <h1 class="color-black" v-html="question"></h1>
   </div>
 
   <!-- Progress bar -->
@@ -14,8 +14,8 @@
     <button
       class="btn btn-primary btn-lg btn-block answerbtn"
       v-for="answer in answers"
-    >
-      {{ answer.text }}
-    </button>
+      v-html="answer.answer_text"
+      v-on:click="send_answer(answer.answer_id)"
+    ></button>
   </div>
 </div>

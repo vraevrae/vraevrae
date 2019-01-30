@@ -1,8 +1,9 @@
-var app = new Vue({
+var vue_question_app = new Vue({
   el: '#vue_question',
   data: {
     question: {},
-    answers: []
+    answers: [],
+    send_answer: send_answer
   }
 })
 
@@ -35,21 +36,16 @@ socket.on('message', function(message) {
 
 // if socket receives new question from the server
 socket.on('current_question', function(data) {
+  vue_question_app.answers = data.answers
+  vue_question_app.question = data.question
   console.log('CURRENT QUESTION: ', data)
-
-  // check if question is not already the current question
-  if (data['question'] !== get_el('quiz-question').innerHTML) {
-    // fill in template with data gotten from the server
-    fill_template(quiz_id, user_id, data['question'], data['answers'])
-  } else {
-    console.log('ASFGDHJFKGDSA')
-  }
 })
 
 // if server received answer
 socket.on('received_answer', function(data) {
-  data['user_id'] === user_id && updateForm(true)
-  console.log('RECEIVED ANSWER', data)
+  vue_question_app.question = 'Waiting for next question'
+  vue_question_app.answers = []
+  console.log('RECEIVED ANSWER SUCCESS', data)
 })
 
 // function to replace document.getElementById() (so code is better readable)
@@ -92,11 +88,11 @@ function get_current_question(
 }
 
 // function to send answer to the server
-function send_answer(
-  answer_id,
-  user_id = get_data('user_id', (quiz_id = get_data('quiz_id')))
-) {
-  console.log('SEND ANSWER')
+function send_answer(answer_id) {
+  let user_id = get_data('user_id')
+  let quiz_id = get_data('quiz_id')
+
+  console.log('SEND ANSWER', answer_id)
 
   // if the button is clicked, send answer via socket to the server
   socket.emit('send_answer', {
@@ -104,37 +100,4 @@ function send_answer(
     answer_id: answer_id,
     quiz_id: quiz_id
   })
-}
-
-// function to update the answer buttons
-function updateForm(wait = false) {
-  console.log('UPDATE FORM')
-  // if the user has to wait
-  if (wait) {
-    // update elements, so buttons can't be clicked anymore
-    get_el('answer_form').style.display = 'none'
-    get_el('sent_answer').innerHTML = 'Wait for the next question...'
-  } else {
-    // update elements, so buttons can be clicked
-    get_el('answer_form').style.display = 'block'
-    get_el('sent_answer').innerHTML = ''
-  }
-}
-
-// function to fill in the template
-function fill_template(quiz_id, user_id, question, answers) {
-  console.log('FILL TEMPLATE')
-  // reset the timer
-  progress_timer = setInterval(update_timer, 1000)
-
-  get_el('quiz-question').innerHTML = question
-
-  // fil in the answerbuttons
-  for (let i = 0; i < answers.length; i++) {
-    get_el('answer-button-' + i.toString()).innerHTML = answers[i]['text']
-    get_el('answer-button-' + i.toString()).setAttribute(
-      'onclick',
-      send_answer(answers[i]['answer_id'])
-    )
-  }
 }
