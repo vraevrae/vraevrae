@@ -21,7 +21,7 @@ class OpenTDB(Source):
         self.get_api_session_token()
 
         # get category counts
-        self.get_amount_of_questions()
+        self.get_available_questions_count()
 
         # save first questions to cache_data
         self.add_questions_to_cache()
@@ -32,7 +32,7 @@ class OpenTDB(Source):
         json = requests.get(query).json()
         self.token = json["token"]
 
-    def get_amount_of_questions(self) -> None:
+    def get_available_questions_count(self) -> None:
         """get the amount of questions for the current source configuration to avoid overfetching, and more importantly: errors"""
         # get counts of category
         if self.category:
@@ -42,31 +42,31 @@ class OpenTDB(Source):
 
             # get the counts per difficulty
             if self.difficulty == "easy":
-                self.amount_of_questions = counts["total_easy_question_count"]
+                self.available_questions_count = counts["total_easy_question_count"]
             elif self.difficulty == "medium":
-                self.amount_of_questions = counts["total_medium_question_count"]
+                self.available_questions_count = counts["total_medium_question_count"]
             elif self.difficulty == "hard":
-                self.amount_of_questions = counts["total_hard_question_count"]
+                self.available_questions_count = counts["total_hard_question_count"]
             else:
-                self.amount_of_questions = counts["total_question_count"]
+                self.available_questions_count = counts["total_question_count"]
 
         # get global counts if no category
         else:
             query = "https://opentdb.com/api_count_global.php"
             json = requests.get(query).json()
-            self.amount_of_questions = json["overall"]["total_num_of_questions"]
+            self.available_questions_count = json["overall"]["total_num_of_questions"]
 
     def download_questions(self) -> list:
         """Internal function to get apidata from Open Trivia DB"""
 
         # check if API still has questions
-        if self.amount_of_questions < 1:
+        if self.available_questions_count < 1:
             raise Exception("API has run out of questions")
 
         # construct the query
         query = f"https://opentdb.com/api.php"
 
-        query += f"?amount={str(self.amount_of_questions)}"
+        query += f"?amount={str(self.available_questions_count)}"
 
         if self.category:
             query += f"&category={str(self.category)}"
@@ -84,7 +84,7 @@ class OpenTDB(Source):
             if json["response_code"] == 0:
                 # reduce the remaining questions
                 # TODO test this
-                self.amount_of_questions -= self.amount_of_questions if self.amount_of_questions < 50 else 50
+                self.available_questions_count -= self.available_questions_count if self.available_questions_count < 50 else 50
 
                 # format and return questions if of proper type (all types to to be downloaded because of limited API-count helper)
                 return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
