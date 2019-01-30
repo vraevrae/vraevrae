@@ -1,4 +1,11 @@
 window.onload = () => {
+  var app = new Vue({
+    el: '#vue-player-list',
+    data: {
+      users: ['klaas', 'piet', 'jan']
+    }
+  })
+
   const socket = io.connect('http://' + document.domain + ':' + location.port)
   let quiz_id = document.getElementById('data').dataset.quiz_id
   let user_id = document.getElementById('data').dataset.user_id
@@ -22,13 +29,7 @@ window.onload = () => {
   })
 
   socket.on('current_players', function(data) {
-    console.log('current_players: ', data)
-  })
-
-  var app = new Vue({
-    el: '#vue-player-list',
-    data: {
-      users: ['klaas', 'piet', 'jan']
-    }
+    app.users = data.users
+    console.log('current_players: ', data.users)
   })
 }
