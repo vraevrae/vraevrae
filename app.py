@@ -300,7 +300,9 @@ def get_current_question(data):
 
     print({"question": question.text, "answers": answers})
 
-    emit("current_question", {"question": question.text, "answers": answers}, room=data["quiz_id"])
+    emit("current_question", {"question": question, "answers": answers},
+         room=data[
+             "quiz_id"])
 
 
 @socketio.on('send_answer')
