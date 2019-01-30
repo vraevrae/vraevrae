@@ -55,3 +55,12 @@ body {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
+
+.scoreboard-answer[data-is-correct="True"] {
+    background: green;
+}
+
+.scoreboard-answer[data-is-selected="True"] {
+    border: 10px solid black;
+}
+

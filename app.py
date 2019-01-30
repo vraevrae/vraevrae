@@ -204,23 +204,17 @@ def scoreboard():
     answers = [store.get_answers_by_id(question.answers)
                for question in questions]
 
-    userAnswersList = []
+    userAnswers = []
     for question in questions:
         user_answers = store.get_user_answers_by_user_and_question_id(
             user_id, question)
         if len(user_answers) != 0:
-            userAnswersList.append(user_answers[0])
+            userAnswers.append(user_answers[0])
         else:
-            userAnswersList.append(False)
-
-    correct_ans = []
-    for question in answers:
-        for answer in question:
-            if answer.is_correct:
-                correct_ans.append(answer)
+            userAnswers.append(False)
 
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
-                           questions=questions, answers=answers, correct_ans=correct_ans)
+                           questions=questions, answers=answers, userAnswers=userAnswers)
 
 
 @socketio.on('connect')
