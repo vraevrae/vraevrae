@@ -18,7 +18,6 @@ socketio = SocketIO(app)
 app.jinja_env.globals['include_raw'] = lambda filename: Markup(
     app.jinja_loader.get_source(app.jinja_env, filename)[0])
 
-
 if __name__ == '__main__':
     socketio.run(app)
 
@@ -286,3 +285,60 @@ def on_leave(data):
     if room is not None:
         leave_room(room)
         send(room + ' is left.', room=room)
+
+
+@socketio.on('get_current_question')
+def get_current_question(data):
+    print("GET CURRENT QUESTION", data)
+    quiz = store.get_quiz_by_id(data["quiz_id"])
+
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
+    answer_object = store.get_answers_by_id(question.answers)
+    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
+               answer_object]
+
+    print({"question": question.text, "answers": answers})
+
+    emit("current_question", {"question": question.text, "answers": answers}, room=data["quiz_id"])
+
+
+@socketio.on('send_answer')
+def set_answer(data):
+    print("SEND ANSWER", data)
+    user_id = data["user_id"]
+    answer_id = data["answer_id"]
+    quiz_id = data["quiz_id"]
+    answer = store.get_answer_by_id(answer_id)
+    user = store.get_user_by_id(user_id)
+    quiz = store.get_quiz_by_user_id(user_id)
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
+
+    # check if there is enough data to answer the question
+    if user_id and answer:
+        print("USER ID AND ANSWER")
+
+        # get the users answers for this question (user is still scoped to quiz, so user ==
+        # quiz)
+        user_answers = store.get_user_answers_by_user_and_question_id(user_id, answer.question_id)
+
+        # if correct and no previous answer found and the question is still active
+        if answer.is_correct and len(user_answers) < 1 and answer.question_id == question_id:
+            print("ANSWER IS CORRECT")
+            # create a new answer
+            new_user_answer = UserAnswer(answer.question_id, answer_id, user_id)
+
+            # store new answer and increment the store
+            store.set_user_answer(new_user_answer)
+            user.score += question.score
+
+        # emit that the answer is received by the server
+        print("QID -> ", quiz_id)
+        print("RID ->", request.sid)
+
+        emit("received_answer", {"success": True, "user_id": user_id}, room=quiz_id)
+
+    else:
+        pass
+        # TODO NOT EXCEPTED BY CLIENT return {"success": False, "user_id": user_id}

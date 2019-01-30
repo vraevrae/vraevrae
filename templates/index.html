@@ -17,26 +17,33 @@
         <h1>Create a new quiz</h1>
         <input type="text" class="form-control" name="username" placeholder="Username">
         <div class="margin-top">
-        Difficulty: 
-        <select name="difficulty" class="selectpicker">
-            <option value="random" selected>Random</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+            <label for="difficulty">
+                Difficulty:
+                <select name="difficulty" class="selectpicker">
+                    <option value="random" selected>Random</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </label>
         </div>
         <div class="margin-top">
-        Category:
-        <select name="category" class="selectpicker">
-            <option value="random" selected>Random</option>
-            {% for category in CATEGORIES %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-        </select>
+            <label for="category">
+                Category:
+                <select name="category" class="selectpicker">
+                    <option value="random" selected>Random</option>
+                    {% for category in CATEGORIES %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
         </div>
         <div class="margin-top">
-        Number of questions:<input id="size-amount" type="text" class="form-control" name="amount"
+            <label for="number_of_question">
+                Number of questions:
+                <input id="size-amount" type="text" class="form-control" name="amount"
                                    placeholder="Choose number between 1 and 50" value="10">
+            </label>
         </div>
         <button type="submit" name="action" class="btn btn-success mt-1"
                 value="creategame">Create Game
@@ -47,18 +54,20 @@
         
         <div class="collapse" id="Info1">
             <div class="card card-body">
-            Choose a username, difficulty and catagory to create a new quiz. Share the game code with your friends to quiz together.
+                Choose a username, difficulty and catagory to create a new quiz. Share the game code
+                with your friends to quiz together.
             </div>
         </div>
 
         
         <div class="panel panel-primary mt-3" id="panel">
-            <div class="panel-heading">How To Play</div>
-                <div class="panel-body color-black">
+            <div class="panel-heading">
+                How To Play
+            </div>
+            <div class="panel-body color-black">
                 You have to score the most points. Each question you get right will get you 10 points. You have 10 seconds per question.
             </div>
         </div>
-
     </form>
 
     <!-- Join Game form screen -->
@@ -68,23 +77,13 @@
         <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
         <button type="submit" name="action" class="btn btn-success" value="joingame">Join Game
         </button>
-        <a class="btn btn-primary" id="questionbutton2" data-toggle="collapse" href="#Info2" role="button" aria-expanded="false" aria-controls="Info2">
-        ?
-        </a>
+        <a class="btn btn-primary" id="questionbutton2" data-toggle="collapse" href="#Info2"
+           role="button" aria-expanded="false" aria-controls="Info2">?</a>
         <div class="collapse" id="Info2">
             <div class="card card-body">
                 Choose a username and join an existing quiz using the game code.
              </div>
         </div>
     </form>
-
-
 </div>
 {% endblock %}
-
-
-    margin-top: 70px;
-    border-top-width: 0px;
-    border-left-width: 0px;
-    border-right-width: 0px;
-    border-bottom-width: 0px;
