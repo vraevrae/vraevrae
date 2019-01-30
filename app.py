@@ -18,7 +18,6 @@ socketio = SocketIO(app)
 app.jinja_env.globals['include_raw'] = lambda filename: Markup(
     app.jinja_loader.get_source(app.jinja_env, filename)[0])
 
-
 if __name__ == '__main__':
     socketio.run(app)
 
