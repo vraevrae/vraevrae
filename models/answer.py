@@ -3,8 +3,10 @@ from uuid import uuid4
 
 class Answer:
     """
-    an answer to a question, correct or false, 
-    not to be confused with a user_answer, which is a transactional object
+    an answer to a question, and its correctness
+
+    not to be confused with a user_answer, which contains the users decisions
+    concering the question. 
     """
 
     def __init__(self, question_id, text, is_correct):

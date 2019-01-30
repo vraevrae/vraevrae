@@ -17,10 +17,8 @@ class OpenTDB(Source):
         # call the parent class init to get caching and interface to the rest of the models
         super().__init__(*args, **kwargs)
 
-        # get session id
+        # get session id and counts
         self.get_api_session_token()
-
-        # get category counts
         self.get_available_questions_count()
 
         # save first questions to cache_data

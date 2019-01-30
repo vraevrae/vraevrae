@@ -9,6 +9,9 @@ from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
+from config import CATEGORIES, MAX_QUESTIONS
+from helpers.cprint import lcprint
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -80,13 +83,10 @@ def index():
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            # try:
             quiz_id = store.create_quiz(OpenTDB, difficulty, category)
-            # except(Exception) as error:
-            # return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
-            for _ in range(10):
+            for _ in range(MAX_QUESTIONS):
                 store.create_question_from_source(quiz_id)
 
             # create a user
@@ -201,13 +201,19 @@ def scoreboard():
     # collect and format data for scoreboard
     scoreboard_questions = []
     for question in questions:
+        # Get answers
         answers = store.get_answers_by_id(question.answers)
+
+        # Get the users answers for the question
         user_answers = store.get_user_answers_by_user_and_question_id(
             user_id, question.question_id)
+
+        # TODO select answers (weird that this returns a list)
         answered_answer_id = user_answers[0].answer_id if len(
             user_answers) else False
 
-        scoreboard_question = vars(question)
+        # Format the question
+        scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
             is_chosen = True if answer.answer_id == answered_answer_id else False
