@@ -1,4 +1,5 @@
 FROM ubuntu:16.04
+FROM python:latest
 
 RUN apt-get update -y && \
     apt-get install -y python3-pip python3-dev
