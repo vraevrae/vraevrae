@@ -1,5 +1,5 @@
 // vue templating setup en state initialisation
-let vue_question_app = new Vue({
+let vue_question = new Vue({
   // element that contains vue template
   el: '#vue_question',
   // data to feed to the template
@@ -38,9 +38,9 @@ socket.on('current_question', function(data) {
   console.log('[SOCKET_IO]: CURRENT QUESTION: ', data)
 
   // write data to the vue state to get reactive templating
-  vue_question_app.answers = data.answers
-  vue_question_app.question = data.question
-  vue_question_app.quiz = data.quiz
+  vue_question.answers = data.answers
+  vue_question.question = data.question
+  vue_question.quiz = data.quiz
 
   // start the interval because time is known
   setInterval(setTimer, 500)
@@ -57,13 +57,13 @@ socket.on('received_answer', function(data) {
   console.log('[SOCKET_IO]: RECEIVED ANSWER SUCCESS', data)
 
   // remove the question and answers
-  vue_question_app.question.text = 'Waiting for next question'
-  vue_question_app.answers = []
+  vue_question.question.text = 'Waiting for next question'
+  vue_question.answers = []
 })
 
 function setTimer() {
   // get time from the vue store and get current time
-  let start_time = new Date(vue_question_app.quiz.start_time)
+  let start_time = new Date(vue_question.quiz.start_time)
   let curr_time = new Date()
 
   // TODO: equalise time in the worst possible way (this ain't gonna work in summer)
@@ -74,5 +74,5 @@ function setTimer() {
   timer = 10 - (difference % 10)
 
   // write the timer to the vue state
-  vue_question_app.timer = timer
+  vue_question.timer = timer
 }
