@@ -60,7 +60,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = request.form.get("amount")
+        max_questions = request.form.get("amount", MAX_QUESTIONS)
 
         try:
             max_questions = int(max_questions)
@@ -102,7 +102,8 @@ def index():
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            quiz_id = store.create_quiz(OpenTDB, difficulty, category, max_questions)
+            quiz_id = store.create_quiz(
+                OpenTDB, difficulty, category, max_questions)
             quiz = store.get_quiz_by_id(quiz_id)
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
