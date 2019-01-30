@@ -2,7 +2,7 @@ window.onload = () => {
   var app = new Vue({
     el: '#vue-player-list',
     data: {
-      users: ['klaas', 'piet', 'jan']
+      users: []
     }
   })
 

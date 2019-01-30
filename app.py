@@ -131,8 +131,7 @@ def lobby():
 
     # render the lobby view
     if request.method == "GET":
-        users = store.get_users_by_id(quiz.users)
-        return render_template("lobby.html", players=users, user=user, quiz=quiz)
+        return render_template("lobby.html", user=user, quiz=quiz)
 
     # submit the game start signal
     elif request.method == "POST":
@@ -240,7 +239,7 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if answer.answer_id == answered_answer_id else False
+            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
             scoreboard_question["answers"].append(
                 {**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
