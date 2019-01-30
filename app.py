@@ -4,14 +4,11 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from config import CATEGORIES
+from config import CATEGORIES, MAX_QUESTIONS
 from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
-from config import CATEGORIES, MAX_QUESTIONS
-from helpers.cprint import lcprint
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -76,18 +73,25 @@ def index():
 
         # give feedback to user
         if username == "":
-            return render_template("index.html", error="Username should not be empty!", CATEGORIES=CATEGORIES), 400
+            return render_template("index.html", error="Username should not be empty!",
+                                   CATEGORIES=CATEGORIES), 400
 
         # join the game
         if action == "joingame" and gamecode:
-            if store.get_quiz_by_code(gamecode):
+            # test if game is already started, if so return an error
+            if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
+                return render_template("index.html", error="Game has already started!",
+                                       CATEGORIES=CATEGORIES), 400
+            # if game is not started, join game
+            elif store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
-                user_id = store.create_user(
-                    quiz_id=quiz.quiz_id, name=username, is_owner=False)
+                user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+            # if game does not exists return a 404
             else:
-                return redirect(url_for("index")), 404
+                return render_template("index.html", error="Game does not exist!",
+                                       CATEGORIES=CATEGORIES), 400
 
         # create a new quiz
         elif action == "creategame":
@@ -257,10 +261,13 @@ def on_join(data):
     print(data)
     room = data['quiz_id']
     username = store.get_user_by_id(data["user_id"]).name
+    users = [user.name for user in store.get_users_by_id(store.get_quiz_by_id(room).users)]
+
+    print(users)
 
     if room is not None:
         join_room(room)
-        emit("new_player", {"username": username}, room=room)
+        emit("current_players", {"users": users}, room=room)
 
 
 @socketio.on('leave_game')

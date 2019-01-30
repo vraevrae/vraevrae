@@ -22,16 +22,7 @@ window.onload = () => {
         console.log("Socket disconnected")
     });
 
-    socket.on('new_player', function (data) {
-        console.log("new player: ", data);
-        let username = data["username"];
-        let list_el = document.createElement("li");
-        list_el.innerHTML = username;
-        list_el.setAttribute("class", "list-group-item");
-
-        console.log(list_el);
-        console.log(document.getElementById("player_list"));
-
-        document.getElementById("player_list").appendChild(list_el);
+    socket.on('current_players', function (data) {
+        console.log("current_players: ", data);
     });
 };
