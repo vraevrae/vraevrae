@@ -34,15 +34,24 @@
         <p></p>
         <button type="submit" name="action" class="btn btn-success mt-1"value="creategame">Create Game
         </button>
-         <a class="btn btn-primary" id="questionbutton1" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
+         <a class="btn btn-primary" id="questionbutton1" data-toggle="collapse" href="#Info1" role="button" aria-expanded="false" aria-controls="Info1">
          ?
         </a>
         
-        <div class="collapse" id="collapseExample1">
+        <div class="collapse" id="Info1">
             <div class="card card-body">
             Choose a username, difficulty and catagory to create a new quiz. Share the game code with your friends to quiz together.
             </div>
         </div>
+
+        
+        <div class="panel panel-primary mt-3">
+        <div class="panel-heading">How To Play</div>
+            <div class="panel-body">
+            You have to score the most points. Each question you get right will get you 10 points. You have 10 seconds per question.
+        </div>
+        </div>
+
     </form>
 
     <!-- Join Game form screen -->
@@ -52,15 +61,16 @@
         <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
         <button type="submit" name="action" class="btn btn-success" value="joingame">Join Game
         </button>
-        <a class="btn btn-primary" id="questionbutton2" data-toggle="collapse" href="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">
+        <a class="btn btn-primary" id="questionbutton2" data-toggle="collapse" href="#Info2" role="button" aria-expanded="false" aria-controls="Info2">
         ?
         </a>
-        <div class="collapse" id="collapseExample2">
+        <div class="collapse" id="Info2">
             <div class="card card-body">
                 Choose a username and join an existing quiz using the game code.
              </div>
         </div>
     </form>
-</div>
 
+
+</div>
 {% endblock %}
