@@ -15,6 +15,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
 socketio = SocketIO(app)
 
+app.jinja_env.filters['zip'] = zip
+
 if __name__ == '__main__':
     socketio.run(app)
 
@@ -87,7 +89,7 @@ def index():
 
             for _ in range(10):
                 question_id = store.create_question_from_source(quiz_id)
-
+                print(vars(store.get_question_by_id(question_id)))
             # create a user
             user_id = store.create_user(
                 quiz_id=quiz_id, name=username, is_owner=True)
@@ -157,9 +159,9 @@ def game():
             # check for correctness (and increment score if needed)
             answer = store.get_answer_by_id(answer_id)
             if answer.is_correct:
-                question = store.get_question_by_id(answer.question_id)
                 user = store.get_user_by_id(user_id)
                 user.score += question.score
+                question = store.get_question_by_id(answer.question_id)
 
             return '', 202
 
@@ -174,8 +176,16 @@ def scoreboard():
     quiz = store.get_quiz_by_id(user.quiz)
     questions = [store.get_question_by_id(
         question_id) for question_id in quiz.questions]
+    answers = [store.get_answers_by_id(question.answers) for question in questions]
+    correct_ans = []
+    for question in answers:
+        for answer in question:
+            if answer.is_correct:
+                correct_ans.append(answer)
+    given_ans = user.answers
+    print(given_ans)
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
-                           questions=questions)
+                           questions=questions, answers=answers, correct_ans=correct_ans, given_ans=given_ans)
 
 
 @socketio.on('connect')

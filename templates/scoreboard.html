@@ -23,6 +23,22 @@ Scoreboard
                 <button class="btn btn-success" type="submit">Return to home page</button>
             </div>
         </form>
+        <h3 class="prj-name">Questions</h3>
+        <p></p>
+        {% for question in answers|zip(questions, correct_ans) %}
+            <li class="list-group-item color-black">
+            {{ question[1].text | safe }} </li>
+            <p></p>
+            {% for ans in question[0] %}
+                {% if ans|string() == question[2]|string() %}
+                    <h3>{{ ans.text | safe }} </h3> 
+                    <p></p>
+                {% else %}
+                    <h4>{{ ans.text | safe }}</h4>
+                {% endif %}
+            {% endfor %}
+            <p></p>
+        {% endfor %}
     </div>
 
 <script type="text/javascript" src="/static/scoreboard.js"></script>
