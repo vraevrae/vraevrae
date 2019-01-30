@@ -131,8 +131,7 @@ def lobby():
 
     # render the lobby view
     if request.method == "GET":
-        users = store.get_users_by_id(quiz.users)
-        return render_template("lobby.html", players=users, user=user, quiz=quiz)
+        return render_template("lobby.html", user=user, quiz=quiz)
 
     # submit the game start signal
     elif request.method == "POST":
