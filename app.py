@@ -3,13 +3,13 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+import time
 
 from helpers.helpers import user_required, game_mode_required
-from models.datasource import Datasource
+from models.sources.opentdb import OpenTDB
 from models.store import store
+from models.useranswer import UserAnswer
 from config import CATEGORIES
-
-from models.sources.opentdb import NoQuestionsAvailableException
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -82,14 +82,16 @@ def index():
 
         # create a new quiz
         elif action == "creategame":
-            try:
-                quiz_id = store.create_quiz(Datasource, difficulty, category)
-            except(NoQuestionsAvailableException) as error:
-                return render_template("index.html", error= str(error), CATEGORIES=CATEGORIES), 400
+            # try to make a game (connects to API by instantiating a Datasource)
+            # try:
+            quiz_id = store.create_quiz(OpenTDB, difficulty, category)
+            # except(Exception) as error:
+            # return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
+            # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
             for _ in range(10):
-                question_id = store.create_question_from_source(quiz_id)
-                print(vars(store.get_question_by_id(question_id)))
+                store.create_question_from_source(quiz_id)
+
             # create a user
             user_id = store.create_user(
                 quiz_id=quiz_id, name=username, is_owner=True)
@@ -107,10 +109,10 @@ def index():
 def lobby():
     """route that shows the lobby and receives start game actions"""
     user = store.get_user_by_id(session["user_id"])
+    quiz = store.get_quiz_by_id(user.quiz)
 
     # render the lobby view
     if request.method == "GET":
-        quiz = store.get_quiz_by_id(user.quiz)
         users = store.get_users_by_id(quiz.users)
         return render_template("lobby.html", players=users, user=user, quiz=quiz)
 
@@ -118,12 +120,15 @@ def lobby():
     elif request.method == "POST":
         action = request.form["action"]
 
-        # allow the starting of th quiz if owner
+        # allow the starting of the quiz if owner
         if action == "start" and user.is_owner:
+            # start te quiz
             store.get_quiz_by_id(user.quiz).start()
-            socketio.emit(
-                "start_game", room=store.get_quiz_by_id(user.quiz).quiz_id)
 
+            # emit to all clients that the game starts (forces a refresh)
+            socketio.emit("start_game", room=quiz.quiz_id)
+
+            # redirect the current client
             return redirect(url_for("game"))
         else:
             return "starting quiz only allowed by owner", 400
@@ -134,36 +139,54 @@ def lobby():
 @game_mode_required
 def game():
     """route that renders questions and receives answers"""
-    # go the the next question (if needed)
-    user = store.get_user_by_id(session["user_id"])
+
+    # get information
+    user_id = session["user_id"]
+    user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
+
+    # check if it is time to go to the next question, if needed
     quiz.next_question()
+
+    # get question
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
 
     if request.method == "GET":
         # retrieve the question and answers
-        question_id = quiz.get_current_question_id()
-        question = store.get_question_by_id(question_id)
         answers = store.get_answers_by_id(question.answers)
-        number = quiz.current_question + 1
 
-        return render_template("quiz.html", question=question, answers=answers, number=number)
+        # get current question (indexed to 1 instead of 0)
+        readable_current_question = quiz.current_question + 1
+
+        return render_template("quiz.html", question=question, answers=answers, number=readable_current_question)
 
     elif request.method == "POST":
-        user_id = session["user_id"]
         answer_id = request.form["answer_id"]
+        answer = store.get_answer_by_id(answer_id)
 
-        if user_id and answer_id:
-            # create history item
-            store.create_user_answer(user_id, answer_id)
+        # check if enough data to answer the question
+        if user_id and answer:
 
-            # check for correctness (and increment score if needed)
-            answer = store.get_answer_by_id(answer_id)
-            if answer.is_correct:
-                user = store.get_user_by_id(user_id)
+            # get the users answers for this question (user is still scoped to quiz, so user == quiz)
+            user_answers = store.get_user_answers_by_user_and_question_id(
+                user_id, answer.question_id)
+
+            # if correct and no previous answer found and the question is still active
+            if answer.is_correct and not len(user_answers) and answer.question_id == question_id:
+
+                # create a new answer
+                new_user_answer = UserAnswer(
+                    answer.question_id, answer_id, user_id)
+
+                # store new answer and increment the store
+                store.set_user_answer(new_user_answer)
                 user.score += question.score
                 question = store.get_question_by_id(answer.question_id)
 
-            return '', 202
+            return f'Accepted answer {answer_id}', 202
+
+        return 'Could not process post request', 400
 
 
 @app.route('/scoreboard')
@@ -174,15 +197,13 @@ def scoreboard():
     # get data for scoreboard
     user = store.get_user_by_id(session["user_id"])
     quiz = store.get_quiz_by_id(user.quiz)
-    questions = [store.get_question_by_id(
-        question_id) for question_id in quiz.questions]
+    questions = store.get_questions_by_id(quiz.questions)
     answers = [store.get_answers_by_id(question.answers) for question in questions]
     correct_ans = []
     for question in answers:
         for answer in question:
             if answer.is_correct:
                 correct_ans.append(answer)
-    given_ans = user.answers
     print(given_ans)
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
                            questions=questions, answers=answers, correct_ans=correct_ans, given_ans=given_ans)

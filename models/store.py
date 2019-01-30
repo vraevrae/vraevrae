@@ -6,6 +6,8 @@ from models.useranswer import UserAnswer
 
 
 class Store:
+    """Class in charge with the storing and retrieval of data"""
+
     def __init__(self):
         self.quizes = {}
         self.questions = {}
@@ -63,24 +65,9 @@ class Store:
 
         return question_id
 
-    def create_user_answer(self, user_id, answer_id):
-        """Create user answer class which saves every answer the user has given"""
-
-        try:
-            answers = [answer for answer in self.user_answers if answer.question_id ==
-                       self.answers[answer_id].question_id and answer.answer_id == answer_id]
-        except AttributeError:
-            answers = []
-
-        if len(answers) == 0:
-            new_user_answer = UserAnswer(user_id, self.get_quiz_by_user_id(user_id).quiz_id,
-                                         answer_id)
-
-            self.user_answers[new_user_answer.user_answer_id] = new_user_answer
-
-            return new_user_answer
-        else:
-            return False
+    def set_user_answer(self, user_answer):
+        self.user_answers[user_answer.user_answer_id] = user_answer
+        return user_answer.user_answer_id
 
     def get_quiz_by_id(self, quiz_id):
         """read a specific quiz from the store by quizId"""
@@ -89,13 +76,10 @@ class Store:
     def get_quiz_by_code(self, code):
         """read a specific quiz from the store by quizId"""
         data = [quiz for quiz in self.quizes.values() if quiz.code is int(code)]
-        if len(data) != 0:
-            return data[0]
-
-        return False
+        return data[0] if len(data) != 0 else None
 
     def get_quiz_by_user_id(self, user_id):
-        """reads a specific question from the store by questionId"""
+        """reads a specific quiz from the store by quizId"""
         user = self.get_user_by_id(user_id)
         return self.get_quiz_by_id(user.quiz)
 
@@ -103,13 +87,21 @@ class Store:
         """reads a specific question from the store by questionId"""
         return self.questions[question_id]
 
+    def get_questions_by_id(self, question_ids):
+        """reads a list of question from the store by questionIds"""
+        return [self.get_question_by_id(question_id) for question_id in question_ids]
+
     def get_answer_by_id(self, answer_id):
-        """reads a specific question from the store by questionId"""
+        """reads a specific answer from the store by answerIds"""
         return self.answers[answer_id]
 
     def get_answers_by_id(self, answer_ids):
-        """reads a specific question from the store by questionId"""
+        """reads a list of answers from the store by answerIds"""
         return [self.get_answer_by_id(answer_id) for answer_id in answer_ids]
+
+    def get_user_answers_by_user_and_question_id(self, user_id, question_id):
+        """reads a specific user_answer from the store by user_answerIds"""
+        return [user_answer for user_answer in self.user_answers.values() if user_answer.user_id == user_id and user_answer.question_id == question_id]
 
     def get_user_by_id(self, user_id):
         """reads a specific user from the store by userId"""
@@ -120,4 +112,5 @@ class Store:
         return [self.get_user_by_id(user_id) for user_id in user_ids]
 
 
+# Instantiate the store in the module (to make it sharable)
 store = Store()

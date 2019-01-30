@@ -7,7 +7,7 @@ from config import MAX_TIME_IN_SECONDS
 
 def test_next_question():
     Quiz.max_time_in_seconds = 0.1
-    quiz = Quiz(FakeSource, 1234)
+    quiz = Quiz(FakeSource, 1234, "easy", "9")
     quiz.start()
     start_question = quiz.current_question
 
@@ -19,14 +19,14 @@ def test_next_question():
 
 
 def test_finish_quiz():
-    quiz = Quiz(FakeSource, 1234)
+    quiz = Quiz(FakeSource, 1234, "easy", "9")
     quiz.finish()
     assert quiz.is_finished is True
 
 
 def test_next_question_causes_finish():
     Quiz.max_time_in_seconds = 0.1
-    quiz = Quiz(FakeSource, 1234)
+    quiz = Quiz(FakeSource, 1234, "easy", "9")
     quiz.start()
 
     for _ in range(10):
