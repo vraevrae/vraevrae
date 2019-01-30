@@ -13,8 +13,9 @@
 
     <div class="row form-horizontal">
         <!-- Join Game form screen -->
-        <form class="col-md-5 col-6 offset-3" method="post" action="{{ url_for('index') }}">
-            <h1>Join existing quiz</h1>
+        <form class="col-md-5 col-6 offset-3 col-md-offset-1" method="post"
+              action="{{ url_for('index') }}">
+            <h1>Join quiz</h1>
             <input type="text" class="form-control" name="username" placeholder="Username">
             <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
             <button type="submit" name="action" class="btn btn-success" value="joingame">Join Game
@@ -29,65 +30,85 @@
         </form>
 
         <!-- Create a new game form screen -->
-        <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post"
+        <form class="col-md-5 col-6 col-offset-3" method="post"
               action="{{ url_for('index') }}">
-            <h1>Create a new quiz</h1>
+            <h1>Create quiz</h1>
             <input type="text" class="form-control" name="username" placeholder="Username">
-            <div class="margin-top">
-                <label for="difficulty">
-                    Difficulty:
-                    <select name="difficulty" class="selectpicker">
-                        <option value="random" selected>Random</option>
-                        <option value="easy">Easy</option>
-                        <option value="medium">Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
-                </label>
-            </div>
-            <div class="margin-top">
-                <label for="category">
-                    Category:
-                    <select name="category" class="selectpicker">
-                        <option value="random" selected>Random</option>
-                        {% for category in CATEGORIES %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-            </div>
-            <div class="margin-top">
-                <label for="questions">
-                    Questions:
-                    <input id="size-amount" type="number" class="form-control" name="amount"
-                           placeholder="10" value="10">
-                </label>
+            <div class="container-fluid">
+                <div id="properties-row" class="row">
+                    <div class="col-sm-4 col-xs-12">
+                        <h5>Difficulty</h5>
+                        <label for="difficulty">
+                            <select name="difficulty" class="selectpicker">
+                                <optgroup label="Difficulty">
+                                    <option value="random" selected>Random</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </optgroup>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <h5>Category</h5>
+                        <label for="category">
+                            <select name="category" class="selectpicker">
+                                <optgroup label="Category">
+                                    <option value="random" selected>Random</option>
+                                    {% for category in CATEGORIES %}
+                                        <option value="{{ category.id }}">{{ category.name }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-sm-4 col-xs-12">
+                        <h5>Questions</h5>
+                        <label for="questions">
+                            <input id="size-amount" type="number" class="form-control" name="amount"
+                                   placeholder="10" value="10" max="50" min="1">
+                        </label>
+                    </div>
+                </div>
             </div>
             <button type="submit" name="action" class="btn btn-success mt-1"
                     value="creategame">Create Game
             </button>
             <a class="btn btn-primary" id="questionbutton1" data-toggle="collapse" href="#Info1"
-               role="button" aria-expanded="false" aria-controls="Info1">
-                ?
-            </a>
-
+               role="button" aria-expanded="false" aria-controls="Info1">?</a>
             <div class="collapse" id="Info1">
                 <div class="card card-body">
                     Choose a username, difficulty and catagory to create a new quiz. Share the game
-                    code
-                    with your friends to quiz together.
+                    code with your friends to play together.
                 </div>
             </div>
         </form>
     </div>
     <div class="row form-horizontal">
         <div class="col-md-5 col-6 col-offset-3 col-md-offset-1">
-            <div class="panel panel-primary mt-3" id="panel">
-                <div class="panel-heading">
-                    How To Win
+            <div class="panel panel-primary" id="panel">
+                <a href="#howtowin" data-toggle="collapse" role="button" aria-expanded="false"
+                   aria-controls="howtowin">
+                    <div class="panel-heading bg-info">
+                        <h5 class="color-black">How do I win?</h5>
+                    </div>
+                </a>
+                <div id="howtowin" class="panel-body color-black collapse">
+                    <p>Well it's quite easily actually. You just have to be the one with the least
+                        wrong answers. So basically if you know more trivia facts than your
+                        opponents, chances are you will win!</p>
                 </div>
-                <div class="panel-body color-black">
-                    To win, you have to score the most points. Each question you get right will get
-                    you 10 points. You have 10 seconds per question.
+            </div>
+            <div class="panel panel-primary" id="panel">
+                <a href="#howtoknowmore" data-toggle="collapse" role="button"
+                   aria-expanded="false" aria-controls="howtoknowmore">
+                    <div class="panel-heading bg-info">
+                        <h5 class="color-black">How do I get to know more trivia facts?</h5>
+                    </div>
+                </a>
+                <div id="howtoknowmore" class="panel-body color-black collapse">
+                    <p>That is not too hard, good for you! Play often and you will
+                        learn all the facts!</p>
                 </div>
             </div>
         </div>

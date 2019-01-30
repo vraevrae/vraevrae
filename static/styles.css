@@ -1,16 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto|Roboto Condensed');
+
 html {
   width: 100vw;
   height: 100vh;
 }
 
 body {
-  color: white;
-  background-color: #070f1c;
-  background-image: url('/static/images/logo.svg');
-  background-size: 30%;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: 90% 90%;
+    color: white;
+    background-color: #070f1c;
+    background-image: url('/static/images/logo.svg');
+    background-size: 30%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 90% 90%;
+    font-family: 'Roboto', sans-serif;
 }
 
 .color-black {
@@ -94,3 +97,15 @@ form input {
     width: 6rem;
 }
 
+h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    text-transform: uppercase;
+}
+
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: 100% !important;
+}
+
+#properties-row div {
+    padding: 0 0.5em 0 0 !important;
+}
