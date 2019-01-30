@@ -2,8 +2,10 @@
 let vue_question_app = new Vue({
   el: '#vue_question',
   data: {
+    quiz: {},
     question: {},
     answers: [],
+    timer: 10,
     send_answer: send_answer
   }
 })
@@ -30,6 +32,7 @@ socket.on('current_question', function(data) {
   console.log('[SOCKET_IO]: CURRENT QUESTION: ', data)
   vue_question_app.answers = data.answers
   vue_question_app.question = data.question
+  vue_question_app.quiz = data.quiz
 })
 
 // function to send answer to the server
@@ -44,3 +47,11 @@ socket.on('received_answer', function(data) {
   vue_question_app.question.text = 'Waiting for next question'
   vue_question_app.answers = []
 })
+
+setTimer = () => {
+  let start_time = new Date(data.quiz.start_time)
+  let curr_time = new Date()
+  curr_time.setHours(curr_time.getHours() - 1)
+  difference = (curr_time.getTime() - start_time.getTime()) / 1000
+  vue_question_app.timer = difference % 10
+}
