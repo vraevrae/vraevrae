@@ -242,7 +242,7 @@ def get_current_question(data):
 
     print({"question": question.text, "answers": answers})
 
-    return {"question": question.text, "answers": answers}
+    emit("current_question", {"question": question.text, "answers": answers}, room=data["quiz_id"])
 
 
 @socketio.on('send_answer')
@@ -279,7 +279,8 @@ def set_answer(data):
         print("QID -> ", quiz_id)
         print("RID ->", request.sid)
 
-        return {"success": True, "user_id": user_id}
+        emit("received_answer", {"success": True, "user_id": user_id}, room=quiz_id)
 
     else:
-        return {"success": False, "user_id": user_id}
+        pass
+        # TODO NOT EXCEPTED BY CLIENT return {"success": False, "user_id": user_id}
