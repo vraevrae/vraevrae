@@ -3,18 +3,19 @@
     404
 {% endblock %}
 {% block main %}
-    {% if error is defined %}
-        <div class="alert alert-danger" role="alert">
-            {{ error }}
-        </div>
-    {% endif %}
 
-    <div class="row form-horizontal">
-        <div class="col-12 text-center">
-            <h1>Unknown Error</h1>
-            <h4>{{ data }}</h4>
-            <p>Why don't just go back to the <a href={{ url_for("index") }}>home page</a></p>
-        </div>
+{% if error is defined %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
     </div>
+{% endif %}
+
+<div class="row form-horizontal">
+    <div class="col-12 text-center">
+        <h1>Unknown Error</h1>
+        <h4>{{ data }}</h4>
+        <p>Why don't just go back to the <a href={{ url_for("index") }}>home page</a></p>
+    </div>
+</div>
 
 {% endblock %}
