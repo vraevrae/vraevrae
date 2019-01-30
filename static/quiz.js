@@ -33,7 +33,7 @@ socket.on('current_question', function(data) {
   vue_question_app.answers = data.answers
   vue_question_app.question = data.question
   vue_question_app.quiz = data.quiz
-  setTimer()
+  setInterval(setTimer, 500)
 })
 
 // function to send answer to the server
