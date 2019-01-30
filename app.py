@@ -186,7 +186,7 @@ def game():
                 user_id, answer.question_id)
 
             # if correct and no previous answer found and the question is still active
-            if answer.is_correct and not len(user_answers) and answer.question_id == question_id:
+            if not len(user_answers) and answer.question_id == question_id:
 
                 # create a new answer
                 new_user_answer = UserAnswer(
@@ -194,8 +194,9 @@ def game():
 
                 # store new answer and increment the store
                 store.set_user_answer(new_user_answer)
-                user.score += question.score
-                question = store.get_question_by_id(answer.question_id)
+                if answer.is_correct:
+                    user.score += question.score
+                    question = store.get_question_by_id(answer.question_id)
 
             return f'Accepted answer {answer_id}', 202
 
