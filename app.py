@@ -250,7 +250,6 @@ def on_join(data):
 
     if room is not None:
         join_room(room)
-        emit("new_player", {"username": username}, room=room)
         emit("current_players", {"users": users}, room=room)
 
 
