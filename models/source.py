@@ -11,6 +11,9 @@ Heavily edited:
     - The arrow type statements aren't enforced, and were actually incorrect
     - Also the entanglement with a config file seemed more annoying to me than beneficial. It really only makes 
       sense for things that should actually be configurable, else it's just another place to check
+    - Making the buffer cache when at lower than x questions didnt make sense in synchrounous code, because it actually
+      cause more delays than it solves (especially with categories and difficulties). 
+      Ansynchronously, however, it would make sense. 
 4. Inheritance is much nicer in this case than two seperate composed classes
     - I opted to rewrite to inheritance, this makes the use of "self" much more efficient and allows for
       polymorphism (although it's trivial here)
@@ -28,23 +31,33 @@ class Source:
         self.cached_questions = []
         self.difficulty = difficulty
         self.category = category
+        self.available_questions_count = 10
 
     def get_question(self):
-        """Function that returns a question and initatiates a new request, if needed"""
+        """external interface to be used by the rest of the models"""
+        return self.get_question_from_cache()
+
+    def get_question_from_cache(self):
+        """function that returns a question and initatiates a new request, if needed"""
         question = self.cached_questions[0]
         self.cached_questions.remove(question)
 
-        # TODO rewrite to take amount of questions under consideration
-        if len(self.cached_questions) <= 5:
+        # get new questions if the is empty and the api has questions available
+        if len(self.cached_questions) == 0 and self.available_questions_count > 0:
             self.add_questions_to_cache()
+
+        # raise error if the cache and API is empty
+        if len(self.cached_questions) == 0 and self.available_questions_count == 0:
+            raise Exception(
+                "not enough questions available in this category / difficulty combination")
 
         return question
 
     def add_questions_to_cache(self):
-        """Save questions to cache_data"""
+        """save questions to cache_data"""
         questions = self.download_questions()
         self.cached_questions.extend(questions)
 
     def download_questions(self):
         raise NotImplementedError(
-            "Child class should implement specifics of authentication, downloading and formatting")
+            "child class should implement specifics of authentication, downloading and formatting")
