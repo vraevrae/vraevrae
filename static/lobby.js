@@ -24,6 +24,5 @@ window.onload = () => {
 
     socket.on('current_players', function (data) {
         console.log("current_players: ", data);
-        users = data["users"]
     });
 };
