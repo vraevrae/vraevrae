@@ -34,4 +34,9 @@ window.onload = () => {
 
         document.getElementById("player_list").appendChild(list_el);
     });
+
+    socket.on('current_players', function (data) {
+        console.log("current_players: ", data);
+        users = data["users"]
+    });
 };

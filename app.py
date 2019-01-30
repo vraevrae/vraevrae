@@ -4,14 +4,11 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from config import CATEGORIES
+from config import CATEGORIES, MAX_QUESTIONS
 from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
-from config import CATEGORIES, MAX_QUESTIONS
-from helpers.cprint import lcprint
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -247,10 +244,14 @@ def on_join(data):
     print(data)
     room = data['quiz_id']
     username = store.get_user_by_id(data["user_id"]).name
+    users = [user.name for user in store.get_users_by_id(store.get_quiz_by_id(room).users)]
+
+    print(users)
 
     if room is not None:
         join_room(room)
         emit("new_player", {"username": username}, room=room)
+        emit("current_players", {"users": users}, room=room)
 
 
 @socketio.on('leave_game')
