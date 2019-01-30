@@ -58,6 +58,15 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
+        max_questions = request.form.get("amount")
+
+        try:
+            max_questions = int(max_questions)
+        except ValueError:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
+        if int(max_questions) < 1 or int(max_questions) > 50:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         if difficulty == "random":
             difficulty = None
@@ -83,10 +92,11 @@ def index():
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            quiz_id = store.create_quiz(OpenTDB, difficulty, category)
+            quiz_id = store.create_quiz(OpenTDB, difficulty, category, max_questions)
+            quiz = store.get_quiz_by_id(quiz_id)
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
-            for _ in range(MAX_QUESTIONS):
+            for _ in range(quiz.max_questions or MAX_QUESTIONS):
                 store.create_question_from_source(quiz_id)
 
             # create a user

@@ -11,7 +11,9 @@ class Quiz:
     max_questions = config.MAX_QUESTIONS
 
     # Object attributes, different for each quiz
-    def __init__(self, Source, code, difficulty, category):
+    def __init__(self, Source, code, difficulty, category, max_questions):
+        if max_questions:
+            self.max_questions = max_questions
         self.quiz_id = str(uuid4())
         self.code = code
         self.questions = []
