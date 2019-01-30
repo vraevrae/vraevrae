@@ -14,6 +14,10 @@ let vue_question_app = new Vue({
 
 // socket setup
 let socket = io.connect('http://' + document.domain + ':' + location.port)
+
+// destructure variables onto the current scope (window) to make them available everywhere
+// TODO: make this use of window scope a tad less dirty by enclosing this entire thing in a function
+// should still work due to function closures
 let { quiz_id, user_id } = document.querySelector('#data').dataset
 
 // if socket connected succesfully
