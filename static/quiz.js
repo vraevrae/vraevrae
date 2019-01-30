@@ -7,7 +7,7 @@ let vue_question = new Vue({
     quiz: {},
     question: {},
     answers: [],
-    timer: 10,
+    timer: 0,
     send_answer: send_answer
   }
 })
@@ -75,4 +75,7 @@ function setTimer() {
 
   // write the timer to the vue state
   vue_question.timer = timer
+
+  // TODO: figure out when to trigger socket event, only sets correct time now.
+  // Perhaps a parallel interval
 }
