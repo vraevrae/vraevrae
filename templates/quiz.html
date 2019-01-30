@@ -1,29 +1,16 @@
-{% extends "layout.html" %}
-{% block title %}
-Game
-{% endblock %}
+{% extends "layout.html" %} 
+{% block title %} 
+  Game 
+{% endblock %} 
 {% block main%}
 
-<script type="text/javascript" src="/static/quiz.js"></script>
+<div id="data" data-quiz_id="{{- quiz.quiz_id -}}" data-user_id="{{- user.user_id -}}"></div>
 
-<div class=test>
-    <!-- Question screen -->
-	<div class="well well-lg center">
-		<h1 class="color-black">{{ number }}/{{ amount }}: {{ question.text | safe }}</h1>
-	</div>
-    <!-- Progress bar -->
-	<div class="progress progress-striped active margin-top">
-		<div id="quiz-progress" class="progress-bar" style="width:100%;"></div>
-	</div>
-    <!-- Answer form field -->
-	<form id="update" action="{{ url_for('game') }}" method="post" class="margin-top">
-		<input type="hidden" id="hidden_answer" name="action" value="answer">
-        {% for answer in answers %}
-			<button class="btn btn-primary btn-lg btn-block answerbtn" type="submit" name="answer_id" value={{ answer.answer_id }}>
-            {{ answer.text | safe }}
-        </button>
-        {% endfor %}
-    </form>
-</div>
+<!-- Vue question component that should be excluded from Jinja rendering due to conflicting syntax -->
+{{ include_raw('vue_question.html') }}
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript" src="/static/quiz.js"></script>
 
 {% endblock %}

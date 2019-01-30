@@ -5,7 +5,7 @@
 {% block main %}
 
 <!-- Quiz ID-->
-    <div id="data" data-quiz_id="{{- quiz.quiz_id -}}" data-user_id="{{- user.user_id -}}"></div>
+<div id="data" data-quiz_id="{{- quiz.quiz_id -}}" data-user_id="{{- user.user_id -}}"></div>
 
 
 <!-- User and logo -->
@@ -16,8 +16,10 @@
             Users
         </h3>
     </div>
-    <!-- A VUE ELEMENT IS IMPORTED HERE FOR DYNAMIC DATA FROM SOCKET.IO -->
-    <div id="vue-player-list" class="col-12">{{ include_raw('vue_player_list.vue') }}</div>
+
+    <!-- Vue playerlist component that should be excluded from Jinja rendering due to conflicting syntax -->
+    {{ include_raw('vue_player_list.html') }}
+    
 </div>
     <div class="col-lg-4 col-lg-offset-1">
         <h3>

@@ -1,35 +1,29 @@
 window.onload = () => {
-  var app = new Vue({
+  // vue templating setup en state initialisation
+  var vue_player_list = new Vue({
     el: '#vue-player-list',
     data: {
       users: []
     }
   })
 
+  // socket setup
   const socket = io.connect('http://' + document.domain + ':' + location.port)
-  let quiz_id = document.getElementById('data').dataset.quiz_id
-  let user_id = document.getElementById('data').dataset.user_id
+  let { quiz_id, user_id } = document.querySelector('#data').dataset
 
+  // connect and join game
   socket.on('connect', function() {
     socket.emit('is_connected', { data: "I'm connected!" })
-    console.log('connected')
-
-    console.log(quiz_id)
-
-    socket.emit('join_game', { quiz_id: quiz_id, user_id: user_id })
+    socket.emit('join_game', { quiz_id, user_id })
   })
 
-  socket.on('message', function(message) {
-    console.log(message)
-  })
-
+  // disconnect
   socket.on('disconnect', function() {
-    socket.emit('leave_game', { quiz_id: quiz_id })
-    console.log('Socket disconnected')
+    socket.emit('leave_game', { quiz_id })
   })
 
+  // get all current players
   socket.on('current_players', function(data) {
-    app.users = data.users
-    console.log('current_players: ', data.users)
+    vue_player_list.users = data.users
   })
 }

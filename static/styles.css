@@ -51,11 +51,8 @@ body {
 }
 
 .form-control {
-    display: inline;
-}
-
-form input {
-    margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .scoreboard-answer {
@@ -79,7 +76,7 @@ form input {
 }
 
 .question-answers {
-    padding: 0 19px 19px 19px;
+  padding: 0px 19px 19px 19px;
 }
 
 /* UTILIY, DONT REMOVE */
@@ -87,14 +84,21 @@ form input {
   display: none;
 }
 
+.margin-top{
+    margin-top: 7px;
+}
+
 #panel{
-    margin-top: 70px;
-    margin-bottom: 70px;
-    border: unset;
+  margin-top: 70px;
+  margin-bottom: 70px;
+  border-top-width: 0px;
+  border-left-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 0px;
 }
 
 #size-amount{
-    width: 6rem;
+    width: 46px;
 }
 
 h1 {

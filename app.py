@@ -10,6 +10,7 @@ from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
+import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -177,7 +178,7 @@ def game():
 
         amount = len(quiz.questions)
 
-        return render_template("quiz.html", question=question, answers=answers, number=readable_current_question, amount=amount)
+        return render_template("quiz.html", user=user, quiz=quiz, question=question, answers=answers, number=readable_current_question, amount=amount)
 
     elif request.method == "POST":
         answer_id = request.form["answer_id"]
@@ -238,7 +239,8 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
+            is_chosen = True if str(answer.answer_id) == str(
+                answered_answer_id) else False
             scoreboard_question["answers"].append(
                 {**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
@@ -300,7 +302,14 @@ def get_current_question(data):
 
     print({"question": question.text, "answers": answers})
 
-    emit("current_question", {"question": question, "answers": answers}, room=data["quiz_id"])
+    quiz_object = {
+        "start_time": quiz.start_time.isoformat(),
+        "max_questions": quiz.max_questions,
+        "max_time_in_seconds": quiz.max_time_in_seconds
+    }
+
+    emit("current_question", {"question": vars(
+        question), "answers": answers, "quiz": quiz_object}, room=data["quiz_id"])
 
 
 @socketio.on('send_answer')
@@ -321,13 +330,15 @@ def set_answer(data):
 
         # get the users answers for this question (user is still scoped to quiz, so user ==
         # quiz)
-        user_answers = store.get_user_answers_by_user_and_question_id(user_id, answer.question_id)
+        user_answers = store.get_user_answers_by_user_and_question_id(
+            user_id, answer.question_id)
 
         # if correct and no previous answer found and the question is still active
         if answer.is_correct and len(user_answers) < 1 and answer.question_id == question_id:
             print("ANSWER IS CORRECT")
             # create a new answer
-            new_user_answer = UserAnswer(answer.question_id, answer_id, user_id)
+            new_user_answer = UserAnswer(
+                answer.question_id, answer_id, user_id)
 
             # store new answer and increment the store
             store.set_user_answer(new_user_answer)
@@ -337,7 +348,8 @@ def set_answer(data):
         print("QID -> ", quiz_id)
         print("RID ->", request.sid)
 
-        emit("received_answer", {"success": True, "user_id": user_id}, room=quiz_id)
+        emit("received_answer", {"success": True,
+                                 "user_id": user_id}, room=quiz_id)
 
     else:
         pass
