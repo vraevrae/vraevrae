@@ -27,7 +27,7 @@ class Source:
     """Class for getting, formatting and buffering data from an external API"""
 
     def __init__(self, difficulty=None, category=None):
-        # create cache and store configuration
+        """create the cache, store configuration, and set a default available questions"""
         self.cached_questions = []
         self.difficulty = difficulty
         self.category = category
@@ -59,5 +59,6 @@ class Source:
         self.cached_questions.extend(questions)
 
     def download_questions(self):
+        """stub for child class"""
         raise NotImplementedError(
             "child class should implement specifics of authentication, downloading and formatting")
