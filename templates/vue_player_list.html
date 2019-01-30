@@ -1,5 +1,7 @@
+<!-- player list componenent: renderend by Vue instance in lobby.js -->
 <div id="vue-player-list" class="col-12" v-cloak>
   <ul id="player_list" class="list-group">
+    <!-- list of players, looped by v-for -->
     <li class="list-group-item" v-for="user in users">{{ user }}</li>
   </ul>
 </div>

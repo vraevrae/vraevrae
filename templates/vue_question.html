@@ -5,7 +5,7 @@
     <h1 class="color-black" v-html="question.text"></h1>
   </div>
 
-  <!-- Progress bar -->
+  <!-- progress bar -->
   <progress
     id="quiz-progress"
     :value="timer"
@@ -13,8 +13,9 @@
     style="width:100%"
   ></progress>
 
-  <!-- Answers -->
+  <!-- answers -->
   <div>
+    <!-- list of buttons: looped by v-for -->
     <button
       class="btn btn-primary btn-lg btn-block answerbtn"
       v-for="answer in answers"

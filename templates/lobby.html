@@ -16,9 +16,10 @@
             Users
         </h3>
     </div>
-    
-    <!-- A VUE ELEMENT IS IMPORTED HERE FOR DYNAMIC DATA FROM SOCKET.IO -->
+
+    <!-- Vue playerlist component that should be excluded from Jinja rendering due to conflicting syntax -->
     {{ include_raw('vue_player_list.html') }}
+    
 </div>
     <div class="col-lg-4 col-lg-offset-1">
         <h3>
