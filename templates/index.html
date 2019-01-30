@@ -16,6 +16,7 @@
     <form class="col-md-5 col-6 col-offset-3 col-md-offset-1" method="post" action="{{ url_for('index') }}">
         <h1>Create a new quiz</h1>
         <input type="text" class="form-control" name="username" placeholder="Username">
+        <div class="margin-top">
         Difficulty: 
         <select name="difficulty" class="selectpicker">
             <option value="random" selected>Random</option>
@@ -23,6 +24,8 @@
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
         </select>
+        </div>
+        <div class="margin-top">
         Category:
         <select name="category" class="selectpicker">
             <option value="random" selected>Random</option>
@@ -30,19 +33,23 @@
                 <option value="{{ category.id }}">{{ category.name }}</option>
             {% endfor %}
         </select>
+        </div>
+        <div class="margin-top">
         Number of questions:<input type="text" class="form-control" name="amount"
                                    placeholder="Choose number between 1 and 50" value="10">
+        </div>
+        <div class="margin-top">
         <button type="submit" name="action" class="btn btn-success mt-1"
                 value="creategame">Create Game
         </button>
          <a class="btn btn-primary" id="questionbutton1" data-toggle="collapse" href="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">
          ?
         </a>
-        
         <div class="collapse" id="collapseExample1">
             <div class="card card-body">
             Choose a username, difficulty and catagory to create a new quiz. Share the game code with your friends to quiz together.
             </div>
+        </div>
         </div>
     </form>
 

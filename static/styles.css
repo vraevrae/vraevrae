@@ -83,3 +83,7 @@ body {
 [v-cloak] {
   display: none;
 }
+
+.margin-top{
+    margin-top: 7px;
+}
