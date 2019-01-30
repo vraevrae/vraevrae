@@ -9,6 +9,7 @@ class Store:
     """Class in charge with the storing and retrieval of data"""
 
     def __init__(self):
+        """create the store itself, on which the functions operate"""
         self.quizes = {}
         self.questions = {}
         self.answers = {}
