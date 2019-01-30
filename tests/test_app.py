@@ -206,7 +206,7 @@ def test_answer_question_wrongly():
         assert user.score == 0
 
 
-def test_quiz_finishes_with_scoreboard():
+def test_quiz_finishes():
     with app.test_request_context():
 
         user_id = [user.user_id for user in store.users.values()
@@ -230,3 +230,22 @@ def test_quiz_finishes_with_scoreboard():
         assert rv.status_code == 302
         assert user.score == 10
         assert quiz.is_finished == True
+
+
+def test_quiz_finishes_with_scoreboard():
+    with app.test_request_context():
+
+        user_id = [user.user_id for user in store.users.values()
+                   if user.name == "pietje"][0]
+
+        client = app.test_client()
+        with client.session_transaction() as session:
+            session['user_id'] = user_id
+
+        user = store.get_user_by_id(user_id)
+        quiz = store.get_quiz_by_user_id(user_id)
+
+        rv = client.get(url_for('scoreboard'))  # Finally redirects
+
+        assert quiz.is_finished == True
+        assert rv.status_code == 200

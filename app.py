@@ -10,12 +10,12 @@ from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
 from config import CATEGORIES
+from helpers.cprint import lcprint
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
 socketio = SocketIO(app)
-
-app.jinja_env.filters['zip'] = zip
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -194,27 +194,34 @@ def game():
 @game_mode_required
 def scoreboard():
     """route that shows the scoreboard"""
+
     # get data for scoreboard
     user_id = session["user_id"]
     user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
-
     questions = store.get_questions_by_id(quiz.questions)
 
-    answers = [store.get_answers_by_id(question.answers)
-               for question in questions]
-
-    userAnswers = []
+    # collect and format data for scoreboard
+    scoreboard_questions = []
     for question in questions:
+        answers = store.get_answers_by_id(question.answers)
         user_answers = store.get_user_answers_by_user_and_question_id(
-            user_id, question)
-        if len(user_answers) != 0:
-            userAnswers.append(user_answers[0])
-        else:
-            userAnswers.append(False)
+            user_id, question.question_id)
+        answered_answer_id = user_answers[0].answer_id if len(
+            user_answers) else False
 
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
-                           questions=questions, answers=answers, userAnswers=userAnswers)
+        scoreboard_question = vars(question)
+        scoreboard_question["answers"] = []
+        for answer in answers:
+            is_chosen = True if answer.answer_id == answered_answer_id else False
+            scoreboard_question["answers"].append(
+                {**vars(answer), "is_chosen": is_chosen})
+            if is_chosen and answer.is_correct:
+                scoreboard_question["is_correct"] = True
+
+        scoreboard_questions.append(scoreboard_question)
+
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users), questions=scoreboard_questions)
 
 
 @socketio.on('connect')

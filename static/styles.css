@@ -56,11 +56,23 @@ body {
     margin-bottom: 0.5em;
 }
 
-.scoreboard-answer[data-is-correct="True"] {
+.scoreboard-answer{
+    border-radius: 4px;
+    padding: 5px;
+}
+.scoreboard-answer[data-is-correct="True"]{
     background: green;
 }
 
-.scoreboard-answer[data-is-selected="True"] {
-    border: 10px solid black;
+.scoreboard-answer[data-is-correct="False"][data-is-chosen="True"]{
+    border: 2px solid red;
+}
+
+.round-borders{
+    border-radius: 4px;
+}
+
+.question-answers{
+    padding: 0px 19px 19px 19px;
 }
 
