@@ -61,11 +61,15 @@ body {
     padding: 5px;
 }
 .scoreboard-answer[data-is-correct="True"]{
-    background: green;
+    border: 2px solid green;
 }
 
 .scoreboard-answer[data-is-correct="False"][data-is-chosen="True"]{
-    border: 2px solid red;
+    background: red;
+}
+
+.scoreboard-answer[data-is-correct="True"][data-is-chosen="True"]{
+    background: green;
 }
 
 .round-borders{
