@@ -1,6 +1,3 @@
-/* TODO*/
-/* GA WEG YUNUS, JE HEBT HIER NIKS TE ZOEKEN*/
-
 html {
   width: 100vw;
   height: 100vh;
@@ -51,8 +48,11 @@ body {
 }
 
 .form-control {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+    display: inline;
+}
+
+form input {
+    margin-bottom: 0.5em;
 }
 
 .scoreboard-answer {
@@ -76,7 +76,7 @@ body {
 }
 
 .question-answers {
-  padding: 0px 19px 19px 19px;
+    padding: 0 19px 19px 19px;
 }
 
 /* UTILIY, DONT REMOVE */
@@ -84,20 +84,13 @@ body {
   display: none;
 }
 
-.margin-top{
-    margin-top: 7px;
-}
-
 #panel{
-  margin-top: 70px;
-  margin-bottom: 70px;
-  border-top-width: 0px;
-  border-left-width: 0px;
-  border-right-width: 0px;
-  border-bottom-width: 0px;
+    margin-top: 70px;
+    margin-bottom: 70px;
+    border: unset;
 }
 
 #size-amount{
-    width: 46px;
+    width: 6rem;
 }
 
