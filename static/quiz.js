@@ -1,60 +1,50 @@
 // create socket connection with server
 let socket, user_id, quiz_id, progress_timer;
 
-// if document is fully loaded
-document.onload = () => {
+// create interval, so the progressbar can be updated every second
+socket = io.connect('http://' + document.domain + ':' + location.port);
 
-    // create interval, so the progressbar can be updated every second
-    progress_timer = setInterval(update_timer, 1000);
-    socket = io.connect('http://' + document.domain + ':' + location.port);
+// get data from the html file
+quiz_id = get_data("quiz_id");
+user_id = get_data("user_id");
 
-    update_timer();
-    update_timer();
-    update_timer();
+// if socket connected succesfully
+socket.on('connect', function () {
+    console.log("Socket connected");
+    console.log("quiz_id ->", quiz_id);
 
-    // get data from the html file
-    quiz_id = get_data("quiz_id");
-    user_id = get_data("user_id");
+    // join game with current quiz_id
+    socket.emit('join_game', {"quiz_id": quiz_id, "user_id": user_id}); // COMMENTED BECAUSE LOBBY
+    // ALREADY ADDS
+    // TO QUIZ
+    get_current_question(quiz_id, user_id);
+});
 
-    // if socket connected succesfully
-    socket.on('connect', function () {
-        console.log("Socket connected");
-        console.log("quiz_id ->", quiz_id);
+// if socket receives a message from the server
+socket.on('message', function (message) {
+    console.log("SOCKET MESSAGE: ", message)
+});
 
-        // join game with current quiz_id
-        socket.emit('join_game', {"quiz_id": quiz_id});
-        //get_current_question(quiz_id, user_id); //COMMENTED BECAUSE TEMPLATE ALREADY DOES THIS
-    });
+// if socket receives new question from the server
+socket.on('current_question', function (data) {
+    console.log("CURRENT QUESTION: ", data);
 
-    /*
-     * SOCKET FUNCTIONS
-     */
+    // check if question is not already the current question
+    if (data["question"] !== get_el("quiz-question").innerHTML) {
+        // fill in template with data gotten from the server
+        fill_template(quiz_id, user_id, data["question"], data["answers"])
+    } else {
+        console.log("ASFGDHJFKGDSA")
+    }
+});
 
-    // if socket receives a message from the server
-    socket.on('message', function (message) {
-        console.log("SOCKET MESSAGE: ", message)
-    });
+// if server received answer
+socket.on("received_answer", function (data) {
+    data["user_id"] === user_id && updateForm(true);
+    console.log("RECEIVED ANSWER", data)
+});
 
-    // if socket receives new question from the server
-    socket.on('current_question', function (data) {
-        console.log("CURRENT QUESTION: ", data);
 
-        // check if question is not already the current question
-        if (data["question"] !== get_el("quiz-question").innerHTML) {
-            // fill in template with data gotten from the server
-            fill_template(quiz_id, user_id, data["question"], data["answers"])
-        } else {
-            console.log("ASFGDHJFKGDSA")
-        }
-    });
-
-    // if server received answer
-    socket.on("received_answer", function (data) {
-        data["user_id"] === user_id && updateForm(true);
-        console.log("RECEIVED ANSWER", data)
-    });
-
-};
 
 // function to replace document.getElementById() (so code is better readable)
 function get_el(id) {
@@ -68,7 +58,7 @@ function get_data(name) {
 
 // function to update timer every second
 function update_timer() {
-    console.log("hoi");
+    console.log("update_timer");
     // get current progress
     let current_progress = get_el("progress_bar").value;
 

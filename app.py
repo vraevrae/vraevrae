@@ -12,7 +12,7 @@ from models.useranswer import UserAnswer
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
-socketio = SocketIO(app, session=False)
+socketio = SocketIO(app)
 
 if __name__ == '__main__':
     socketio.run(app)
