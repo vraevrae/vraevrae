@@ -1,5 +1,6 @@
+<!-- question: this piece of code gets templated by Vue instance in quiz.js  -->
 <div id="vue_question" v-cloak>
-  <!-- Question screen -->
+  <!-- the question itself -->
   <div class="well well-lg center">
     <h1 class="color-black" v-html="question.text"></h1>
   </div>
@@ -12,6 +13,7 @@
     style="width:100%"
   ></progress>
 
+  <!-- Answers -->
   <div>
     <button
       class="btn btn-primary btn-lg btn-block answerbtn"
