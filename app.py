@@ -3,15 +3,12 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
-import time
 
+from config import CATEGORIES
 from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
-from config import CATEGORIES
-from helpers.cprint import lcprint
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -226,8 +223,7 @@ def scoreboard():
 
 @socketio.on('connect')
 def connect():
-    emit('my response')
-    print('my response')
+    pass
 
 
 @socketio.on("is_connected")
@@ -244,10 +240,11 @@ def disconnect():
 def on_join(data):
     print(data)
     room = data['quiz_id']
+    username = store.get_user_by_id(data["user_id"]).name
 
     if room is not None:
         join_room(room)
-        send(room + ' is joined.', room=room)
+        emit("new_player", {"username": username}, room=room)
 
 
 @socketio.on('leave_game')
