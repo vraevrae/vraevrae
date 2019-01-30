@@ -64,25 +64,33 @@ def index():
 
         # give feedback to user
         if username == "":
-            return render_template("index.html", error="Username should not be empty!", CATEGORIES=CATEGORIES), 400
+            return render_template("index.html", error="Username should not be empty!",
+                                   CATEGORIES=CATEGORIES), 400
 
         # join the game
         if action == "joingame" and gamecode:
-            if store.get_quiz_by_code(gamecode):
+            # test if game is already started, if so return an error
+            if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
+                return render_template("index.html", error="Game has already started!",
+                                       CATEGORIES=CATEGORIES), 400
+            # if game is not started, join game
+            elif store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
-                user_id = store.create_user(
-                    quiz_id=quiz.quiz_id, name=username, is_owner=False)
+                user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+            # if game does not exists return a 404
             else:
-                return redirect(url_for("index")), 404
+                return render_template("index.html", error="Game does not exist!",
+                                       CATEGORIES=CATEGORIES), 400
 
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
             quiz_id = store.create_quiz(OpenTDB, difficulty, category)
 
-            # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
+            # create the questions from the Quiz and the Datasource buffer (could connect to API
+            # when buffer is empty)
             for _ in range(MAX_QUESTIONS):
                 store.create_question_from_source(quiz_id)
 
