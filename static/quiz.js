@@ -1,6 +1,8 @@
-// vue setup
+// vue templating setup en state initialisation
 let vue_question_app = new Vue({
+  // element that contains vue template
   el: '#vue_question',
+  // data to feed to the template
   data: {
     quiz: {},
     question: {},
@@ -21,7 +23,7 @@ socket.on('connect', function() {
   get_current_question()
 })
 
-// function to get current question from server
+// get current question from server
 function get_current_question() {
   console.log('[SOCKET_IO]: GET NEW QUESTION')
   socket.emit('get_current_question', { quiz_id, user_id })
@@ -30,9 +32,13 @@ function get_current_question() {
 // if socket receives new question from the server
 socket.on('current_question', function(data) {
   console.log('[SOCKET_IO]: CURRENT QUESTION: ', data)
+
+  // write data to the vue state to get reactive templating
   vue_question_app.answers = data.answers
   vue_question_app.question = data.question
   vue_question_app.quiz = data.quiz
+
+  // start the interval because time is known
   setInterval(setTimer, 500)
 })
 
@@ -45,16 +51,24 @@ function send_answer(answer_id) {
 // if server received answer
 socket.on('received_answer', function(data) {
   console.log('[SOCKET_IO]: RECEIVED ANSWER SUCCESS', data)
+
+  // remove the question and answers
   vue_question_app.question.text = 'Waiting for next question'
   vue_question_app.answers = []
 })
 
 function setTimer() {
+  // get time from the vue store and get current time
   let start_time = new Date(vue_question_app.quiz.start_time)
   let curr_time = new Date()
+
+  // TODO: equalise time in the worst possible way (this ain't gonna work in summer)
   curr_time.setHours(curr_time.getHours() - 1)
+
+  // calculate the difference and transform it to a timer
   difference = (curr_time.getTime() - start_time.getTime()) / 1000
   timer = 10 - (difference % 10)
-  console.log(timer)
+
+  // write the timer to the vue state
   vue_question_app.timer = timer
 }
