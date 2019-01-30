@@ -204,7 +204,7 @@ def scoreboard():
         for answer in question:
             if answer.is_correct:
                 correct_ans.append(answer)
-    print(given_ans)
+                
     return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
                            questions=questions, answers=answers, correct_ans=correct_ans, given_ans=given_ans)
 
