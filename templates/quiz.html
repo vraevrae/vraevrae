@@ -3,35 +3,30 @@
 Game
 {% endblock %}
 {% block main%}
-    <script type="text/javascript"
-            src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-    <script type="text/javascript" src="{{ url_for("static", filename="quiz.js") }}"></script>
+
+<script type="text/javascript" src="/static/quiz.js"></script>
+
 <div class=test>
-    <div id="data" data-quiz_id="{{- quiz_id -}}" data-user_id="{{- user_id -}}"></div>
-    <div class="well well-lg center">
-        <h1 class="color-black text-center"
-            id="quiz-question">{{ number }}/10: {{ question.text | safe }}</h1>
-    </div>
-    <progress id="progress_bar" value="100" max="100" style="width: 100%;"></progress>
-    <h1 id="sent_answer" class="text-center"></h1>
-    <div id="answer_form">
-        <button id="answer-button-0" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" onclick="send_answer('{{ answer0["answer_id"] |
-                safe }}')"
-                value="{{ answer0["answer_id"] | safe }}">{{ answer0["text"] | safe }}</button>
-        <button id="answer-button-1" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" onclick="send_answer('{{ answer1["answer_id"] |
-                safe }}')"
-                value="{{ answer1["answer_id"] | safe }}">{{ answer1["text"] | safe }}</button>
-        <button id="answer-button-2" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" onclick="send_answer('{{ answer2["answer_id"] |
-                safe }}')"
-                value="{{ answer2["answer_id"] | safe }}">{{ answer2["text"] | safe }}</button>
-        <button id="answer-button-3" class="btn btn-primary btn-lg btn-block answerbtn"
-                type="submit" name="answer_id" onclick="send_answer('{{ answer3["answer_id"] |
-                safe }}')"
-                value="{{ answer3["answer_id"] | safe }}">{{ answer3["text"] | safe }}</button>
-    </div>
+    <!-- Question screen -->
+	<div class="well well-lg center">
+		<h1 class="color-black">{{ number }}/10: {{ question.text | safe }}</h1>
+	</div>
+	<p></p>
+    <!-- Progress bar -->
+	<div class="progress progress-striped active">
+		<div id="quiz-progress" class="progress-bar" style="width:100%;"></div>
+	</div>
+	<p></p>
+    <!-- Answer form field -->
+	<form id="update" action="{{ url_for('game') }}" method="post">
+		<input type="hidden" id="hidden_answer" name="action" value="answer">
+        {% for answer in answers %}
+
+			<button class="btn btn-primary btn-lg btn-block answerbtn" type="submit" name="answer_id" value={{ answer.answer_id }}>
+            {{ answer.text | safe }}
+        </button>
+        {% endfor %}
+    </form>
 </div>
 
 {% endblock %}

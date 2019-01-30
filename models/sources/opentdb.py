@@ -1,81 +1,122 @@
 from random import shuffle
-
 import requests
 
-import config
+from models.source import Source
 
 
-class OpenTDB:
-    source = "opentdb"
+class OpenTDB(Source):
+    """
+    Open Trivia Database
 
-    def __init__(self, difficulty, category, amount_of_questions=config.DATASOURCE_PROPERTIES[source]["maxRequest"]):
-        self.amount_of_questions = amount_of_questions
-        self.difficulty = difficulty
-        self.category = category
+    A trivia database with a free API licenced under Creative Commons Attribution-ShareAlike 4.0 International License.
 
-    def _download_data(self, amount_of_questions=1) -> dict:
-        """
-        Internal function to get apidata from Open Trivia DB
-        :returns JSON data
-        """
-        # try to get a correct request from Open Trivia DB
-        query = f"https://opentdb.com/api.php?amount={str(amount_of_questions)}&type=multiple"
-        if self.difficulty:
-            query += f"&difficulty={str(self.difficulty)}"
+    https://opentdb.com by PixelTail Games LCC
+    """
+
+    def __init__(self, *args, **kwargs):
+        # call the parent class init to get caching and interface to the rest of the models
+        super().__init__(*args, **kwargs)
+
+        # get session id and counts
+        self.get_api_session_token()
+        self.get_available_questions_count()
+
+        # save first questions to cache_data
+        self.add_questions_to_cache()
+
+    def get_api_session_token(self) -> None:
+        """set API session token to guarantee uniqueness"""
+        query = f"https://opentdb.com/api_token.php?command=request"
+        json = requests.get(query).json()
+        self.token = json["token"]
+
+    def get_available_questions_count(self) -> None:
+        """get the amount of questions for the current source configuration to avoid overfetching, and more importantly: errors"""
+        # get counts of category
+        if self.category:
+            query = f"https://opentdb.com/api_count.php?category={self.category}"
+            json = requests.get(query).json()
+            counts = json["category_question_count"]
+
+            # get the counts per difficulty
+            if self.difficulty == "easy":
+                self.available_questions_count = counts["total_easy_question_count"]
+            elif self.difficulty == "medium":
+                self.available_questions_count = counts["total_medium_question_count"]
+            elif self.difficulty == "hard":
+                self.available_questions_count = counts["total_hard_question_count"]
+            else:
+                self.available_questions_count = counts["total_question_count"]
+
+        # get global counts if no category
+        else:
+            query = "https://opentdb.com/api_count_global.php"
+            json = requests.get(query).json()
+            self.available_questions_count = json["overall"]["total_num_of_questions"]
+
+    def download_questions(self) -> list:
+        """Internal function to get apidata from Open Trivia DB"""
+
+        # check if API still has questions
+        if self.available_questions_count < 1:
+            raise Exception("API has run out of questions")
+
+        # construct the query
+        query = f"https://opentdb.com/api.php"
+
+        query += f"?amount={str(self.available_questions_count)}"
+
         if self.category:
             query += f"&category={str(self.category)}"
+        if self.difficulty:
+            query += f"&difficulty={str(self.difficulty)}"
+        if self.token:
+            query += f"&token={str(self.token)}"
 
+        # try to get questions from API
         try:
             r = requests.get(query)
             json = r.json()
 
-            # check if request was correct
+            # sucess
             if json["response_code"] == 0:
-                # return apidata
-                return json["results"]
-            if json["response_code"] == 1:
-                # rais an exception if not enough questions
-                category_name = [category["name"] for category in config.CATEGORIES if int(
-                    category["id"]) == int(self.category)]
-                raise Exception(
-                    f"category {category_name[0]} with difficulty {str(self.difficulty)} does not have enough questions")
-            else:
-                # raise an exception if the request was not correct
-                raise Exception("[Datasource] opentdb response_code is not 0, request incorrect."
-                                " Request URL: " + query)
+                # reduce the remaining questions
+                # TODO test this
+                self.available_questions_count -= self.available_questions_count if self.available_questions_count < 50 else 50
 
-        # raise an exception if there is an error with the request
+                # format and return questions if of proper type (all types to to be downloaded because of limited API-count helper)
+                return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
+
+            # unknown error
+            else:
+                raise Exception(
+                    f"[Datasource] opentdb unknown error. Request URL: {query}")
+
+        # error with the request
         except requests.exceptions.RequestException as e:
-            print(e) if config.DEBUG is True else None
-            raise Exception(
-                "[Datasource] opentdb request has an error: " + e.__str__())
+            raise Exception(f"[Datasource] request has failed: {str(e)}")
 
     @staticmethod
-    def _format_opentdb_data(data) -> dict:
-        """function to format data for use"""
-
-        # shuffle answers to make sure the correct answer is not at the same place in the list
+    def format_question(raw_question) -> dict:
+        """function to format and shuffle the retrieved questions"""
+        # format answers
         answers = [
-            {"text": data["incorrect_answers"][0],
-             "is_correct": False},
-            {"text": data["incorrect_answers"][1],
-             "is_correct": False},
-            {"text": data["incorrect_answers"][2],
-             "is_correct": False},
-            {"text": data["correct_answer"],
-             "is_correct": True},
+            {"text": raw_question["incorrect_answers"][0],
+                "is_correct": False},
+            {"text": raw_question["incorrect_answers"][1],
+                "is_correct": False},
+            {"text": raw_question["incorrect_answers"][2],
+                "is_correct": False},
+            {"text": raw_question["correct_answer"],
+                "is_correct": True},
         ]
 
+        # shuffle answers to make sure the correct answer is not at the same place in the list
         shuffle(answers)
 
-        # return dictonary
-        return {"text": data["question"],
+        # return correctly formatted question
+        return {"text": raw_question["question"],
                 "answers": answers,
-                "category": data["category"],
-                "difficulty": data["difficulty"],
-                "type": data["type"]}
-
-    def get_formatted_data(self) -> list:
-        """function to return all formatted questions"""
-        return [self._format_opentdb_data(question) for question in self._download_data(
-            self.amount_of_questions)]
+                "category": raw_question["category"],
+                "difficulty": raw_question["difficulty"],
+                "type": raw_question["type"]}

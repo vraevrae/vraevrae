@@ -4,9 +4,9 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from config import CATEGORIES
+from config import CATEGORIES, MAX_QUESTIONS
 from helpers.helpers import user_required, game_mode_required
-from models.datasource import Datasource
+from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
 
@@ -70,23 +70,30 @@ def index():
 
         # join the game
         if action == "joingame" and gamecode:
-            if store.get_quiz_by_code(gamecode):
+            # test if game is already started, if so return an error
+            if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
+                return render_template("index.html", error="Game has already started!",
+                                       CATEGORIES=CATEGORIES), 400
+            # if game is not started, join game
+            elif store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
                 user_id = store.create_user(quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+            # if game does not exists return a 404
             else:
-                return redirect(url_for("index")), 404
+                return render_template("index.html", error="Game does not exist!",
+                                       CATEGORIES=CATEGORIES), 400
 
         # create a new quiz
         elif action == "creategame":
-            try:
-                quiz_id = store.create_quiz(Datasource, difficulty, category)
-            except Exception as error:
-                return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
+            # try to make a game (connects to API by instantiating a Datasource)
+            quiz_id = store.create_quiz(OpenTDB, difficulty, category)
 
-            for _ in range(10):
-                question_id = store.create_question_from_source(quiz_id)
+            # create the questions from the Quiz and the Datasource buffer (could connect to API
+            # when buffer is empty)
+            for _ in range(MAX_QUESTIONS):
+                store.create_question_from_source(quiz_id)
 
             # create a user
             user_id = store.create_user(quiz_id=quiz_id, name=username, is_owner=True)
@@ -180,6 +187,7 @@ def game():
                 # store new answer and increment the store
                 store.set_user_answer(new_user_answer)
                 user.score += question.score
+                question = store.get_question_by_id(answer.question_id)
 
             return f"Accepted answer {answer_id}", 200
 
@@ -191,12 +199,40 @@ def game():
 @game_mode_required
 def scoreboard():
     """route that shows the scoreboard"""
+
     # get data for scoreboard
-    user = store.get_user_by_id(session["user_id"])
+    user_id = session["user_id"]
+    user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
     questions = store.get_questions_by_id(quiz.questions)
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
-                           questions=questions)
+
+    # collect and format data for scoreboard
+    scoreboard_questions = []
+    for question in questions:
+        # Get answers
+        answers = store.get_answers_by_id(question.answers)
+
+        # Get the users answers for the question
+        user_answers = store.get_user_answers_by_user_and_question_id(
+            user_id, question.question_id)
+
+        # TODO select answers (weird that this returns a list)
+        answered_answer_id = user_answers[0].answer_id if len(
+            user_answers) else False
+
+        # Format the question
+        scoreboard_question = {**vars(question)}
+        scoreboard_question["answers"] = []
+        for answer in answers:
+            is_chosen = True if answer.answer_id == answered_answer_id else False
+            scoreboard_question["answers"].append(
+                {**vars(answer), "is_chosen": is_chosen})
+            if is_chosen and answer.is_correct:
+                scoreboard_question["is_correct"] = True
+
+        scoreboard_questions.append(scoreboard_question)
+
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users), questions=scoreboard_questions)
 
 
 @socketio.on('connect')
@@ -214,10 +250,14 @@ def disconnect():
 def on_join(data):
     print("JOIN GAME", data)
     room = data['quiz_id']
+    username = store.get_user_by_id(data["user_id"]).name
+    users = [user.name for user in store.get_users_by_id(store.get_quiz_by_id(room).users)]
+
+    print(users)
 
     if room is not None:
         join_room(room)
-        send(room + ' is joined.', room=room)
+        emit("current_players", {"users": users}, room=room)
 
 
 @socketio.on('leave_game')

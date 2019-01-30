@@ -9,6 +9,7 @@ class Store:
     """Class in charge with the storing and retrieval of data"""
 
     def __init__(self):
+        """create the store itself, on which the functions operate"""
         self.quizes = {}
         self.questions = {}
         self.answers = {}
@@ -66,6 +67,7 @@ class Store:
         return question_id
 
     def set_user_answer(self, user_answer):
+        """set a user_answer to the store"""
         self.user_answers[user_answer.user_answer_id] = user_answer
         return user_answer.user_answer_id
 
