@@ -1,78 +1,85 @@
-
 /* TODO*/
 /* GA WEG YUNUS, JE HEBT HIER NIKS TE ZOEKEN*/
 
 html {
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 body {
-    color: white;
-    background-color: #070F1C;
-    background-image: url("/static/images/logo.svg");
-    background-size: 30%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: 90% 90%;
+  color: white;
+  background-color: #070f1c;
+  background-image: url('/static/images/logo.svg');
+  background-size: 30%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 90% 90%;
 }
 
 .color-black {
-    color: black;
+  color: black;
 }
 
-.center{
-    text-align: center;
+.center {
+  text-align: center;
 }
 
-.answerbtn{
-    width: 70%;
-    margin: 0 auto;
+.answerbtn {
+  width: 70%;
+  margin: 0 auto;
 }
 
 .nav-color {
-    background: #5CB85C;
-    border-color: #4CAE4C;
-    border-radius: unset;
+  background: #5cb85c;
+  border-color: #4cae4c;
+  border-radius: unset;
 }
 
 #menulogo {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
-.list-group-item{
-    color: black;
-    overflow: hidden;
+.list-group-item {
+  color: black;
+  overflow: hidden;
 }
 
 .score {
-    float: right;
-    font-weight: bolder;
+  float: right;
+  font-weight: bolder;
 }
 
 .form-control {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
-.scoreboard-answer{
-    border-radius: 4px;
-    padding: 5px;
+.scoreboard-answer {
+  border-radius: 4px;
+  padding: 5px;
 }
 .scoreboard-answer[data-is-correct="True"]{
-    background: green;
+    border: 2px solid green;
 }
 
 .scoreboard-answer[data-is-correct="False"][data-is-chosen="True"]{
-    border: 2px solid red;
+    background: red;
 }
 
-.round-borders{
-    border-radius: 4px;
+.scoreboard-answer[data-is-correct="True"][data-is-chosen="True"]{
+    background: green;
 }
 
-.question-answers{
-    padding: 0px 19px 19px 19px;
+.round-borders {
+  border-radius: 4px;
 }
 
+.question-answers {
+  padding: 0px 19px 19px 19px;
+}
+
+/* UTILIY, DONT REMOVE */
+[v-cloak] {
+  display: none;
+}

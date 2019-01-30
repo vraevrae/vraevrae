@@ -16,14 +16,14 @@ class Store:
         self.users = {}
         self.user_answers = {}
 
-    def create_quiz(self, source, difficulty=None, category=None):
+    def create_quiz(self, source, difficulty=None, category=None, max_questions=None):
         """creates a new quiz and adds it to the store"""
         # Get the lowest available code
         code = 1
         if len(self.questions) is not 0:
             code = max([quiz.code for quiz in self.quizes.values()]) + 1
 
-        new_quiz = Quiz(source, code, difficulty, category)
+        new_quiz = Quiz(source, code, difficulty, category, max_questions)
         self.quizes[new_quiz.quiz_id] = new_quiz
         return new_quiz.quiz_id
 

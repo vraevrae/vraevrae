@@ -3,6 +3,7 @@ from tempfile import mkdtemp
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from jinja2 import Markup
 
 from config import CATEGORIES, MAX_QUESTIONS
 from helpers.helpers import user_required, game_mode_required
@@ -13,6 +14,10 @@ from models.useranswer import UserAnswer
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
 socketio = SocketIO(app)
+
+app.jinja_env.globals['include_raw'] = lambda filename: Markup(
+    app.jinja_loader.get_source(app.jinja_env, filename)[0])
+
 
 if __name__ == '__main__':
     socketio.run(app)
@@ -55,6 +60,15 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
+        max_questions = request.form.get("amount", MAX_QUESTIONS)
+
+        try:
+            max_questions = int(max_questions)
+        except ValueError:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
+        if int(max_questions) < 1 or int(max_questions) > 50:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         if difficulty == "random":
             difficulty = None
@@ -64,26 +78,36 @@ def index():
 
         # give feedback to user
         if username == "":
-            return render_template("index.html", error="Username should not be empty!", CATEGORIES=CATEGORIES), 400
+            return render_template("index.html", error="Username should not be empty!",
+                                   CATEGORIES=CATEGORIES), 400
 
         # join the game
         if action == "joingame" and gamecode:
-            if store.get_quiz_by_code(gamecode):
+            # test if game is already started, if so return an error
+            if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
+                return render_template("index.html", error="Game has already started!",
+                                       CATEGORIES=CATEGORIES), 400
+            # if game is not started, join game
+            elif store.get_quiz_by_code(gamecode):
                 quiz = store.get_quiz_by_code(gamecode)
                 user_id = store.create_user(
                     quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+            # if game does not exists return a 404
             else:
-                return redirect(url_for("index")), 404
+                return render_template("index.html", error="Game does not exist!",
+                                       CATEGORIES=CATEGORIES), 400
 
         # create a new quiz
         elif action == "creategame":
             # try to make a game (connects to API by instantiating a Datasource)
-            quiz_id = store.create_quiz(OpenTDB, difficulty, category)
+            quiz_id = store.create_quiz(
+                OpenTDB, difficulty, category, max_questions)
+            quiz = store.get_quiz_by_id(quiz_id)
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
-            for _ in range(MAX_QUESTIONS):
+            for _ in range(quiz.max_questions or MAX_QUESTIONS):
                 store.create_question_from_source(quiz_id)
 
             # create a user
@@ -153,7 +177,9 @@ def game():
         # get current question (indexed to 1 instead of 0)
         readable_current_question = quiz.current_question + 1
 
-        return render_template("quiz.html", question=question, answers=answers, number=readable_current_question)
+        amount = len(quiz.questions)
+
+        return render_template("quiz.html", question=question, answers=answers, number=readable_current_question, amount=amount)
 
     elif request.method == "POST":
         answer_id = request.form["answer_id"]
@@ -167,7 +193,7 @@ def game():
                 user_id, answer.question_id)
 
             # if correct and no previous answer found and the question is still active
-            if answer.is_correct and not len(user_answers) and answer.question_id == question_id:
+            if not len(user_answers) and answer.question_id == question_id:
 
                 # create a new answer
                 new_user_answer = UserAnswer(
@@ -175,8 +201,9 @@ def game():
 
                 # store new answer and increment the store
                 store.set_user_answer(new_user_answer)
-                user.score += question.score
-                question = store.get_question_by_id(answer.question_id)
+                if answer.is_correct:
+                    user.score += question.score
+                    question = store.get_question_by_id(answer.question_id)
 
             return f'Accepted answer {answer_id}', 202
 
@@ -244,7 +271,8 @@ def on_join(data):
     print(data)
     room = data['quiz_id']
     username = store.get_user_by_id(data["user_id"]).name
-    users = [user.name for user in store.get_users_by_id(store.get_quiz_by_id(room).users)]
+    users = [user.name for user in store.get_users_by_id(
+        store.get_quiz_by_id(room).users)]
 
     print(users)
 

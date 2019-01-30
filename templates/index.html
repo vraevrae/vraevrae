@@ -23,7 +23,6 @@
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
         </select>
-        <p></p>
         Category:
         <select name="category" class="selectpicker">
             <option value="random" selected>Random</option>
@@ -31,8 +30,10 @@
                 <option value="{{ category.id }}">{{ category.name }}</option>
             {% endfor %}
         </select>
-        <p></p>
-        <button type="submit" name="action" class="btn btn-success mt-1"value="creategame">Create Game
+        Number of questions:<input type="text" class="form-control" name="amount"
+                                   placeholder="Choose number between 1 and 50" value="10">
+        <button type="submit" name="action" class="btn btn-success mt-1"
+                value="creategame">Create Game
         </button>
          <a class="btn btn-primary" id="questionbutton1" data-toggle="collapse" href="#Info1" role="button" aria-expanded="false" aria-controls="Info1">
          ?
