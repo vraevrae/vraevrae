@@ -1,7 +1,8 @@
 class FakeSource:
 
-    def __init__(self, difficulty):
+    def __init__(self, difficulty, category):
         self.difficulty = difficulty
+        self.category = category
 
     @staticmethod
     def get_question():

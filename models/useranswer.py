@@ -2,10 +2,10 @@ from uuid import uuid4
 
 
 class UserAnswer:
-    """quiz useranswer"""
+    """quiz user_answer, inherits from answer"""
 
-    def __init__(self, user_id, quiz_id, answer_id):
+    def __init__(self, question_id, answer_id, user_id):
         self.user_answer_id = str(uuid4())
-        self.user_id = user_id
+        self.question_id = question_id
         self.answer_id = answer_id
-        self.quiz_id = quiz_id
+        self.user_id = user_id
