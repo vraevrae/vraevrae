@@ -1,9 +1,15 @@
 {% extends "layout.html" %} {% block title %} Game {% endblock %} {% block
 main%}
-
-<script type="text/javascript" src="/static/quiz.js"></script>
+<div id="data" data-quiz_id="{{- quiz.quiz_id -}}" data-user_id="{{- user.user_id -}}"></div>
 
 <!-- A VUE ELEMENT IS IMPORTED HERE FOR DYNAMIC DATA FROM SOCKET.IO -->
 {{ include_raw('vue_question.html') }}
+
+<script
+  type="text/javascript"
+  src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script type="text/javascript" src="/static/quiz.js"></script>
 
 {% endblock %}

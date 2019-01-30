@@ -177,7 +177,7 @@ def game():
 
         amount = len(quiz.questions)
 
-        return render_template("quiz.html", question=question, answers=answers, number=readable_current_question, amount=amount)
+        return render_template("quiz.html", user=user, quiz=quiz, question=question, answers=answers, number=readable_current_question, amount=amount)
 
     elif request.method == "POST":
         answer_id = request.form["answer_id"]
@@ -238,7 +238,8 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
+            is_chosen = True if str(answer.answer_id) == str(
+                answered_answer_id) else False
             scoreboard_question["answers"].append(
                 {**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
