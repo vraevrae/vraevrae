@@ -1,27 +1,22 @@
 <!-- Question screen -->
-<div class="well well-lg center">
-  <h1 class="color-black">
-    {{ number }}/{{ amount }}: {{ question.text | safe }}
-  </h1>
+<div class="well well-lg center" v-cloak>
+  <h1 class="color-black">{{ question.text }}</h1>
 </div>
 
 <!-- Progress bar -->
-<div class="progress progress-striped active">
+<div class="progress progress-striped active" v-cloak>
   <div id="quiz-progress" class="progress-bar" style="width:100%;"></div>
 </div>
 
-<form id="update" action="{{ url_for('game') }}" method="post">
-  <input type="hidden" id="hidden_answer" name="action" value="answer" /> {% for
-  answer in answers %}
+<div id="update" v-cloak>
+  <input type="hidden" id="hidden_answer" name="action" value="answer" />
   <button
     class="btn btn-primary btn-lg btn-block answerbtn"
     type="submit"
     name="answer_id"
-    value="{{"
-    answer.answer_id
-    }}
+    value="{{ answer.answer_id }}"
+    v-for="answer in answers"
   >
-    {{ answer.text | safe }}
+    {{ answer.text }}
   </button>
-  {% endfor %}
-</form>
+</div>
