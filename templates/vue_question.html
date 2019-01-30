@@ -1,16 +1,15 @@
-<div id="vue_question">
+<div id="vue_question" v-cloak>
   <!-- Question screen -->
-  <div class="well well-lg center" v-cloak>
-    <h1 class="color-black" v-html="question"></h1>
+  <div class="well well-lg center">
+    <h1 class="color-black" v-html="question.text"></h1>
   </div>
 
   <!-- Progress bar -->
-  <div class="progress progress-striped active" v-cloak>
+  <div class="progress progress-striped active">
     <div id="quiz-progress" class="progress-bar" style="width:100%;"></div>
   </div>
 
-  <div id="update" v-cloak>
-    <input type="hidden" id="hidden_answer" name="action" value="answer" />
+  <div>
     <button
       class="btn btn-primary btn-lg btn-block answerbtn"
       v-for="answer in answers"
