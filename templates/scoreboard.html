@@ -25,17 +25,12 @@ Scoreboard
         </form>
         <h3 class="prj-name">Questions</h3>
         <p></p>
-        {% for question in answers|zip(questions, correct_ans) %}
+        {% for question, answers, user_answer in questions|zip(answers, userAnswers) %}
             <li class="list-group-item color-black">
-            {{ question[1].text | safe }} </li>
+            {{ question.text | safe }} </li>
             <p></p>
-            {% for ans in question[0] %}
-                {% if ans|string() == question[2]|string() %}
-                    <h3>{{ ans.text | safe }} </h3> 
-                    <p></p>
-                {% else %}
-                    <h4>{{ ans.text | safe }}</h4>
-                {% endif %}
+            {% for answer in answers %}
+                <h3 data-is-correct={{answer.is_correct}} data-is-selected={{answer.answer_id == user_answer.answer_id}} class="scoreboard-answer"> {{ answer.text | safe }} </h3>
             {% endfor %}
             <p></p>
         {% endfor %}
