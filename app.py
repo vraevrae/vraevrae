@@ -195,10 +195,24 @@ def game():
 def scoreboard():
     """route that shows the scoreboard"""
     # get data for scoreboard
-    user = store.get_user_by_id(session["user_id"])
+    user_id = session["user_id"]
+    user = store.get_user_by_id(user_id)
     quiz = store.get_quiz_by_id(user.quiz)
+
     questions = store.get_questions_by_id(quiz.questions)
-    answers = [store.get_answers_by_id(question.answers) for question in questions]
+
+    answers = [store.get_answers_by_id(question.answers)
+               for question in questions]
+
+    userAnswersList = []
+    for question in questions:
+        user_answers = store.get_user_answers_by_user_and_question_id(
+            user_id, question)
+        if len(user_answers) != 0:
+            userAnswersList.append(user_answers[0])
+        else:
+            userAnswersList.append(False)
+
     correct_ans = []
     for question in answers:
         for answer in question:
