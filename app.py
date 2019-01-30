@@ -302,9 +302,6 @@ def get_current_question(data):
 
     print({"question": question.text, "answers": answers})
 
-<<<<<<< HEAD
-    emit("current_question", {"question": question, "answers": answers}, room=data["quiz_id"])
-=======
     quiz_object = {
         "start_time": quiz.start_time.isoformat(),
         "max_questions": quiz.max_questions,
@@ -313,7 +310,6 @@ def get_current_question(data):
 
     emit("current_question", {"question": vars(
         question), "answers": answers, "quiz": quiz_object}, room=data["quiz_id"])
->>>>>>> working and refactored quiz
 
 
 @socketio.on('send_answer')
