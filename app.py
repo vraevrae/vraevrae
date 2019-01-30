@@ -4,11 +4,11 @@ from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 
-from helpers.helpers import user_required, game_mode_required, send_new_question
+from config import CATEGORIES
+from helpers.helpers import user_required, game_mode_required
 from models.datasource import Datasource
 from models.store import store
 from models.useranswer import UserAnswer
-from config import CATEGORIES
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
@@ -65,7 +65,8 @@ def index():
 
         # give feedback to user
         if username == "":
-            return render_template("index.html", error="Username should not be empty!", CATEGORIES=CATEGORIES), 400
+            return render_template("index.html", error="Username should not be empty!",
+                                   CATEGORIES=CATEGORIES), 400
 
         # join the game
         if action == "joingame" and gamecode:
@@ -81,7 +82,7 @@ def index():
         elif action == "creategame":
             try:
                 quiz_id = store.create_quiz(Datasource, difficulty, category)
-            except(Exception) as error:
+            except Exception as error:
                 return render_template("index.html", error=str(error), CATEGORIES=CATEGORIES), 400
 
             for _ in range(10):
@@ -164,7 +165,8 @@ def game():
         # check if enough data to answer the question
         if user_id and answer:
 
-            # get the users answers for this question (user is still scoped to quiz, so user == quiz)
+            # get the users answers for this question (user is still scoped to quiz, so user ==
+            # quiz)
             user_answers = store.get_user_answers_by_user_and_question_id(
                 user_id, answer.question_id)
 
@@ -179,7 +181,7 @@ def game():
                 store.set_user_answer(new_user_answer)
                 user.score += question.score
 
-            return f'Accepted answer {answer_id}', 202
+            return f"Accepted answer {answer_id}", 200
 
         return 'Could not process post request', 400
 
@@ -230,8 +232,17 @@ def on_leave(data):
 @socketio.on('get_current_question')
 def get_current_question(data):
     print("GET CURRENT QUESTION", data)
+    quiz = store.get_quiz_by_id(data["quiz_id"])
 
-    send_new_question(data["quiz_id"])
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
+    answer_object = store.get_answers_by_id(question.answers)
+    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
+               answer_object]
+
+    print({"question": question.text, "answers": answers})
+
+    return {"question": question.text, "answers": answers}
 
 
 @socketio.on('send_answer')
@@ -239,16 +250,36 @@ def set_answer(data):
     print("SEND ANSWER", data)
     user_id = data["user_id"]
     answer_id = data["answer_id"]
-
-    # create history item
-    store.create_user_answer(user_id, answer_id)
-
-    # check for correctness (and increment score if needed)
+    quiz_id = data["quiz_id"]
     answer = store.get_answer_by_id(answer_id)
+    user = store.get_user_by_id(user_id)
+    quiz = store.get_quiz_by_user_id(user_id)
+    question_id = quiz.get_current_question_id()
+    question = store.get_question_by_id(question_id)
 
-    if answer.is_correct:
-        question = store.get_question_by_id(answer.question_id)
-        user = store.get_user_by_id(user_id)
-        user.score += question.score
+    # check if there is enough data to answer the question
+    if user_id and answer:
+        print("USER ID AND ANSWER")
 
-    emit("received_answer", {"success": True}, room=data["quiz_id"])
+        # get the users answers for this question (user is still scoped to quiz, so user ==
+        # quiz)
+        user_answers = store.get_user_answers_by_user_and_question_id(user_id, answer.question_id)
+
+        # if correct and no previous answer found and the question is still active
+        if answer.is_correct and len(user_answers) < 1 and answer.question_id == question_id:
+            print("ANSWER IS CORRECT")
+            # create a new answer
+            new_user_answer = UserAnswer(answer.question_id, answer_id, user_id)
+
+            # store new answer and increment the store
+            store.set_user_answer(new_user_answer)
+            user.score += question.score
+
+        # emit that the answer is received by the server
+        print("QID -> ", quiz_id)
+        print("RID ->", request.sid)
+
+        return {"success": True, "user_id": user_id}
+
+    else:
+        return {"success": False, "user_id": user_id}
