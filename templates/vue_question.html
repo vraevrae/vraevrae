@@ -1,0 +1,27 @@
+<!-- Question screen -->
+<div class="well well-lg center">
+  <h1 class="color-black">
+    {{ number }}/{{ amount }}: {{ question.text | safe }}
+  </h1>
+</div>
+
+<!-- Progress bar -->
+<div class="progress progress-striped active">
+  <div id="quiz-progress" class="progress-bar" style="width:100%;"></div>
+</div>
+
+<form id="update" action="{{ url_for('game') }}" method="post">
+  <input type="hidden" id="hidden_answer" name="action" value="answer" /> {% for
+  answer in answers %}
+  <button
+    class="btn btn-primary btn-lg btn-block answerbtn"
+    type="submit"
+    name="answer_id"
+    value="{{"
+    answer.answer_id
+    }}
+  >
+    {{ answer.text | safe }}
+  </button>
+  {% endfor %}
+</form>
