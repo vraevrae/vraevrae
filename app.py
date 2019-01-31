@@ -236,23 +236,7 @@ def scoreboard():
         users = store.get_users_by_id(quiz.users)
         users = sorted(users, key=lambda user: user.score, reverse=True)
 
-    return render_template("scoreboard.html", users=users,
-                           questions=scoreboard_questions, quiz=quiz)
-
-
-@socketio.on('connect')
-def connect():
-    pass
-
-
-@socketio.on("is_connected")
-def is_connected(data):
-    print(data)
-
-
-@socketio.on('disconnect')
-def disconnect():
-    print('Client disconnected')
+    return render_template("scoreboard.html", users=users, questions=scoreboard_questions, quiz=quiz)
 
 
 @socketio.on('join_game')

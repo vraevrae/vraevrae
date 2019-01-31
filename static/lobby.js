@@ -13,13 +13,7 @@ window.onload = () => {
 
   // connect and join game
   socket.on('connect', function() {
-    socket.emit('is_connected', { data: "I'm connected!" })
     socket.emit('join_game', { quiz_id, user_id })
-  })
-
-  // disconnect
-  socket.on('disconnect', function() {
-    socket.emit('leave_game', { quiz_id })
   })
 
   // get all current players
