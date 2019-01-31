@@ -113,6 +113,10 @@ def index():
             session["user_id"] = user_id
 
             return redirect(url_for("lobby"))
+        
+        elif action == "joingame" and not gamecode:
+            return render_template("index.html", error="Game Code should not be empty!",
+                                       CATEGORIES=CATEGORIES), 400
         # invalid request
         else:
             # TODO: JOIN GAME WITHOUT CODE EVALUATES TO THIS
