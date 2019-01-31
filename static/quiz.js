@@ -44,6 +44,7 @@ socket.on('current_question', function(data) {
 
   // start the interval because time is known
   setInterval(setTimer, 500)
+  setInterval(get_current_question, 10000)
 })
 
 // function to send answer to the server

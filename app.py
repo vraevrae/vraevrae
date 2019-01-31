@@ -151,7 +151,7 @@ def lobby():
             return "starting quiz only allowed by owner", 400
 
 
-@app.route('/game', methods=["GET", "POST"])
+@app.route('/game', methods=["GET"])
 @user_required
 @game_mode_required
 def game():
@@ -165,48 +165,8 @@ def game():
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
-    # get question
-    question_id = quiz.get_current_question_id()
-    question = store.get_question_by_id(question_id)
-
-    if request.method == "GET":
-        # retrieve the question and answers
-        answers = store.get_answers_by_id(question.answers)
-
-        # get current question (indexed to 1 instead of 0)
-        readable_current_question = quiz.current_question + 1
-
-        amount = len(quiz.questions)
-
-        return render_template("quiz.html", user=user, quiz=quiz, question=question, answers=answers, number=readable_current_question, amount=amount)
-
-    elif request.method == "POST":
-        answer_id = request.form["answer_id"]
-        answer = store.get_answer_by_id(answer_id)
-
-        # check if enough data to answer the question
-        if user_id and answer:
-
-            # get the users answers for this question (user is still scoped to quiz, so user == quiz)
-            user_answers = store.get_user_answers_by_user_and_question_id(
-                user_id, answer.question_id)
-
-            # if correct and no previous answer found and the question is still active
-            if not len(user_answers) and answer.question_id == question_id:
-
-                # create a new answer
-                new_user_answer = UserAnswer(
-                    answer.question_id, answer_id, user_id)
-
-                # store new answer and increment the store
-                store.set_user_answer(new_user_answer)
-                if answer.is_correct:
-                    user.score += question.score
-                    question = store.get_question_by_id(answer.question_id)
-
-            return f'Accepted answer {answer_id}', 202
-
-        return 'Could not process post request', 400
+    # render template with vue component
+    return render_template("quiz.html", user=user, quiz=quiz)
 
 
 @app.route('/scoreboard')
@@ -291,8 +251,11 @@ def on_leave(data):
 
 @socketio.on('get_current_question')
 def get_current_question(data):
-    print("GET CURRENT QUESTION", data)
+
     quiz = store.get_quiz_by_id(data["quiz_id"])
+
+    # check if it is time to go to the next question, if needed
+    quiz.next_question()
 
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
@@ -316,33 +279,40 @@ def get_current_question(data):
 def set_answer(data):
     print("SEND ANSWER", data)
     user_id = data["user_id"]
-    answer_id = data["answer_id"]
-    quiz_id = data["quiz_id"]
-    answer = store.get_answer_by_id(answer_id)
     user = store.get_user_by_id(user_id)
+
+    answer_id = data["answer_id"]
+    answer = store.get_answer_by_id(answer_id)
+
+    quiz_id = data["quiz_id"]
     quiz = store.get_quiz_by_user_id(user_id)
+
+    # check if it is time to go to the next question, if needed
+    quiz.next_question()
+
+    # get the questoni
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
 
-    # check if there is enough data to answer the question
+    # check if enough data to answer the question
     if user_id and answer:
-        print("USER ID AND ANSWER")
 
-        # get the users answers for this question (user is still scoped to quiz, so user ==
-        # quiz)
+        # get the users answers for this question (user is still scoped to quiz, so user == quiz)
         user_answers = store.get_user_answers_by_user_and_question_id(
             user_id, answer.question_id)
 
         # if correct and no previous answer found and the question is still active
-        if answer.is_correct and len(user_answers) < 1 and answer.question_id == question_id:
-            print("ANSWER IS CORRECT")
+        if not len(user_answers) and answer.question_id == question_id:
+
             # create a new answer
             new_user_answer = UserAnswer(
                 answer.question_id, answer_id, user_id)
 
             # store new answer and increment the store
             store.set_user_answer(new_user_answer)
-            user.score += question.score
+            if answer.is_correct:
+                user.score += question.score
+                question = store.get_question_by_id(answer.question_id)
 
         # emit that the answer is received by the server
         print("QID -> ", quiz_id)
