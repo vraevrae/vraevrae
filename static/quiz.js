@@ -24,14 +24,14 @@ window.onload = () => {
   // if socket connected succesfully
   socket.on('connect', function() {
     console.log('[SOCKET_IO]: Socket connected')
-    socket.emit('join_game', { quiz_id, user_id })
+    socket.emit('join_game', { user_id })
     get_current_question()
   })
 
   // get current question from server
   function get_current_question() {
     console.log('[SOCKET_IO]: GET NEW QUESTION')
-    socket.emit('get_current_question', { quiz_id, user_id })
+    socket.emit('get_current_question', { user_id })
   }
 
   // if socket receives new question from the server
@@ -43,7 +43,7 @@ window.onload = () => {
     vue_question.question = data.question
     vue_question.quiz = data.quiz
 
-    // clean the old intervals (to avoid crashing stuff)
+    // clear the old intervals (to avoid crashing stuff)
     vue_question.timerInterval && clearInterval(vue_question.timerInterval)
     vue_question.questionTimeout && clearTimeout(vue_question.questionTimeout)
 
@@ -62,7 +62,7 @@ window.onload = () => {
   // function to send answer to the server
   function send_answer(answer_id) {
     console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
-    socket.emit('send_answer', { user_id, answer_id, quiz_id })
+    socket.emit('send_answer', { user_id, answer_id })
   }
 
   // if server received answer
@@ -74,6 +74,7 @@ window.onload = () => {
     vue_question.answers = []
   })
 
+  // function that calculates remaining time
   function setTimer() {
     // get time from the vue store and get current time
     let start_time = new Date(vue_question.quiz.start_time)
