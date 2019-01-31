@@ -3,7 +3,7 @@ window.onload = () => {
   let vue_question = new Vue({
     // element that contains vue template
     el: '#vue_question',
-    // data to feed to the template
+    // data to make reactively available to the template
     data: {
       quiz: {},
       question: {},
