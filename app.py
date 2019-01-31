@@ -70,6 +70,7 @@ def index():
         if category == "random":
             category = None
 
+        # check if max questions can be cast to int
         try:
             max_questions = int(max_questions)
         except ValueError:
@@ -86,6 +87,7 @@ def index():
         # join the game
         if action == "joingame" and gamecode:
 
+            # check if gamecode can be case to int
             try:
                 gamecode = int(gamecode)
             except ValueError:
@@ -187,6 +189,7 @@ def game():
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
+    # emit finish command so client can reroute
     if quiz.is_finished:
         socketio.emit("finish_game", room=quiz.quiz_id)
 
@@ -216,11 +219,11 @@ def scoreboard():
         user_answers = store.get_user_answers_by_user_and_question_id(
             user_id, question.question_id)
 
-        # TODO select answers (weird that this returns a list)
+        # TODO: select answers (weird that this returns a list)
         answered_answer_id = user_answers[0].answer_id if len(
             user_answers) else False
 
-        # Format the question
+        # format the question
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
@@ -233,6 +236,7 @@ def scoreboard():
 
         scoreboard_questions.append(scoreboard_question)
 
+        # sort users by score
         users = store.get_users_by_id(quiz.users)
         users = sorted(users, key=lambda user: user.score, reverse=True)
 
@@ -241,27 +245,23 @@ def scoreboard():
 
 @socketio.on('join_game')
 def on_join(data):
+    """socketio event listener that joins a user and emits to all users if someone joins"""
     quiz = store.get_quiz_by_user_id(data['user_id'])
     room = quiz.quiz_id
+
+    # get and clean the users (no score)
     users = store.get_users_by_id(store.get_quiz_by_id(room).users)
     users_cleaned = [user.name for user in users]
 
+    # emit the new users the to the room
     if room is not None:
         join_room(room)
         emit("current_players", {"users": users_cleaned}, room=room)
 
 
-@socketio.on('leave_game')
-def on_leave(data):
-    quiz = store.get_quiz_by_user_id(data['user_id'])
-    room = quiz.quiz_id
-    if room is not None:
-        leave_room(room)
-        send(room + ' is left.', room=room)
-
-
 @socketio.on('get_current_question')
 def get_current_question(data):
+    """socketio event listener that emits the current question to the room if so requested"""
     # get the data
     user_id = data["user_id"]
     quiz = store.get_quiz_by_user_id(user_id)
@@ -292,13 +292,13 @@ def get_current_question(data):
     }
 
     # emit the data
-    # TODO: should not emit proper question if already answered
     emit("current_question", {"question": vars(
         question), "answers": answers_cleaned, "quiz": quiz_cleaned}, room=quiz.quiz_id)
 
 
 @socketio.on('send_answer')
 def set_answer(data):
+    """socketio event listener that receives an answer from a particular client"""
     # get data
     user_id = data["user_id"]
     user = store.get_user_by_id(user_id)
