@@ -26,4 +26,9 @@ window.onload = () => {
   socket.on('current_players', function(data) {
     vue_player_list.users = data.users
   })
+
+  // when the game starts reload to get proper template
+  socket.on('start_game', function(data) {
+    window.location.reload()
+  })
 }

@@ -9,16 +9,14 @@ Scoreboard
 	<div class="header">
 		<h3 class="prj-name">
 			<span class="fa fa-users fa-2x"></span>
-			<br>
                 Scoreboard
-            </br>
 		</h3>
 	</div>
 	<ul class="list-group">
         {% for user in users %}       
         <li class="list-group-item">
             <span>{{ user.name }}</span>
-            <span style="float:right">{{ user.score }}</span>
+            <span style="float:right">{{ user.score }}/{{ quiz.questions | length * 10 }}</span>
         </li>
         {% endfor %}
     </ul>

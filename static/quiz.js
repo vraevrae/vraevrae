@@ -19,7 +19,7 @@ window.onload = () => {
   let socket = io.connect('http://' + document.domain + ':' + location.port)
 
   // destructure variables onto the current scope (window) to make them available everywhere
-  let { quiz_id, user_id } = document.querySelector('#data').dataset
+  let { user_id } = document.querySelector('#data').dataset
 
   // if socket connected succesfully
   socket.on('connect', function() {
@@ -51,7 +51,7 @@ window.onload = () => {
     setTimer()
 
     // start the interval because time is known
-    vue_question.timerInterval = setInterval(setTimer, 500)
+    vue_question.timerInterval = setInterval(setTimer, 20)
     vue_question.questionTimeout = setTimeout(
       get_current_question,
       // if remaining time is bigger than 1 second, return timer in milliseconds, else return 1000 ms
@@ -62,16 +62,25 @@ window.onload = () => {
   // function to send answer to the server
   function send_answer(answer_id) {
     console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
+
+    // remove the question and answers
+    if (
+      vue_question.quiz.current_question == vue_question.quiz.total_questions
+    ) {
+      vue_question.question.text = 'Waiting for quiz to finish'
+    } else {
+      vue_question.question.text = 'Waiting for next question'
+    }
+
+    vue_question.answers = []
+
+    // send the answer
     socket.emit('send_answer', { user_id, answer_id })
   }
 
-  // if server received answer
-  socket.on('received_answer', function(data) {
-    console.log('[SOCKET_IO]: RECEIVED ANSWER SUCCESS', data)
-
-    // remove the question and answers
-    vue_question.question.text = 'Waiting for next question'
-    vue_question.answers = []
+  // redirect the user to scoreboard
+  socket.on('finish_game', function(data) {
+    window.location.reload()
   })
 
   // function that calculates remaining time
@@ -85,7 +94,7 @@ window.onload = () => {
 
     // calculate the difference and transform it to a timer
     difference = (curr_time.getTime() - start_time.getTime()) / 1000
-    timer = 10 - (difference % 10)
+    timer = (10 - (difference % 10)) % 10
 
     // write the timer to the vue state
     vue_question.timer = timer

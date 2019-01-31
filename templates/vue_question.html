@@ -2,7 +2,10 @@
 <div id="vue_question" v-cloak>
   <!-- the question itself -->
   <div class="well well-lg center">
-    <h1 class="color-black" v-html="question.text"></h1>
+    <h1 class="color-black">
+      <span> {{ quiz.current_question }} / {{ quiz.total_questions }} </span>
+      <span v-html="question.text"></span>
+    </h1>
   </div>
 
   <!-- progress bar -->

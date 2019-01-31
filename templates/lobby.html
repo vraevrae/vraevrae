@@ -23,8 +23,14 @@
 </div>
     <div class="col-lg-4 col-lg-offset-1">
         <h3>
-            <span id="gamecodetext">Game code:</span> {{ quiz.code }}
+            Game code: {{ quiz.code }}
         </h3>
+        <h5 class="text-capitalize">
+            Difficulty: {{ quiz.source.get_difficulty() }}
+        </h5>
+        <h5 class="text-capitalize">
+            Category: {{ quiz.source.get_difficulty() }}
+        </h5>
         {% if user.is_owner %}
         <form action="{{ url_for('lobby') }}" method="post">
             <div class="form-group">

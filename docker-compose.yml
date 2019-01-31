@@ -1,10 +1,17 @@
-version: '3'
+version: "3"
 services:
   web:
     build: .
-    ports:
-      - "5000:5000"
     volumes:
-      - .:/code
-  redis:
-    image: "redis:alpine"
+      - './app:/app'
+    environment:
+      FLASK_DEBUG: 1
+      FLASK_ENV: development
+      FLASK_APP: app.py
+
+    ports:
+      - '5000:5000'
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0

@@ -15,7 +15,7 @@
         <!-- Join Game form screen -->
         <form class="col-md-5 col-6 offset-3 col-md-offset-1" method="post"
               action="{{ url_for('index') }}">
-            <h1>Join quiz</h1>
+            <h1 class="uppercase">Join quiz</h1>
             <input type="text" class="form-control" name="username" placeholder="Username">
             <input type="text" class="form-control" name="gamecode" placeholder="Game Code">
             <button type="submit" name="action" class="btn btn-success" value="joingame">Join Game
@@ -32,7 +32,7 @@
         <!-- Create a new game form screen -->
         <form class="col-md-5 col-6 col-offset-3" method="post"
               action="{{ url_for('index') }}">
-            <h1>Create quiz</h1>
+            <h1 class="uppercase">Create quiz</h1>
             <input type="text" class="form-control" name="username" placeholder="Username">
             <div class="container-fluid">
                 <div id="properties-row" class="row">
@@ -95,7 +95,7 @@
                 </a>
                 <div id="howtowin" class="panel-body color-black collapse">
                     <p>Well it's quite easily actually. You just have to be the one with the least
-                        wrong answers. Each right question will get you 10 points So basically if you know more trivia facts than your
+                        wrong answers. Each right question will get you 10 points. So basically if you know more trivia facts than your
                         opponents, chances are you will win!</p>
                 </div>
             </div>
