@@ -64,7 +64,14 @@ window.onload = () => {
     console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
 
     // remove the question and answers
-    vue_question.question.text = 'Waiting for next question'
+    if (
+      vue_question.quiz.current_question == vue_question.quiz.total_questions
+    ) {
+      vue_question.question.text = 'Waiting for quiz to finish'
+    } else {
+      vue_question.question.text = 'Waiting for next question'
+    }
+
     vue_question.answers = []
 
     // send the answer
