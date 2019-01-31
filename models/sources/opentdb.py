@@ -1,4 +1,5 @@
 from random import shuffle
+
 import requests
 
 from models.source import Source
@@ -26,7 +27,7 @@ class OpenTDB(Source):
 
     def get_api_session_token(self) -> None:
         """set API session token to guarantee uniqueness"""
-        query = f"https://opentdb.com/api_token.php?command=request"
+        query = "https://opentdb.com/api_token.php?command=request"
         json = requests.get(query).json()
         self.token = json["token"]
 
