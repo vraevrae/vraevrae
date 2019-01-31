@@ -1,5 +1,7 @@
 FROM samar/alpine-python3-flask
 
+RUN pip3 install --upgrade pip
+
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
 
