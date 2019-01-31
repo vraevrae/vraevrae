@@ -71,6 +71,11 @@ window.onload = () => {
     socket.emit('send_answer', { user_id, answer_id })
   }
 
+  // redirect the user to scoreboard
+  socket.on('finish_game', function(data) {
+    window.location.reload()
+  })
+
   // function that calculates remaining time
   function setTimer() {
     // get time from the vue store and get current time
