@@ -327,3 +327,6 @@ def set_answer(data):
     else:
         pass
         # TODO NOT EXCEPTED BY CLIENT return {"success": False, "user_id": user_id}
+
+
+# TODO: GAME SHOULD END FOR ALL USERS
