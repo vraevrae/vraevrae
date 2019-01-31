@@ -60,7 +60,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = int(request.form.get("amount", MAX_QUESTIONS))
+        max_questions = request.form.get("amount", MAX_QUESTIONS)
 
         # if difficulty and category are random, set it to none
         if difficulty == "random":
@@ -68,6 +68,11 @@ def index():
 
         if category == "random":
             category = None
+
+        try:
+            max_questions = int(max_questions)
+        except ValueError:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         if int(max_questions) < 1 or int(max_questions) > 50:
             return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
@@ -79,6 +84,12 @@ def index():
 
         # join the game
         if action == "joingame" and gamecode:
+
+            try:
+                gamecode = int(gamecode)
+            except ValueError:
+                return render_template("index.html", error="Invalid Game Code!", CATEGORIES=CATEGORIES), 400
+
             # test if game is already started, if so return an error
             if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
                 return render_template("index.html", error="Game has already started!",
