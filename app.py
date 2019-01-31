@@ -1,4 +1,5 @@
 from tempfile import mkdtemp
+from operator import itemgetter
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
@@ -125,10 +126,10 @@ def index():
             session["user_id"] = user_id
 
             return redirect(url_for("lobby"))
-        
+
         elif action == "joingame" and not gamecode:
             return render_template("index.html", error="Game Code should not be empty!",
-                                       CATEGORIES=CATEGORIES), 400
+                                   CATEGORIES=CATEGORIES), 400
         # invalid request
         else:
             # TODO: JOIN GAME WITHOUT CODE EVALUATES TO THIS
@@ -216,14 +217,19 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
-            scoreboard_question["answers"].append({**vars(answer), "is_chosen": is_chosen})
+            is_chosen = True if str(answer.answer_id) == str(
+                answered_answer_id) else False
+            scoreboard_question["answers"].append(
+                {**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
                 scoreboard_question["is_correct"] = True
 
         scoreboard_questions.append(scoreboard_question)
 
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
+        users = store.get_users_by_id(quiz.users)
+        users = sorted(users, key=lambda user: user.score, reverse=True)
+
+    return render_template("scoreboard.html", users=users,
                            questions=scoreboard_questions, quiz=quiz)
 
 
