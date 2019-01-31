@@ -1,4 +1,5 @@
 from tempfile import mkdtemp
+from operator import itemgetter
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
@@ -60,7 +61,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = int(request.form.get("amount", MAX_QUESTIONS))
+        max_questions = request.form.get("amount", MAX_QUESTIONS)
 
         # if difficulty and category are random, set it to none
         if difficulty == "random":
@@ -68,6 +69,11 @@ def index():
 
         if category == "random":
             category = None
+
+        try:
+            max_questions = int(max_questions)
+        except ValueError:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         if int(max_questions) < 1 or int(max_questions) > 50:
             return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
@@ -79,6 +85,12 @@ def index():
 
         # join the game
         if action == "joingame" and gamecode:
+
+            try:
+                gamecode = int(gamecode)
+            except ValueError:
+                return render_template("index.html", error="Invalid Game Code!", CATEGORIES=CATEGORIES), 400
+
             # test if game is already started, if so return an error
             if store.get_quiz_by_code(gamecode) and store.get_quiz_by_code(gamecode).is_started:
                 return render_template("index.html", error="Game has already started!",
@@ -114,6 +126,10 @@ def index():
             session["user_id"] = user_id
 
             return redirect(url_for("lobby"))
+
+        elif action == "joingame" and not gamecode:
+            return render_template("index.html", error="Game Code should not be empty!",
+                                   CATEGORIES=CATEGORIES), 400
         # invalid request
         else:
             # TODO: JOIN GAME WITHOUT CODE EVALUATES TO THIS
@@ -208,14 +224,19 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
-            scoreboard_question["answers"].append({**vars(answer), "is_chosen": is_chosen})
+            is_chosen = True if str(answer.answer_id) == str(
+                answered_answer_id) else False
+            scoreboard_question["answers"].append(
+                {**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
                 scoreboard_question["is_correct"] = True
 
         scoreboard_questions.append(scoreboard_question)
 
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
+        users = store.get_users_by_id(quiz.users)
+        users = sorted(users, key=lambda user: user.score, reverse=True)
+
+    return render_template("scoreboard.html", users=users,
                            questions=scoreboard_questions, quiz=quiz)
 
 
