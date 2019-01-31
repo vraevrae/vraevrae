@@ -51,7 +51,7 @@ window.onload = () => {
     setTimer()
 
     // start the interval because time is known
-    vue_question.timerInterval = setInterval(setTimer, 500)
+    vue_question.timerInterval = setInterval(setTimer, 20)
     vue_question.questionTimeout = setTimeout(
       get_current_question,
       // if remaining time is bigger than 1 second, return timer in milliseconds, else return 1000 ms
@@ -64,7 +64,14 @@ window.onload = () => {
     console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
 
     // remove the question and answers
-    vue_question.question.text = 'Waiting for next question'
+    if (
+      vue_question.quiz.current_question == vue_question.quiz.total_questions
+    ) {
+      vue_question.question.text = 'Waiting for quiz to finish'
+    } else {
+      vue_question.question.text = 'Waiting for next question'
+    }
+
     vue_question.answers = []
 
     // send the answer
@@ -87,7 +94,7 @@ window.onload = () => {
 
     // calculate the difference and transform it to a timer
     difference = (curr_time.getTime() - start_time.getTime()) / 1000
-    timer = 10 - (difference % 10)
+    timer = (10 - (difference % 10)) % 10
 
     // write the timer to the vue state
     vue_question.timer = timer

@@ -102,7 +102,7 @@ body {
 	width: 76px;
 }
 
-h1 {
+.uppercase {
 	font-family: 'Roboto Condensed', sans-serif;
 	text-transform: uppercase;
 }
