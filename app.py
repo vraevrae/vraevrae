@@ -63,23 +63,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = request.form.get("amount", MAX_QUESTIONS)
-
-        # if difficulty and category are random, set it to none
-        if difficulty == "random":
-            difficulty = None
-
-        if category == "random":
-            category = None
-
-        # check if max questions can be cast to int
-        try:
-            max_questions = int(max_questions)
-        except ValueError:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
-        if int(max_questions) < 1 or int(max_questions) > 50:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+        max_questions = request.form.get("amount", None)
 
         # give feedback to user
         if username == "":
@@ -114,6 +98,24 @@ def index():
 
         # create a new quiz
         elif action == "creategame":
+
+            # if difficulty and category are random, set it to none
+            if difficulty == "random":
+                difficulty = None
+
+            if category == "random":
+                category = None
+
+            # check if max questions can be cast to int
+            if max_questions:
+                try:
+                    max_questions = int(max_questions)
+                except TypeError:
+                    return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
+                if int(max_questions) < 1 or int(max_questions) > 50:
+                    return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
             # try to make a game (connects to API by instantiating a Datasource)
             quiz_id = store.create_quiz(
                 OpenTDB, difficulty, category, max_questions)
@@ -121,7 +123,7 @@ def index():
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API
             # when buffer is empty)
-            for _ in range(quiz.max_questions or MAX_QUESTIONS):
+            for _ in range(quiz.max_questions):
                 store.create_question_from_source(quiz_id)
 
             # create a user
