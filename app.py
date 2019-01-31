@@ -60,7 +60,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = request.form.get("amount", MAX_QUESTIONS)
+        max_questions = int(request.form.get("amount", MAX_QUESTIONS))
 
         # if difficulty and category are random, set it to none
         if difficulty == "random":
