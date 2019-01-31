@@ -6,14 +6,14 @@ html {
 }
 
 body {
-    color: white;
-    background-color: #070f1c;
-    background-image: url('/static/images/logo.svg');
-    background-size: 30%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: 90% 90%;
-    font-family: 'Roboto', sans-serif;
+  color: white;
+  background-color: #070f1c;
+  background-image: url('/static/images/logo.svg');
+  background-size: 30%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: 90% 90%;
+  font-family: 'Roboto', sans-serif;
 }
 
 .color-black {
@@ -60,15 +60,15 @@ body {
   padding: 5px;
 }
 .scoreboard-answer[data-is-correct="True"]{
-    border: 2px solid green;
+  border: 2px solid green;
 }
 
 .scoreboard-answer[data-is-correct="False"][data-is-chosen="True"]{
-    background: red;
+  background: red;
 }
 
 .scoreboard-answer[data-is-correct="True"][data-is-chosen="True"]{
-    background: green;
+  background: green;
 }
 
 .round-borders {
@@ -98,12 +98,12 @@ body {
 }
 
 #size-amount{
-    width: 46px;
+  width: 76px;
 }
 
 h1 {
-    font-family: 'Roboto Condensed', sans-serif;
-    text-transform: uppercase;
+  font-family: 'Roboto Condensed', sans-serif;
+  text-transform: uppercase;
 }
 
 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {

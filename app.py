@@ -60,21 +60,17 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = request.form.get("amount", MAX_QUESTIONS)
+        max_questions = int(request.form.get("amount", MAX_QUESTIONS))
 
-        try:
-            max_questions = int(max_questions)
-        except ValueError:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
-        if int(max_questions) < 1 or int(max_questions) > 50:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
+        # if difficulty and category are random, set it to none
         if difficulty == "random":
             difficulty = None
 
         if category == "random":
             category = None
+
+        if int(max_questions) < 1 or int(max_questions) > 50:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         # give feedback to user
         if username == "":
@@ -94,6 +90,7 @@ def index():
                     quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+
             # if game does not exists return a 404
             else:
                 return render_template("index.html", error="Game does not exist!",
@@ -118,6 +115,7 @@ def index():
             return redirect(url_for("lobby"))
         # invalid request
         else:
+            # TODO: JOIN GAME WITHOUT CODE EVALUATES TO THIS
             return "Invalid request", 400
 
 
@@ -228,22 +226,22 @@ def disconnect():
 
 @socketio.on('join_game')
 def on_join(data):
-    print(data)
-    room = data['quiz_id']
-    username = store.get_user_by_id(data["user_id"]).name
-    users = [user.name for user in store.get_users_by_id(
-        store.get_quiz_by_id(room).users)]
-
-    print(users)
+    quiz = store.get_quiz_by_user_id(data['user_id'])
+    room = quiz.quiz_id
+    users = store.get_users_by_id(store.get_quiz_by_id(room).users)
+    users_cleaned = [user.name for user in users]
 
     if room is not None:
         join_room(room)
-        emit("current_players", {"users": users}, room=room)
+        emit("current_players", {"users": users_cleaned}, room=room)
+
+# TODO: EMIT START GAME TO ALL USERS!!!!!
 
 
 @socketio.on('leave_game')
 def on_leave(data):
-    room = data['quiz_id']
+    quiz = store.get_quiz_by_user_id(data['user_id'])
+    room = quiz.quiz_id
     if room is not None:
         leave_room(room)
         send(room + ' is left.', room=room)
@@ -251,40 +249,45 @@ def on_leave(data):
 
 @socketio.on('get_current_question')
 def get_current_question(data):
-
-    quiz = store.get_quiz_by_id(data["quiz_id"])
+    # get the data
+    user_id = data["user_id"]
+    quiz = store.get_quiz_by_user_id(user_id)
 
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
+    # get the current question
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
-    answer_object = store.get_answers_by_id(question.answers)
-    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
-               answer_object]
 
-    print({"question": question.text, "answers": answers})
+    # get and clean answers (so client doesn't know which is correct)
+    answers = store.get_answers_by_id(question.answers)
+    answers_cleaned = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
+                       answers]
 
-    quiz_object = {
+    # get a minimal quiz object, so client can calculate times
+    # TODO: should emit max-time per question to improve time calculation
+    quiz_cleaned = {
         "start_time": quiz.start_time.isoformat(),
         "max_questions": quiz.max_questions,
         "max_time_in_seconds": quiz.max_time_in_seconds
     }
 
+    # emit the data
+    # TODO: should not emit proper question if already answered
     emit("current_question", {"question": vars(
-        question), "answers": answers, "quiz": quiz_object}, room=data["quiz_id"])
+        question), "answers": answers_cleaned, "quiz": quiz_cleaned}, room=quiz.quiz_id)
 
 
 @socketio.on('send_answer')
 def set_answer(data):
-    print("SEND ANSWER", data)
+    # get data
     user_id = data["user_id"]
     user = store.get_user_by_id(user_id)
 
     answer_id = data["answer_id"]
     answer = store.get_answer_by_id(answer_id)
 
-    quiz_id = data["quiz_id"]
     quiz = store.get_quiz_by_user_id(user_id)
 
     # check if it is time to go to the next question, if needed
@@ -315,12 +318,12 @@ def set_answer(data):
                 question = store.get_question_by_id(answer.question_id)
 
         # emit that the answer is received by the server
-        print("QID -> ", quiz_id)
-        print("RID ->", request.sid)
-
         emit("received_answer", {"success": True,
-                                 "user_id": user_id}, room=quiz_id)
+                                 "user_id": user_id}, room=quiz.quiz_id)
 
     else:
         pass
         # TODO NOT EXCEPTED BY CLIENT return {"success": False, "user_id": user_id}
+
+
+# TODO: GAME SHOULD END FOR ALL USERS
