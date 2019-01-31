@@ -163,6 +163,9 @@ def game():
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
+    if quiz.is_finished:
+        socketio.emit("finish_game", room=quiz.quiz_id)
+
     # render template with vue component
     return render_template("quiz.html", user=user, quiz=quiz)
 
@@ -235,8 +238,6 @@ def on_join(data):
         join_room(room)
         emit("current_players", {"users": users_cleaned}, room=room)
 
-# TODO: EMIT START GAME TO ALL USERS!!!!!
-
 
 @socketio.on('leave_game')
 def on_leave(data):
@@ -255,6 +256,9 @@ def get_current_question(data):
 
     # check if it is time to go to the next question, if needed
     quiz.next_question()
+
+    if quiz.is_finished:
+        socketio.emit("finish_game", room=quiz.quiz_id)
 
     # get the current question
     question_id = quiz.get_current_question_id()
@@ -293,7 +297,7 @@ def set_answer(data):
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
-    # get the questoni
+    # get the question
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
 
@@ -316,14 +320,3 @@ def set_answer(data):
             if answer.is_correct:
                 user.score += question.score
                 question = store.get_question_by_id(answer.question_id)
-
-        # emit that the answer is received by the server
-        emit("received_answer", {"success": True,
-                                 "user_id": user_id}, room=quiz.quiz_id)
-
-    else:
-        pass
-        # TODO NOT EXCEPTED BY CLIENT return {"success": False, "user_id": user_id}
-
-
-# TODO: GAME SHOULD END FOR ALL USERS

@@ -19,7 +19,7 @@ window.onload = () => {
   let socket = io.connect('http://' + document.domain + ':' + location.port)
 
   // destructure variables onto the current scope (window) to make them available everywhere
-  let { quiz_id, user_id } = document.querySelector('#data').dataset
+  let { user_id } = document.querySelector('#data').dataset
 
   // if socket connected succesfully
   socket.on('connect', function() {
@@ -62,16 +62,18 @@ window.onload = () => {
   // function to send answer to the server
   function send_answer(answer_id) {
     console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
-    socket.emit('send_answer', { user_id, answer_id })
-  }
-
-  // if server received answer
-  socket.on('received_answer', function(data) {
-    console.log('[SOCKET_IO]: RECEIVED ANSWER SUCCESS', data)
 
     // remove the question and answers
     vue_question.question.text = 'Waiting for next question'
     vue_question.answers = []
+
+    // send the answer
+    socket.emit('send_answer', { user_id, answer_id })
+  }
+
+  // redirect the user to scoreboard
+  socket.on('finish_game', function(data) {
+    window.location.reload()
   })
 
   // function that calculates remaining time
