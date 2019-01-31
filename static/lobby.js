@@ -9,11 +9,11 @@ window.onload = () => {
 
   // socket setup
   const socket = io.connect('http://' + document.domain + ':' + location.port)
-  let { quiz_id, user_id } = document.querySelector('#data').dataset
+  let { user_id } = document.querySelector('#data').dataset
 
   // connect and join game
   socket.on('connect', function() {
-    socket.emit('join_game', { quiz_id, user_id })
+    socket.emit('join_game', { user_id })
   })
 
   // get all current players
