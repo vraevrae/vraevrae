@@ -274,7 +274,9 @@ def get_current_question(data):
     quiz_cleaned = {
         "start_time": quiz.start_time.isoformat(),
         "max_questions": quiz.max_questions,
-        "max_time_in_seconds": quiz.max_time_in_seconds
+        "max_time_in_seconds": quiz.max_time_in_seconds,
+        "current_question": quiz.current_question + 1,
+        "total_questions": len(quiz.questions)
     }
 
     # emit the data
