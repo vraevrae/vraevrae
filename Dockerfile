@@ -1,10 +1,4 @@
-FROM python:3
-
-WORKDIR /usr/app
-
-COPY ./ ./
-RUN pip install --no-cache-dir -r ./requirements.txt
-
-EXPOSE 5000
-
-CMD [ "flask", "run" ]
+FROM python:3.6.8-alpine
+ADD . /code
+WORKDIR /code
+RUN pip install -r requirements.txt

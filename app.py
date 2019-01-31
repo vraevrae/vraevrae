@@ -10,17 +10,17 @@ from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
 from models.useranswer import UserAnswer
-import json
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "extemelysecretvraevraesocketkey"
+app.config['SERVER_NAME'] = None
 socketio = SocketIO(app)
 
 app.jinja_env.globals['include_raw'] = lambda filename: Markup(
     app.jinja_loader.get_source(app.jinja_env, filename)[0])
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, host='0.0.0.0')
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:
@@ -228,22 +228,20 @@ def disconnect():
 
 @socketio.on('join_game')
 def on_join(data):
-    print(data)
-    room = data['quiz_id']
-    username = store.get_user_by_id(data["user_id"]).name
-    users = [user.name for user in store.get_users_by_id(
-        store.get_quiz_by_id(room).users)]
-
-    print(users)
+    quiz = store.get_quiz_by_user_id(data['user_id'])
+    room = quiz.quiz_id
+    users = store.get_users_by_id(store.get_quiz_by_id(room).users)
+    users_cleaned = [user.name for user in users]
 
     if room is not None:
         join_room(room)
-        emit("current_players", {"users": users}, room=room)
+        emit("current_players", {"users": users_cleaned}, room=room)
 
 
 @socketio.on('leave_game')
 def on_leave(data):
-    room = data['quiz_id']
+    quiz = store.get_quiz_by_user_id(data['user_id'])
+    room = quiz.quiz_id
     if room is not None:
         leave_room(room)
         send(room + ' is left.', room=room)
@@ -251,40 +249,43 @@ def on_leave(data):
 
 @socketio.on('get_current_question')
 def get_current_question(data):
-
-    quiz = store.get_quiz_by_id(data["quiz_id"])
+    # get the data
+    user_id = data["user_id"]
+    quiz = store.get_quiz_by_user_id(user_id)
 
     # check if it is time to go to the next question, if needed
     quiz.next_question()
 
+    # get the current question
     question_id = quiz.get_current_question_id()
     question = store.get_question_by_id(question_id)
-    answer_object = store.get_answers_by_id(question.answers)
-    answers = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
-               answer_object]
 
-    print({"question": question.text, "answers": answers})
+    # get and clean answers (so client doesn't know which is correct)
+    answers = store.get_answers_by_id(question.answers)
+    answers_cleaned = [{"answer_id": answer.answer_id, "answer_text": answer.text} for answer in
+                       answers]
 
-    quiz_object = {
+    # get a minimal quiz object, so client can calculate times
+    quiz_cleaned = {
         "start_time": quiz.start_time.isoformat(),
         "max_questions": quiz.max_questions,
         "max_time_in_seconds": quiz.max_time_in_seconds
     }
 
+    # emit the data
     emit("current_question", {"question": vars(
-        question), "answers": answers, "quiz": quiz_object}, room=data["quiz_id"])
+        question), "answers": answers_cleaned, "quiz": quiz_cleaned}, room=quiz.quiz_id)
 
 
 @socketio.on('send_answer')
 def set_answer(data):
-    print("SEND ANSWER", data)
+    # get data
     user_id = data["user_id"]
     user = store.get_user_by_id(user_id)
 
     answer_id = data["answer_id"]
     answer = store.get_answer_by_id(answer_id)
 
-    quiz_id = data["quiz_id"]
     quiz = store.get_quiz_by_user_id(user_id)
 
     # check if it is time to go to the next question, if needed
@@ -315,11 +316,8 @@ def set_answer(data):
                 question = store.get_question_by_id(answer.question_id)
 
         # emit that the answer is received by the server
-        print("QID -> ", quiz_id)
-        print("RID ->", request.sid)
-
         emit("received_answer", {"success": True,
-                                 "user_id": user_id}, room=quiz_id)
+                                 "user_id": user_id}, room=quiz.quiz_id)
 
     else:
         pass
