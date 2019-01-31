@@ -1,4 +1,4 @@
-FROM jazzdd/alpine-flask:python3
+FROM samar/alpine-python3-flask
 
 # We copy just the requirements.txt first to leverage Docker cache
 COPY ./requirements.txt /app/requirements.txt
