@@ -12,5 +12,5 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-CMD ["flask", "run", "-p", "5000:5000"]
+CMD ["flask", "run", "-p", "5000"]
 #uwsgi --http :5000 --gevent 1000 --http-websockets --master --wsgi-file app.py --callable app
