@@ -1,7 +1,10 @@
-jinja2
-requests==2.21.0
+Flask_Session
 Flask==1.0.2
-pytest<4.1
-Flask_SocketIO==3.1.2
 Pygments==2.3.1
-Flask_Session==0.3.1
+Jinja2==2.10
+Flask_SocketIO==3.1.2
+requests==2.21.0
+pytest==4.0.2
+gunicorn==18.0
+eventlet==0.24.1
+redis
