@@ -130,7 +130,14 @@ def lobby():
 
     # render the lobby view
     if request.method == "GET":
-        return render_template("lobby.html", user=user, quiz=quiz)
+        # get name of current category
+        if quiz.category:
+            category = [category["name"] for category in CATEGORIES if int(category["id"]) ==
+                        int(quiz.category)][0]
+        else:
+            category = "Random"
+
+        return render_template("lobby.html", user=user, quiz=quiz, category=category)
 
     # submit the game start signal
     elif request.method == "POST":

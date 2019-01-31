@@ -37,11 +37,3 @@ class Source:
         """stub for child class"""
         raise NotImplementedError(
             "child class should implement specifics of authentication, downloading and formatting")
-
-    def get_difficulty(self):
-        """function to get difficulty from current quiz"""
-        return str(self.difficulty) if self.difficulty is not None else "Random"
-
-    def get_category(self):
-        """function to get category from current quiz"""
-        return str(self.category) if self.category is not None else "Random"

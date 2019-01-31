@@ -26,10 +26,16 @@
             Game code: {{ quiz.code }}
         </h3>
         <h5 class="text-capitalize">
-            Difficulty: {{ quiz.source.get_difficulty() }}
+            Difficulty: {% if quiz.difficulty == None %} Random {% else %}
+            {{ quiz.difficulty }} {% endif %}
         </h5>
         <h5 class="text-capitalize">
-            Category: {{ quiz.source.get_difficulty() }}
+            Category:
+            {% if category == None %}
+                Random
+            {% else %}
+                {{ category }}
+            {% endif %}
         </h5>
         {% if user.is_owner %}
         <form action="{{ url_for('lobby') }}" method="post">

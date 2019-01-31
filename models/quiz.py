@@ -22,6 +22,8 @@ class Quiz:
         self.start_time = None
         self.is_finished = False
         self.current_question = 0
+        self.difficulty = difficulty
+        self.category = category
         self.source = Source(difficulty=difficulty, category=category)
 
     def add_question_by_id(self, question_id):
