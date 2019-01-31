@@ -1,8 +1,8 @@
-# vraevrae
+# Vraevrae
 
-A trivia site for the course "webprogrammeren en databases" given by on the University of Amsterdam.
+A trivia site for the course "webprogrammeren en databases" given by the University of Amsterdam.
 
-## instalation
+## Installation
 
 To run in development mode:
 
@@ -25,22 +25,22 @@ To deploy the project:
 todo
 ```
 
-## authors
+## Authors
 
 - Rachel ...
 - Yunis Demir
 - Deniz ...
 - Robert-Jan Korteschiel
 
-## notable dependencies
+## Notable dependencies
 
-### clientside
+### Clientside
 
 - Bootstrap - basic styling
 - Socket.io - clientside fast omnidirectional communication
 - Vue.js - for reactive clientside templating
 
-### serverside (see requirements.txt)
+### Serverside (see requirements.txt)
 
 - Flask-SocketIO - serverside fast omnidirectional communication
 
