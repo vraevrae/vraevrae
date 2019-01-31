@@ -23,21 +23,17 @@ window.onload = () => {
 
   // if socket connected succesfully
   socket.on('connect', function() {
-    console.log('[SOCKET_IO]: Socket connected')
     socket.emit('join_game', { user_id })
     get_current_question()
   })
 
   // get current question from server
   function get_current_question() {
-    console.log('[SOCKET_IO]: GET NEW QUESTION')
     socket.emit('get_current_question', { user_id })
   }
 
   // if socket receives new question from the server
   socket.on('current_question', function(data) {
-    console.log('[SOCKET_IO]: CURRENT QUESTION: ', data)
-
     // write data to the vue state to get reactive templating
     vue_question.answers = data.answers
     vue_question.question = data.question
@@ -61,16 +57,11 @@ window.onload = () => {
 
   // function to send answer to the server
   function send_answer(answer_id) {
-    console.log('[SOCKET_IO]: SEND ANSWER', answer_id)
-
     // remove the question and answers
-    if (
+    vue_question.question.text =
       vue_question.quiz.current_question == vue_question.quiz.total_questions
-    ) {
-      vue_question.question.text = 'Waiting for quiz to finish'
-    } else {
-      vue_question.question.text = 'Waiting for next question'
-    }
+        ? 'Waiting for quiz to finish'
+        : 'Waiting for next question'
 
     vue_question.answers = []
 
