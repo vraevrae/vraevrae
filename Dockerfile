@@ -12,6 +12,5 @@ RUN pip3 install -r requirements.txt
 
 COPY . /app
 
-CMD ["uwsgi", "--http", ":5000", "--gevent", "1000", "--http-websockets", "--master",
-"--wsgi-file", "app.py", "--callable", "app"]
+CMD ["uwsgi", "--http", ":5000", "--gevent", "1000", "--http-websockets", "--master", "--wsgi-file", "app.py", "--callable", "app"]
 #uwsgi --http :5000 --gevent 1000 --http-websockets --master --wsgi-file app.py --callable app
