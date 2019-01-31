@@ -17,7 +17,7 @@ To test the project:
 pytest
 ```
 
-The project has about 30 tests, which test the models, api and basic webrequests (socketio code is not tested yet)
+The project has 35 tests, which test the models, api and basic webrequests and socket-io events
 
 To deploy the project:
 
