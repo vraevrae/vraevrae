@@ -62,19 +62,15 @@ def index():
         category = request.form.get("category", None)
         max_questions = request.form.get("amount", MAX_QUESTIONS)
 
-        try:
-            max_questions = int(max_questions)
-        except ValueError:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
-        if int(max_questions) < 1 or int(max_questions) > 50:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
+        # if difficulty and category are random, set it to none
         if difficulty == "random":
             difficulty = None
 
         if category == "random":
             category = None
+
+        if int(max_questions) < 1 or int(max_questions) > 50:
+            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
         # give feedback to user
         if username == "":
@@ -94,6 +90,7 @@ def index():
                     quiz_id=quiz.quiz_id, name=username, is_owner=False)
                 session["user_id"] = user_id
                 return redirect(url_for("lobby"))
+
             # if game does not exists return a 404
             else:
                 return render_template("index.html", error="Game does not exist!",
