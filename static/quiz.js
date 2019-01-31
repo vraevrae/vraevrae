@@ -9,7 +9,7 @@ let vue_question = new Vue({
     answers: [],
     timer: 0,
     timerInterval: null,
-    getQuestionInteval: null,
+    questionTimeout: null,
     send_answer: send_answer
   }
 })
@@ -46,12 +46,14 @@ socket.on('current_question', function(data) {
 
   // clean the old intervals (to avoid crashing stuff)
   vue_question.timerInterval && clearInterval(vue_question.timerInterval)
-  vue_question.questionInterval && clearTimeout(vue_question.questionInterval)
+  vue_question.questionTimeout && clearTimeout(vue_question.questionTimeout)
+
+  // set the timer correctly so it can be used to set new timeouts
+  setTimer()
 
   // start the interval because time is known
-  setTimer()
   vue_question.timerInterval = setInterval(setTimer, 500)
-  vue_question.questionInterval = setTimeout(
+  vue_question.questionTimeout = setTimeout(
     get_current_question,
     // if remaining time is bigger than 1 second, return timer in milliseconds, else return 1000 ms
     vue_question.timer > 1 ? vue_question.timer * 1000 : 1000
