@@ -1,7 +1,9 @@
 window.onload = () => {
   // vue templating setup en state initialisation
   var vue_player_list = new Vue({
+    // element that contains vue template
     el: '#vue-player-list',
+    // data to make reactively available to the template
     data: {
       users: []
     }
