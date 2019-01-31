@@ -51,7 +51,7 @@ window.onload = () => {
     setTimer()
 
     // start the interval because time is known
-    vue_question.timerInterval = setInterval(setTimer, 500)
+    vue_question.timerInterval = setInterval(setTimer, 20)
     vue_question.questionTimeout = setTimeout(
       get_current_question,
       // if remaining time is bigger than 1 second, return timer in milliseconds, else return 1000 ms
