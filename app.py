@@ -118,6 +118,7 @@ def index():
             return redirect(url_for("lobby"))
         # invalid request
         else:
+            # TODO: JOIN GAME WITHOUT CODE EVALUATES TO THIS
             return "Invalid request", 400
 
 
@@ -237,6 +238,8 @@ def on_join(data):
         join_room(room)
         emit("current_players", {"users": users_cleaned}, room=room)
 
+# TODO: EMIT START GAME TO ALL USERS!!!!!
+
 
 @socketio.on('leave_game')
 def on_leave(data):
@@ -266,6 +269,7 @@ def get_current_question(data):
                        answers]
 
     # get a minimal quiz object, so client can calculate times
+    # TODO: should emit max-time per question to improve time calculation
     quiz_cleaned = {
         "start_time": quiz.start_time.isoformat(),
         "max_questions": quiz.max_questions,
@@ -273,6 +277,7 @@ def get_current_question(data):
     }
 
     # emit the data
+    # TODO: should not emit proper question if already answered
     emit("current_question", {"question": vars(
         question), "answers": answers_cleaned, "quiz": quiz_cleaned}, room=quiz.quiz_id)
 
