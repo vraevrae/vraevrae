@@ -41,11 +41,13 @@ Session(app)
 
 @app.errorhandler(404)
 def error404(e):
+    """handle the 404s"""
     return render_template("404.html"), 404
 
 
 @app.errorhandler(KeyError)
 def key_error_page(e):
+    """handle all kinds of keyerrors"""
     return render_template("error.html", data=e), 500
 
 
