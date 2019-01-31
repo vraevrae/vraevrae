@@ -82,8 +82,6 @@ window.onload = () => {
     let start_time = new Date(vue_question.quiz.start_time)
     let curr_time = new Date()
 
-    console.log(start_time, curr_time)
-
     // TODO: equalise time in the worst possible way (this ain't gonna work in summer)
     curr_time.setHours(curr_time.getHours() - 1)
 
@@ -91,7 +89,6 @@ window.onload = () => {
     difference = (curr_time.getTime() - start_time.getTime()) / 1000
     timer = (10 - (difference % 10)) % 10
 
-    console.log(difference, timer)
     // write the timer to the vue state
     vue_question.timer = timer
   }
