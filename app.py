@@ -103,7 +103,8 @@ def index():
                 OpenTDB, difficulty, category, max_questions)
             quiz = store.get_quiz_by_id(quiz_id)
 
-            # create the questions from the Quiz and the Datasource buffer (could connect to API when buffer is empty)
+            # create the questions from the Quiz and the Datasource buffer (could connect to API
+            # when buffer is empty)
             for _ in range(quiz.max_questions or MAX_QUESTIONS):
                 store.create_question_from_source(quiz_id)
 
@@ -200,16 +201,15 @@ def scoreboard():
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
-            is_chosen = True if str(answer.answer_id) == str(
-                answered_answer_id) else False
-            scoreboard_question["answers"].append(
-                {**vars(answer), "is_chosen": is_chosen})
+            is_chosen = True if str(answer.answer_id) == str(answered_answer_id) else False
+            scoreboard_question["answers"].append({**vars(answer), "is_chosen": is_chosen})
             if is_chosen and answer.is_correct:
                 scoreboard_question["is_correct"] = True
 
         scoreboard_questions.append(scoreboard_question)
 
-    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users), questions=scoreboard_questions)
+    return render_template("scoreboard.html", users=store.get_users_by_id(quiz.users),
+                           questions=scoreboard_questions, quiz=quiz)
 
 
 @socketio.on('connect')
