@@ -24,7 +24,7 @@ class Source:
         # raise error if the cache and API is empty
         if len(self.cached_questions) == 0 and self.available_questions_count == 0:
             raise Exception(
-                "not enough questions available in this category / difficulty combination")
+                "Not enough questions available in this category / difficulty combination")
 
         return question
 
@@ -36,4 +36,4 @@ class Source:
     def download_questions(self):
         """stub for child class"""
         raise NotImplementedError(
-            "child class should implement specifics of authentication, downloading and formatting")
+            "Child class should implement specifics of authentication, downloading and formatting")
