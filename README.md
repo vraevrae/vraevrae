@@ -26,10 +26,11 @@ Once the user is on the index page, he or she can create a new game or join an a
 Demonstration: https://www.youtube.com/watch?v=qYy6DwczCVI
 
 ## Credits
-Yunus Demir
-Robert-Jan Korteschiel
-Deniz Seyfeli
-Rachel de Haan
+- Yunus Demir
+- Robert-Jan Korteschiel
+- Deniz Seyfeli
+- Rachel de Haan
+
 
 ## Notable dependencies
 
