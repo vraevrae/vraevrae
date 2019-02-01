@@ -1,12 +1,11 @@
 from tempfile import mkdtemp
-from operator import itemgetter
 
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_session import Session
-from flask_socketio import SocketIO, join_room, leave_room, send, emit
+from flask_socketio import SocketIO, join_room, emit
 from jinja2 import Markup
 
-from config import CATEGORIES, MAX_QUESTIONS
+from config import CATEGORIES
 from helpers.helpers import user_required, game_mode_required
 from models.sources.opentdb import OpenTDB
 from models.store import store
@@ -19,9 +18,6 @@ socketio = SocketIO(app)
 
 app.jinja_env.globals['include_raw'] = lambda filename: Markup(
     app.jinja_loader.get_source(app.jinja_env, filename)[0])
-
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
 
 # ensure responses aren't cached
 if app.config["DEBUG"]:
@@ -342,3 +338,6 @@ def set_answer(data):
             if answer.is_correct:
                 user.score += question.score
                 question = store.get_question_by_id(answer.question_id)
+
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0')
