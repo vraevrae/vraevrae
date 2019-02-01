@@ -35,9 +35,11 @@ window.onload = () => {
   // if socket receives new question from the server
   socket.on('current_question', function(data) {
     // write data to the vue state to get reactive templating
-    vue_question.answers = data.answers
-    vue_question.question = data.question
-    vue_question.quiz = data.quiz
+    if (data.quiz.current_question != vue_question.quiz.current_question) {
+      vue_question.answers = data.answers
+      vue_question.question = data.question
+      vue_question.quiz = data.quiz
+    }
 
     // clear the old intervals (to avoid crashing stuff)
     vue_question.timerInterval && clearInterval(vue_question.timerInterval)
