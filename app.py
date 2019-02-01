@@ -41,10 +41,10 @@ def error404(e):
     return render_template("404.html"), 404
 
 
-@app.errorhandler(KeyError)
+@app.errorhandler(Exception)
 def key_error_page(e):
     """handle all kinds of keyerrors"""
-    return render_template("error.html", data=e), 500
+    return render_template("index.html", error=e), 500
 
 
 @app.route('/', methods=["GET", "POST"])
@@ -338,6 +338,7 @@ def set_answer(data):
             if answer.is_correct:
                 user.score += question.score
                 question = store.get_question_by_id(answer.question_id)
+
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port="5001")
