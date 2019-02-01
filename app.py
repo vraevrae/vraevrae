@@ -297,9 +297,17 @@ def get_current_question(data):
         "total_questions": len(quiz.questions)
     }
 
+    user_answers = store.get_user_answers_by_user_and_question_id(
+        user_id, question.question_id)
+
+    # if correct and no previous answer found and the question is still active
+    is_answered = False
+    if len(user_answers):
+        is_answered = True
+
     # emit the data
     emit("current_question", {"question": vars(
-        question), "answers": answers_cleaned, "quiz": quiz_cleaned}, room=quiz.quiz_id)
+        question), "answers": answers_cleaned, "quiz": quiz_cleaned, "is_answered": is_answered}, room=quiz.quiz_id)
 
 
 @socketio.on('send_answer')

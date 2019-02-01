@@ -16,7 +16,7 @@ window.onload = () => {
   })
 
   // socket setup
-  let socket = io.connect('https://' + document.domain + ':' + location.port)
+  let socket = io.connect('http://' + document.domain + ':' + location.port)
 
   // destructure variables onto the current scope (window) to make them available everywhere
   let { user_id } = document.querySelector('#data').dataset
@@ -35,7 +35,10 @@ window.onload = () => {
   // if socket receives new question from the server
   socket.on('current_question', function(data) {
     // write data to the vue state to get reactive templating
-    if (data.quiz.current_question != vue_question.quiz.current_question) {
+    if (
+      data.quiz.current_question != vue_question.quiz.current_question &&
+      !data.is_answered
+    ) {
       vue_question.answers = data.answers
       vue_question.question = data.question
       vue_question.quiz = data.quiz
