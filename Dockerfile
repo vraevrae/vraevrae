@@ -1,15 +1,11 @@
-FROM samar/alpine-python3-flask
+FROM python:3.7.2-slim
 
-RUN pip3 install --upgrade pip
+RUN pip install gunicorn json-logging-py
 
-# We copy just the requirements.txt first to leverage Docker cache
-COPY ./requirements.txt /app/requirements.txt
+COPY gunicorn.conf /gunicorn.conf
 
-WORKDIR /app
+COPY . /
 
-RUN pip3 install -r requirements.txt
+EXPOSE 5000
 
-COPY . /app
-
-CMD ["flask", "run", "-p", "5000"]
-#uwsgi --http :5000 --gevent 1000 --http-websockets --master --wsgi-file app.py --callable app
+ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/gunicorn.conf", "--log-config", "/logging.conf", "-b", ":5001", "app:app"]
