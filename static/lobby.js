@@ -7,24 +7,24 @@ window.onload = () => {
     data: {
       users: []
     }
-  });
+  })
 
   // socket setup
-  const socket = io.connect('https://' + document.domain + ':' + location.port);
-  let { user_id } = document.querySelector('#data').dataset;
+  const socket = io.connect('https://' + document.domain + ':' + location.port)
+  let { user_id } = document.querySelector('#data').dataset
 
   // connect and join game
   socket.on('connect', function() {
     socket.emit('join_game', { user_id })
-  });
+  })
 
   // get all current players
   socket.on('current_players', function(data) {
     vue_player_list.users = data.users
-  });
+  })
 
   // when the game starts reload to get proper template
   socket.on('start_game', function(data) {
     window.location.reload()
   })
-};
+}
