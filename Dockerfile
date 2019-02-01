@@ -1,11 +1,13 @@
 FROM python:3.7.2-slim
 
-RUN pip install gunicorn json-logging-py
+COPY . /
+
+RUN pip install -r requirements.txt
+
+COPY ./requirements.txt /app/requirements.txt
 
 COPY gunicorn_config.py /gunicorn_config.py
 
-COPY . /
-
-EXPOSE 5000
+EXPOSE 5001
 
 ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/gunicorn_config.py", "-b", ":5001", "app:app"]
