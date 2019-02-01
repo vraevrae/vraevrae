@@ -10,8 +10,13 @@ window.onload = () => {
   });
 
   // socket setup
+<<<<<<< HEAD
   const socket = io.connect('https://' + document.domain + ':' + location.port);
   let { user_id } = document.querySelector('#data').dataset;
+=======
+  const socket = io.connect('https://' + document.domain + ':' + location.port)
+  let { user_id } = document.querySelector('#data').dataset
+>>>>>>> https
 
   // connect and join game
   socket.on('connect', function() {
