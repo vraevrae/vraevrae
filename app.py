@@ -63,23 +63,7 @@ def index():
         action = request.form.get("action", False)
         difficulty = request.form.get("difficulty", None)
         category = request.form.get("category", None)
-        max_questions = request.form.get("amount", MAX_QUESTIONS)
-
-        # if difficulty and category are random, set it to none
-        if difficulty == "random":
-            difficulty = None
-
-        if category == "random":
-            category = None
-
-        # check if max questions can be cast to int
-        try:
-            max_questions = int(max_questions)
-        except ValueError:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
-
-        if int(max_questions) < 1 or int(max_questions) > 50:
-            return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+        max_questions = request.form.get("amount", None)
 
         # give feedback to user
         if username == "":
@@ -114,6 +98,24 @@ def index():
 
         # create a new quiz
         elif action == "creategame":
+
+            # if difficulty and category are random, set it to none
+            if difficulty == "random":
+                difficulty = None
+
+            if category == "random":
+                category = None
+
+            # check if max questions can be cast to int
+            if max_questions:
+                try:
+                    max_questions = int(max_questions)
+                except TypeError:
+                    return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
+                if int(max_questions) < 1 or int(max_questions) > 50:
+                    return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
+
             # try to make a game (connects to API by instantiating a Datasource)
             quiz_id = store.create_quiz(
                 OpenTDB, difficulty, category, max_questions)
@@ -121,7 +123,7 @@ def index():
 
             # create the questions from the Quiz and the Datasource buffer (could connect to API
             # when buffer is empty)
-            for _ in range(quiz.max_questions or MAX_QUESTIONS):
+            for _ in range(quiz.max_questions):
                 store.create_question_from_source(quiz_id)
 
             # create a user
@@ -157,6 +159,7 @@ def lobby():
         else:
             category = "Random"
 
+        # render the lobby template (with a vue element for the users included)
         return render_template("lobby.html", user=user, quiz=quiz, category=category)
 
     # submit the game start signal
@@ -221,18 +224,23 @@ def scoreboard():
         user_answers = store.get_user_answers_by_user_and_question_id(
             user_id, question.question_id)
 
-        # TODO: select answers (weird that this returns a list)
+        # set user answer id (empty list would evaluate true)
+        # TODO: weird that this returns a list of 1, while it should never be more than one
         answered_answer_id = user_answers[0].answer_id if len(
             user_answers) else False
 
         # format the question
+        # make a shallow serializable clone (plain assignment would simply hand over the object pointer)
         scoreboard_question = {**vars(question)}
         scoreboard_question["answers"] = []
         for answer in answers:
+            # check if the user actually chose this answer
             is_chosen = True if str(answer.answer_id) == str(
                 answered_answer_id) else False
+            # append the answers by cloning them and adding a boolean is_chosen
             scoreboard_question["answers"].append(
                 {**vars(answer), "is_chosen": is_chosen})
+            # TODO: is the question["is_correct"] still used on the client?
             if is_chosen and answer.is_correct:
                 scoreboard_question["is_correct"] = True
 
@@ -304,10 +312,8 @@ def set_answer(data):
     # get data
     user_id = data["user_id"]
     user = store.get_user_by_id(user_id)
-
     answer_id = data["answer_id"]
     answer = store.get_answer_by_id(answer_id)
-
     quiz = store.get_quiz_by_user_id(user_id)
 
     # check if it is time to go to the next question, if needed

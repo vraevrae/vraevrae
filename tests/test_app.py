@@ -1,10 +1,11 @@
 from flask import url_for, session
 import pytest
-from app import app, store
+from app import app, store, socketio
 from helpers.cprint import lcprint
 from config import DEFAULT_SCORE, MAX_TIME_IN_SECONDS
 from time import sleep
 from models.quiz import Quiz
+import flask_socketio
 
 
 def test_app_exists():
@@ -82,7 +83,7 @@ def test_join_non_existing_quiz():
         )
         rv = client.post(url_for('index'), data=data)
 
-    assert rv.status_code == 404
+    assert rv.status_code == 400
 
 
 def test_start_quiz_when_not_owner_yields_error():
@@ -129,80 +130,61 @@ def test_start_quiz_when_owner():
 
 def test_answer_question_correctly():
     with app.test_request_context():
-        client = app.test_client()
-
+        client = flask_socketio.SocketIOTestClient(app, socketio)
         user_id = [user.user_id for user in store.users.values()
                    if user.name == "pietje"][0]
-
-        with client.session_transaction() as session:
-            session['user_id'] = user_id
 
         quiz = store.get_quiz_by_user_id(user_id)
         question = store.get_question_by_id(quiz.get_current_question_id())
         answers = store.get_answers_by_id(question.answers)
         correct_answer = [answer for answer in answers if answer.is_correct][0]
 
-        rv = client.post(url_for('game'), data=dict(
-            action="answer",
-            answer_id=correct_answer.answer_id
-        ))
-
+        client.emit('send_answer', {"user_id": user_id,
+                                    "answer_id": correct_answer.answer_id})
         user = store.get_user_by_id(user_id)
 
-        assert rv.status_code == 202
         assert user.score == DEFAULT_SCORE
 
 
 def test_answer_question_correctly_twice():
     with app.test_request_context():
-        client = app.test_client()
 
         user_id = [user.user_id for user in store.users.values()
                    if user.name == "pietje"][0]
-
-        with client.session_transaction() as session:
-            session['user_id'] = user_id
 
         quiz = store.get_quiz_by_user_id(user_id)
         question = store.get_question_by_id(quiz.get_current_question_id())
         answers = store.get_answers_by_id(question.answers)
         correct_answer = [answer for answer in answers if answer.is_correct][0]
 
-        rv = client.post(url_for('game'), data=dict(
-            action="answer",
-            answer_id=correct_answer.answer_id
-        ))
+        client = flask_socketio.SocketIOTestClient(app, socketio)
+        client.emit('send_answer', {"user_id": user_id,
+                                    "answer_id": correct_answer.answer_id})
 
         user = store.get_user_by_id(user_id)
 
-        assert rv.status_code == 202
+        # server should not accept anwering the same question twice
         assert user.score == DEFAULT_SCORE
 
 
 def test_answer_question_wrongly():
     with app.test_request_context():
-        client = app.test_client()
 
         user_id = [user.user_id for user in store.users.values()
                    if user.name == "klaasje"][0]
-
-        with client.session_transaction() as session:
-            session['user_id'] = user_id
-
         quiz = store.get_quiz_by_user_id(user_id)
         question = store.get_question_by_id(quiz.get_current_question_id())
         answers = store.get_answers_by_id(question.answers)
-        correct_answer = [
+        incorrect_answer = [
             answer for answer in answers if not answer.is_correct][0]
 
-        rv = client.post(url_for('game'), data=dict(
-            action="answer",
-            answer_id=correct_answer.answer_id
-        ))
+        client = flask_socketio.SocketIOTestClient(app, socketio)
+        client.emit('send_answer', {"user_id": user_id,
+                                    "answer_id": incorrect_answer.answer_id})
 
         user = store.get_user_by_id(user_id)
 
-        assert rv.status_code == 202
+        # different user, so score should be 0 again
         assert user.score == 0
 
 
@@ -216,20 +198,21 @@ def test_quiz_finishes():
         with client.session_transaction() as session:
             session['user_id'] = user_id
 
-        # TODO FIX THIS BUG: Game only increments by 1 for each request (even though it should do more depending on time)
         sleep(0.1)
         rv = client.get(url_for('game'))  # Sets the game to question 2
         sleep(0.1)
         rv = client.get(url_for('game'))  # Sets the game to finished
         sleep(0.1)
         rv = client.get(url_for('game'))  # Finally redirects
+        sleep(0.1)
 
         user = store.get_user_by_id(user_id)
         quiz = store.get_quiz_by_user_id(user_id)
 
-        assert rv.status_code == 302
-        assert user.score == 10
+        assert quiz.is_started == True
         assert quiz.is_finished == True
+        assert user.score == 10
+        assert rv.status_code == 302
 
 
 def test_quiz_finishes_with_scoreboard():
