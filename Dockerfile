@@ -8,6 +8,8 @@ COPY gunicorn_config.py /gunicorn_config.py
 
 EXPOSE 5001
 
-#ENTRYPOINT ["flask", "run", "-p", "5001"]
+ENV FLASK_APP=app.py
 
-ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/gunicorn_config.py", "-b", ":5001", "app:app"]
+ENTRYPOINT ["flask", "run", "-p", "5001"]
+
+#ENTRYPOINT ["/usr/local/bin/gunicorn", "--config", "/gunicorn_config.py", "-b", ":5001", "app:app"]
