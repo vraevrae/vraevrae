@@ -301,9 +301,9 @@ def get_current_question(data):
         user_id, question.question_id)
 
     # if correct and no previous answer found and the question is still active
-    is_answered = False
+    is_answered = 0
     if len(user_answers):
-        is_answered = True
+        is_answered = 1
 
     # emit the data
     emit("current_question", {"question": vars(
