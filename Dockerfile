@@ -4,8 +4,6 @@ COPY . /
 
 RUN pip install -r requirements.txt
 
-COPY ./requirements.txt /app/requirements.txt
-
 COPY gunicorn_config.py /gunicorn_config.py
 
 EXPOSE 5001
