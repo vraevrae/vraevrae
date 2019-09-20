@@ -113,6 +113,8 @@ def index():
                     return render_template("index.html", error="Choose a number between 1 and 50", CATEGORIES=CATEGORIES), 400
 
             # try to make a game (connects to API by instantiating a Datasource)
+            # quiz_id = store.create_quiz(
+            #     OpenTDB, difficulty, category, max_questions)
             quiz_id = store.create_quiz(
                 OpenTDB, difficulty, category, max_questions)
             quiz = store.get_quiz_by_id(quiz_id)

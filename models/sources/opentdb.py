@@ -83,22 +83,28 @@ class OpenTDB(Source):
             if json["response_code"] == 0:
                 # reduce the remaining questions
                 # TODO test this
-                self.available_questions_count -= self.available_questions_count if self.available_questions_count < 50 else 50
+                self.available_questions_count -= \
+                    self.available_questions_count if \
+                    self.available_questions_count < 50 else 50
 
-                # format and return questions if of proper type (all types to to be downloaded because of limited API-count helper)
-                return [self.format_question(raw_question) for raw_question in json["results"] if raw_question["type"] == "multiple"]
+                # format and return questions if of proper typ«e (all types
+                # to to be downloaded because of limited API-count helper)
+                return [self.format_question(raw_question) for raw_question
+                        in json["results"] if raw_question["type"] ==
+                        "multiple"]
 
             # unknown error
             else:
                 raise Exception(
-                    f"[Datasource] opentdb unknown error. Request URL: {query}")
+                    f"[Datasource] opentdb unknown error. Request URL:"
+                    f" {query}")
 
         # error with the request
         except requests.exceptions.RequestException as e:
             raise Exception(f"[Datasource] request has failed: {str(e)}")
 
     @staticmethod
-    def format_question(raw_question) -> dict:
+    def format_question(raw_question) -> List[Dict[str, Union[str, Any]]]:
         """function to format and shuffle the retrieved questions"""
         # format answers
         answers = [
@@ -114,10 +120,37 @@ class OpenTDB(Source):
 
         # shuffle answers to make sure the correct answer is not at the same place in the list
         shuffle(answers)
-
-        # return correctly formatted question
-        return {"text": raw_question["question"],
-                "answers": answers,
-                "category": raw_question["category"],
-                "difficulty": raw_question["difficulty"],
-                "type": raw_question["type"]}
+        return [
+            {"text": "Welke wiskunde is nodig om informatiekunde te studeren?",
+             "answers": shuffle([{"text": "Minimaal wiskunde B",
+                                  "is_correct": False},
+                                 {"text": "Dat maakt niet uit",
+                                  "is_correct": False},
+                                 {"text": "Dat maakt niet uit, maar wel met "
+                                          "toelatingstest",
+                                  "is_correct": False},
+                                 {"text": "Minimaal wiskunde A",
+                                  "is_correct": True}]),
+             "category": "UvA",
+             "difficulty": "easy",
+             "type": "Presentation"},
+            {"text": "Op welk beroep is de studie informatiekunde niet "
+                     "gericht?",
+             "answers": shuffle([{"text": "Data Scientist",
+                                  "is_correct": False},
+                                 {"text": "Interactieontwerper",
+                                  "is_correct": False},
+                                 {"text": "Onderzoeker",
+                                  "is_correct": False},
+                                 {"text": "Programmeur",
+                                  "is_correct": True}]),
+             "category": "UvA",
+             "difficulty": "easy",
+             "type": "Presentation"}
+        ]
+        # # return correctly formatted question
+        # return {"text": raw_question["question"],
+        #         "answers": answers,
+        #         "category": raw_question["category"],
+        #         "difficulty": raw_question["difficulty"],
+        #         "type": raw_question["type"]}
