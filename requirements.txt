@@ -1,6 +1,6 @@
 Flask_Session
 Flask==1.0.2
-Pygments==2.3.1
+Pygments==2.7.4
 Jinja2>=2.10
 Flask_SocketIO==3.1.2
 requests==2.21.0
